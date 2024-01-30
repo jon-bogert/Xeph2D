@@ -9,14 +9,15 @@ namespace Xeph2D
 	{
 		XEPH2D_REG_COMP(0x00000002);
 
+		void Serializables() override;
 		void Awake() override;
 		void OnDestroy() override;
 
 		void Draw();
 
-		sf::Texture m_tempTex;
 		sf::Sprite m_tempSprite;
 
+		std::string m_textureKey = "";
 		int m_order = 0;
 	};
 }

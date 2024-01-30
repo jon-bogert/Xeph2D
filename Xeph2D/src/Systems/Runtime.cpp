@@ -1,4 +1,6 @@
 #include "Xeph2D/Systems/Runtime.h"
+
+#include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/SceneManager.h"
 #include "Xeph2D/Scene.h"
 #include "Xeph2D.h"
@@ -32,6 +34,7 @@ void Xeph2D::Runtime::Initialize(
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
 	WindowManager::Initialize();
+	AssetManager::Initialize();
 	SceneManager::Initialize(namingCallback, populateCallback);
 	SceneManager::LoadScene(0);
 }

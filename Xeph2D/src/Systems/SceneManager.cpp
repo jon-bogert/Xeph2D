@@ -2,6 +2,7 @@
 
 #include "Xeph2D/Component.h"
 #include "Xeph2D/Scene.h"
+#include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/Debug.h"
 #include "Xeph2D/Utility.h"
 
@@ -10,8 +11,6 @@
 #include <filesystem>
 
 #define BUILD_INFO_FILE "settings/BuildInfo.yaml"
-
-using yaml_val = YAML::iterator::value_type;
 
 Xeph2D::Scene& Xeph2D::SceneManager::ActiveScene()
 {
@@ -42,6 +41,7 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
     {
         //TODO - Check Asset similarities
         Get().m_activeScene->Shutdown();
+        AssetManager::Get().ClearTextures();
     }
     Get().m_activeScene = std::make_shared<Scene>();
 
@@ -57,8 +57,13 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
     YAML::Node contents;
     contents = YAML::LoadFile(filePath);
 
-    //TODO - Load Scene Data
+    //Load Assets
+    for (yaml_val& texture : contents["textures"])
+    {
+        AssetManager::Get().LoadTexture(texture.as<std::string>());
+    }
 
+    //Load Objects
     for (yaml_val& objInfo : contents["objects"])
     {
         std::shared_ptr<GameObject>& activeObject = Get().m_activeScene->m_gameObjects.emplace_back(std::make_shared<GameObject>());
@@ -88,7 +93,7 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
 
 void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const std::string& field)
 {
-    if (m_componentInfoBuffer == nullptr)
+    if (Get().m_componentInfoBuffer == nullptr)
     {
         Debug::LogErr("SceneLoader -> Component info buffer was null while Loading");
         return;

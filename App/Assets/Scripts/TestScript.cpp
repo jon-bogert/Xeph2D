@@ -9,14 +9,17 @@ void TestScript::Start()
 
 void TestScript::Update()
 {
+	if (InputSystem::GetKeyHold(Key::W))
+		LocalPosition().y += 1.f * Time::DeltaTime();
+	if (InputSystem::GetKeyHold(Key::S))
+		LocalPosition().y += -1.f * Time::DeltaTime();
+	if (InputSystem::GetKeyHold(Key::D))
+		LocalPosition().x += 1.f * Time::DeltaTime();
+	if (InputSystem::GetKeyHold(Key::A))
+		LocalPosition().x += -1.f * Time::DeltaTime();
+
 	if (InputSystem::GetKeyDown(Key::One))
-	{
 		SceneManager::LoadScene(0);
-	}
-	if (InputSystem::GetKeyDown(Key::Two))
-	{
-		SceneManager::LoadScene(1);
-	}
 }
 
 void TestScript::OnDestroy()

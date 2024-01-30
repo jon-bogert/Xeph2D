@@ -1,3 +1,5 @@
+textures:
+  - test2
 objects:
   - instID: 0x00000001
     name: Camera
@@ -27,5 +29,6 @@ objects:
     components:
       - typeID: 0x00000002
         enabled: true
+        m_textureKey: test2
       - typeID: 0xa45ff78b
         enabled: true

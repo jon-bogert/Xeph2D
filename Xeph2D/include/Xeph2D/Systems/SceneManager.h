@@ -2,6 +2,7 @@
 #define __XEPH2D_SYSTEMS_SCENELOADER_H__
 
 #include <Xeph2D/Structs.h>
+#include "Serialize.macros.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -31,7 +32,7 @@ namespace Xeph2D
         static void LoadScene(const int buildIndex);
 
         //To be accessed by derived Components (cannot be friend)
-        void __Deserialize(SerializableType type, void* ptr, const std::string& field);
+        static void __Deserialize(SerializableType type, void* ptr, const std::string& field);
 
     private:
         SceneManager() {}
