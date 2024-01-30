@@ -9,5 +9,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 #endif //_CONSOLE
 {
 	Xeph2D::Runtime::Initialize(__X2D_REGISTER_COMP_NAMES, __X2D_POPULATE_COMP_PTR);
+	Xeph2D::Runtime::Update();
+	Xeph2D::Runtime::Terminate();
+
 	return 0;
 }

@@ -26,7 +26,8 @@ namespace Xeph2D
 
 		static void Initialize(uint32_t width, uint32_t height);
 
-		static void DrawSprite(const GameObject* gameObject, sf::Sprite* sprite);
+		static void Draw(sf::Drawable* item);
+		static void PrepareTransformable(const Ref<GameObject>& gameObject, sf::Transformable* transformable);
 
 		static void CheckWindowEvents();
 		static void Begin();

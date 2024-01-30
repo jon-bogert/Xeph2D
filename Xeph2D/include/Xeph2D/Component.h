@@ -54,7 +54,7 @@ namespace Xeph2D
 		Ref<GameObject> gameObject;
 
 	private:
-		friend class SceneLoader;
+		friend class SceneManager;
 
 		template <typename ComponentType>
 		friend class Ref; // and GameObject

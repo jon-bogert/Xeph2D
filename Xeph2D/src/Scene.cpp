@@ -10,6 +10,18 @@ void Xeph2D::Scene::Update()
 	}
 }
 
+void Xeph2D::Scene::Initialize()
+{
+	for (auto& goPtr : m_gameObjects)
+	{
+		goPtr->Awake();
+	}
+	for (auto& goPtr : m_gameObjects)
+	{
+		goPtr->Start();
+	}
+}
+
 void Xeph2D::Scene::Shutdown()
 {
 	for (auto& goPtr : m_gameObjects)

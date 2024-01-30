@@ -1,4 +1,6 @@
 #include "Xeph2D/Systems/Runtime.h"
+#include "Xeph2D/Systems/SceneManager.h"
+#include "Xeph2D/Scene.h"
 #include "Xeph2D.h"
 
 using namespace Xeph2D;
@@ -29,12 +31,25 @@ void Xeph2D::Runtime::Initialize(
 	std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
-	SceneLoader::Initialize(namingCallback, populateCallback);
+	WindowManager::Initialize(1280, 720);
+	SceneManager::Initialize(namingCallback, populateCallback);
+	SceneManager::LoadScene(0);
 }
 
 void Xeph2D::Runtime::Update()
 {
-	Time::Update();
+	while (WindowManager::IsOpen())
+	{
+		WindowManager::CheckWindowEvents();
+		Time::Update();
+		InputSystem::Update();
+
+		SceneManager::ActiveScene().Update();
+
+		WindowManager::Begin();
+		RenderStack::Draw();
+		WindowManager::End();
+	}
 }
 
 void Xeph2D::Runtime::Terminate()

@@ -14,7 +14,8 @@ namespace Xeph2D
 		friend class Runtime;
 		void Update();
 
-		friend class SceneLoader;
+		friend class SceneManager;
+		void Initialize();
 		void Shutdown();
 
 		using GameObjects = std::vector<std::shared_ptr<GameObject>>;

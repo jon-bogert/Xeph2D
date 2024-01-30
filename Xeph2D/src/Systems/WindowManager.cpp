@@ -1,6 +1,8 @@
 #include "Xeph2D/Systems/WindowManager.h"
 #include "Xeph2D/Systems/Debug.h"
 
+#include "Xeph2D/GameObject.h"
+
 using namespace Xeph2D;
 
 #ifdef _EDITOR
@@ -51,39 +53,41 @@ void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
 #endif //_EDITOR
 }
 
-void Xeph2D::WindowManager::DrawSprite(const GameObject* gameObject, sf::Sprite* sprite)
+void Xeph2D::WindowManager::Draw(sf::Drawable* item)
 {
-//	Transform finalTransform = gameObject->transform;
-//	if (gameObject->GetParent())
-//	{
-//		GameObject* currObj = gameObject->GetParent();
-//		while (currObj)
-//		{
-//			finalTransform.position.x += currObj->transform.position.x;
-//			finalTransform.position.y += currObj->transform.position.y;
-//
-//			finalTransform.rotation.AddDeg(currObj->transform.rotation.GetDeg());
-//
-//			finalTransform.scale.x *= currObj->transform.scale.x;
-//			finalTransform.scale.y *= currObj->transform.scale.y;
-//
-//			currObj = currObj->GetParent();
-//		}
-//	}
-//
-//	sprite->setPosition({
-//	(finalTransform.position.x * Get().m_ppu * Get().m_resScale) - (__CAMERA->position.x * Get().m_ppu * Get().m_resScale),
-//	Get().m_height - ((finalTransform.position.y * Get().m_ppu * Get().m_resScale) - (__CAMERA->position.y * Get().m_ppu * Get().m_resScale)) });
-//	
-//	sprite->setScale(finalTransform.scale.x * Get().m_resScale, finalTransform.scale.y * Get().m_resScale);
-//	sprite->setRotation(finalTransform.rotation.GetDeg());
-//
-//	//sprite->setPosition(finalTransform.position.x, finalTransform.position.y);
-//#ifdef _EDITOR
-//	Get().m_viewport->draw(*sprite);
-//#else
-//	Get().m_window->draw(*sprite);
-//#endif // _EDITOR
+#ifdef _EDITOR
+	Get().m_viewport->draw(*item);
+#else
+	Get().m_window->draw(*item);
+#endif // _EDITOR
+}
+
+void Xeph2D::WindowManager::PrepareTransformable(const Ref<GameObject>& gameObject, sf::Transformable* transformable)
+{
+	Transform finalTransform = gameObject->m_transform;
+	//if (gameObject->GetParent())
+	//{
+	//	GameObject* currObj = gameObject->GetParent();
+	//	while (currObj)
+	//	{
+	//		finalTransform.position.x += currObj->transform.position.x;
+	//		finalTransform.position.y += currObj->transform.position.y;
+	//
+	//		finalTransform.rotation.AddDeg(currObj->transform.rotation.GetDeg());
+	//
+	//		finalTransform.scale.x *= currObj->transform.scale.x;
+	//		finalTransform.scale.y *= currObj->transform.scale.y;
+	//
+	//		currObj = currObj->GetParent();
+	//	}
+	//}
+	
+	transformable->setPosition({ // TODO -> Change LocalPosition() to GlobalPosition()
+	(finalTransform.position.x * Get().m_ppu * Get().m_resScale) - (__CAMERA->LocalPosition().x * Get().m_ppu * Get().m_resScale),
+	Get().m_height - ((finalTransform.position.y * Get().m_ppu * Get().m_resScale) - (__CAMERA->LocalPosition().y * Get().m_ppu * Get().m_resScale)) });
+	
+	transformable->setScale(finalTransform.scale.x * Get().m_resScale, finalTransform.scale.y * Get().m_resScale);
+	transformable->setRotation(finalTransform.rotation.GetDeg());
 }
 
 void Xeph2D::WindowManager::CheckWindowEvents()

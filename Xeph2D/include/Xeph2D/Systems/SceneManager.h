@@ -16,14 +16,14 @@ namespace Xeph2D
     class Component;
 
     using SceneInfo = std::string;
-    class SceneLoader final
+    class SceneManager final
     {
     public:
-        ~SceneLoader() = default;
-        SceneLoader(const SceneLoader& other) = delete;
-        SceneLoader(const SceneLoader&& other) = delete;
-        SceneLoader operator=(const SceneLoader& other) = delete;
-        SceneLoader operator=(const SceneLoader&& other) = delete;
+        ~SceneManager() = default;
+        SceneManager(const SceneManager& other) = delete;
+        SceneManager(const SceneManager&& other) = delete;
+        SceneManager operator=(const SceneManager& other) = delete;
+        SceneManager operator=(const SceneManager&& other) = delete;
 
         static Scene& ActiveScene();
         static int ActiveSceneIndex();
@@ -34,8 +34,8 @@ namespace Xeph2D
         void __Deserialize(SerializableType type, void* ptr, const std::string& field);
 
     private:
-        SceneLoader() {}
-        static SceneLoader& Get() { static SceneLoader instance; return instance; }
+        SceneManager() {}
+        static SceneManager& Get() { static SceneManager instance; return instance; }
 
         friend class Runtime;
         static void Initialize(

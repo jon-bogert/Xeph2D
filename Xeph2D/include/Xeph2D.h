@@ -3,12 +3,14 @@
 
 //Components
 #include <Xeph2D/Components/Camera.h>
+#include <Xeph2D/Components/SpriteRenderer.h>
 
 //Systems
 #include <Xeph2D/Systems/Debug.h>
 #include <Xeph2D/Systems/InputSystem/InputSystem.h>
+#include <Xeph2D/Systems/RenderStack.h>
 #include <Xeph2D/Systems/Runtime.h>
-#include <Xeph2D/Systems/SceneLoader.h>
+#include <Xeph2D/Systems/SceneManager.h>
 #include <Xeph2D/Systems/Time.h>
 #include <Xeph2D/Systems/WindowManager.h>
 

@@ -15,6 +15,7 @@ namespace Xeph2D
 	class Component;
 	class GameObject final
 	{
+		friend class WindowManager;
 	public:
 		uint32_t InstID() { return m_instID; }
 
@@ -33,6 +34,10 @@ namespace Xeph2D
 		Rotator& LocalRotation() { return m_transform.rotation; }
 		Vector2& LocalScale() { return m_transform.scale; }
 
+		const Vector2& LocalPosition() const { return m_transform.position; }
+		const Rotator& LocalRotation() const { return m_transform.rotation; }
+		const Vector2& LocalScale() const { return m_transform.scale; }
+
 	private:
 		friend class Scene;
 		void Initialize(Ref<GameObject>& self);
@@ -46,13 +51,13 @@ namespace Xeph2D
 		void OnEnable();
 		void OnDisable();
 
-		friend class SceneLoader;
+		friend class SceneManager;
 		void Shutdown();
 
 		std::string m_name = "GameObject";
 		bool m_isActive = true;
 
-		friend class SceneLoader;
+		friend class SceneManager;
 		uint32_t m_instID = NULL;
 
 		using Components = std::vector<std::shared_ptr<Component>>;

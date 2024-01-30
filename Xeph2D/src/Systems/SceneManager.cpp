@@ -1,4 +1,4 @@
-#include "Xeph2D/Systems/SceneLoader.h"
+#include "Xeph2D/Systems/SceneManager.h"
 
 #include "Xeph2D/Component.h"
 #include "Xeph2D/Scene.h"
@@ -11,17 +11,17 @@
 
 using yaml_val = YAML::iterator::value_type;
 
-Xeph2D::Scene& Xeph2D::SceneLoader::ActiveScene()
+Xeph2D::Scene& Xeph2D::SceneManager::ActiveScene()
 {
     return *Get().m_activeScene;
 }
 
-int Xeph2D::SceneLoader::ActiveSceneIndex()
+int Xeph2D::SceneManager::ActiveSceneIndex()
 {
     return Get().m_index;
 }
 
-void Xeph2D::SceneLoader::LoadScene(const std::string& sceneName)
+void Xeph2D::SceneManager::LoadScene(const std::string& sceneName)
 {
     for (size_t i = 0; i < Get().m_manifest.size(); ++i)
     {
@@ -34,13 +34,14 @@ void Xeph2D::SceneLoader::LoadScene(const std::string& sceneName)
     Debug::LogErr("Could not find scene with name: %s", sceneName.c_str());
 }
 
-void Xeph2D::SceneLoader::LoadScene(const int buildIndex)
+void Xeph2D::SceneManager::LoadScene(const int buildIndex)
 {
     if (Get().m_activeScene != nullptr)
     {
         //TODO - Check Asset similarities
         Get().m_activeScene->Shutdown();
     }
+    Get().m_activeScene = std::make_shared<Scene>();
 
     std::string filePath = "Assets/Scenes/" + Get().m_manifest[buildIndex];
     if (!std::filesystem::exists(filePath))
@@ -58,7 +59,7 @@ void Xeph2D::SceneLoader::LoadScene(const int buildIndex)
 
     for (yaml_val& objInfo : contents["objects"])
     {
-        std::shared_ptr<GameObject>& activeObject = Get().m_activeScene->m_gameObjects.emplace_back();
+        std::shared_ptr<GameObject>& activeObject = Get().m_activeScene->m_gameObjects.emplace_back(std::make_shared<GameObject>());
         activeObject->m_instID = Utility::FromHex32String(objInfo["instID"].as<std::string>());
         activeObject->m_name = objInfo["name"].as<std::string>();
         activeObject->m_transform = CustomSerialTypes::TransformFromYAML(objInfo["transform"]);
@@ -68,7 +69,9 @@ void Xeph2D::SceneLoader::LoadScene(const int buildIndex)
         {
             for (yaml_val& compInfo : objInfo["components"])
             {
+                uint32_t typeID = Utility::FromHex32String(compInfo["typeID"].as<std::string>());
                 std::shared_ptr<Component>& activeComponent = activeObject->m_components.emplace_back();
+                Get().m_populateCallback(activeComponent, typeID);
                 activeComponent->m_enabled = compInfo["enabled"].as<bool>();
                 activeComponent->gameObject = Ref<GameObject>(activeObject);
                 Get().m_componentInfoBuffer = &compInfo;
@@ -77,9 +80,11 @@ void Xeph2D::SceneLoader::LoadScene(const int buildIndex)
             }
         }
     }
+
+    Get().m_activeScene->Initialize();
 }
 
-void Xeph2D::SceneLoader::__Deserialize(SerializableType type, void* ptr, const std::string& field)
+void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const std::string& field)
 {
     if (m_componentInfoBuffer == nullptr)
     {
@@ -119,7 +124,7 @@ void Xeph2D::SceneLoader::__Deserialize(SerializableType type, void* ptr, const 
     }
 }
 
-void Xeph2D::SceneLoader::Initialize(
+void Xeph2D::SceneManager::Initialize(
     std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
     std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
