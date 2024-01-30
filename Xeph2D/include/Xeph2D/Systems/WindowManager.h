@@ -10,6 +10,15 @@
 
 namespace Xeph2D
 {
+	enum class WindowStyle
+	{
+		Windowed,
+		Borderless,
+		Fullscreen,
+		WindowedWithResize,
+		WindowNoClose
+	};
+
 	class WindowManager final
 	{
 	public:
@@ -24,7 +33,7 @@ namespace Xeph2D
 		WindowManager operator=(const WindowManager& other) = delete;
 		WindowManager operator=(const WindowManager&& other) = delete;
 
-		static void Initialize(uint32_t width, uint32_t height);
+		static void Initialize();
 
 		static void Draw(sf::Drawable* item);
 		static void PrepareTransformable(const Ref<GameObject>& gameObject, sf::Transformable* transformable);

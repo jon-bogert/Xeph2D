@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <cstdint>
 
+#include "TestScript.h"
+
 #define __X2D_REGISTER_COMP_NAMES &Xeph2D::__RegisterComponentNames
 #define __X2D_POPULATE_COMP_PTR &Xeph2D::__PopulateComponentPtr
 
@@ -18,7 +20,8 @@ namespace Xeph2D
     {
         return{
         {0x00000001,"Camera"},
-        {0x00000002,"SpriteRenderer"}};
+        {0x00000002,"SpriteRenderer"},
+        {0xa45ff78b, "TestScript"}};
     };
 
     void __PopulateComponentPtr(std::shared_ptr<Component>& ptr, uint32_t compID)
@@ -27,6 +30,7 @@ namespace Xeph2D
         {
         case 0x00000001: ptr = std::make_unique<Camera>(); break;
         case 0x00000002: ptr = std::make_unique<SpriteRenderer>(); break;
+        case 0xa45ff78b: ptr = std::make_unique<TestScript>(); break;
         }
     }
 }

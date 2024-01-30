@@ -189,10 +189,10 @@ project "App"
 		links
 		{
 			"box2d.lib",
-			"sfml-system.lib",
-			"sfml-graphics.lib",
-			"sfml-window.lib",
-			"sfml-audio.lib",
-			"sfml-network.lib",
+			"sfml-system-s.lib",
+			"sfml-graphics-s.lib",
+			"sfml-window-s.lib",
+			"sfml-audio-s.lib",
+			"sfml-network-s.lib",
 			"yaml-cpp.lib"
 		}

@@ -1,0 +1,10 @@
+title: Xeph2D Application
+resolution:
+  width: 0
+  height: 0
+debug-resolution:
+  width: 1280
+  height: 720
+style: 2
+debug-style: 0
+lock-framerate: 0

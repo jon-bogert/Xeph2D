@@ -31,7 +31,7 @@ void Xeph2D::Runtime::Initialize(
 	std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
-	WindowManager::Initialize(1280, 720);
+	WindowManager::Initialize();
 	SceneManager::Initialize(namingCallback, populateCallback);
 	SceneManager::LoadScene(0);
 }

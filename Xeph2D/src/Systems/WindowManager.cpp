@@ -3,6 +3,10 @@
 
 #include "Xeph2D/GameObject.h"
 
+#include <SFML/Window/WindowStyle.hpp>
+
+#define WINDOW_INFO_FILE "settings/WindowInfo.yaml"
+
 using namespace Xeph2D;
 
 #ifdef _EDITOR
@@ -12,6 +16,24 @@ using namespace Xeph2D;
 #define __CAMERA Get().m_camera
 #define __POSITION LocalPosition()// TODO - Change to Global Position once implemented
 #endif //_EDITOR
+
+namespace
+{
+	int SFStyle(Xeph2D::WindowStyle style)
+	{
+		switch (style)
+		{
+		case WindowStyle::Windowed: return sf::Style::Close;
+		case WindowStyle::Borderless: return sf::Style::None;
+		case WindowStyle::Fullscreen: return sf::Style::Fullscreen;
+		case WindowStyle::WindowedWithResize: return sf::Style::Default;
+		case WindowStyle::WindowNoClose: return sf::Style::Titlebar;
+		default:
+			Debug::LogErr("WindowManager.cpp ::SFStyle -> Unimplemented WindowStyle type");
+			return sf::Style::Close;
+		}
+	}
+}
 
 WindowManager& WindowManager::Get()
 {
@@ -38,18 +60,40 @@ void Xeph2D::WindowManager::__UpdateViewportSize(Vector2 size)
 }
 #endif //_EDITOR
 
-void Xeph2D::WindowManager::Initialize(uint32_t width, uint32_t height)
+void Xeph2D::WindowManager::Initialize()
 {
-	Get().m_width = width;
-	Get().m_height = height;
+	YAML::Node windowInfo = YAML::LoadFile(WINDOW_INFO_FILE);
+	std::string title = windowInfo["title"].as<std::string>();
+#ifdef _DEBUG
+	Get().m_width = windowInfo["debug-resolution"]["width"].as<uint32_t>();
+	Get().m_height = windowInfo["debug-resolution"]["height"].as<uint32_t>();
+	WindowStyle style = static_cast<WindowStyle>(windowInfo["debug-style"].as<int>());
+#else
+	Get().m_width = windowInfo["resolution"]["width"].as<uint32_t>();
+	Get().m_height = windowInfo["resolution"]["height"].as<uint32_t>();
+	WindowStyle style = static_cast<WindowStyle>(windowInfo["style"].as<int>());
+#endif //_DEBUG
+
+	if (Get().m_width == 0 || Get().m_height == 0)
+	{
+		sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+		Get().m_width = desktop.width;
+		Get().m_height = desktop.height;
+	}
+
 	Get().m_resScale = Get().m_height / static_cast<float>(Get().m_refHeight);
 
 #ifdef _EDITOR
 	Get().m_viewport = std::make_unique<sf::RenderTexture>();
 	Get().m_viewport->create(width, height);
 #else
-	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), "WindowTitle");
-	Get().m_handle = FindWindowA(NULL, "WindowTitle");
+	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(Get().m_width, Get().m_height), title, SFStyle(style));
+	Get().m_handle = FindWindowA(NULL, title.c_str());
+
+	uint32_t fps = windowInfo["lock-framerate"].as<uint32_t>();
+	if (fps > 0)
+		Get().m_window->setFramerateLimit(fps);
+
 #endif //_EDITOR
 }
 

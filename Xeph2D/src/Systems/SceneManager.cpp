@@ -9,6 +9,8 @@
 
 #include <filesystem>
 
+#define BUILD_INFO_FILE "settings/BuildInfo.yaml"
+
 using yaml_val = YAML::iterator::value_type;
 
 Xeph2D::Scene& Xeph2D::SceneManager::ActiveScene()
@@ -131,6 +133,7 @@ void Xeph2D::SceneManager::Initialize(
     Get().m_namingCallback = namingCallback;
     Get().m_populateCallback = populateCallback;
 
-    //TODO - Load from file
-    Get().m_manifest.push_back("Main.yaml");
+    YAML::Node buildInfo = YAML::LoadFile(BUILD_INFO_FILE);
+    for (yaml_val& scene : buildInfo["scenes"])
+        Get().m_manifest.push_back(scene.as<std::string>());
 }
