@@ -5,6 +5,10 @@ resolution:
 debug-resolution:
   width: 1280
   height: 720
+ref-resolution:
+  width: 1920
+  height: 1080
 style: 2
 debug-style: 0
 lock-framerate: 0
+ppu: 32

@@ -5,7 +5,7 @@
 
 #include <SFML/Window/WindowStyle.hpp>
 
-#define WINDOW_INFO_FILE "settings/WindowInfo.yaml"
+#define WINDOW_INFO_FILE "settings/WindowProperties.yaml"
 
 using namespace Xeph2D;
 
@@ -64,6 +64,10 @@ void Xeph2D::WindowManager::Initialize()
 {
 	YAML::Node windowInfo = YAML::LoadFile(WINDOW_INFO_FILE);
 	std::string title = windowInfo["title"].as<std::string>();
+
+	Get().m_refWidth = windowInfo["ref-resolution"]["width"].as<uint32_t>();
+	Get().m_refHeight = windowInfo["ref-resolution"]["height"].as<uint32_t>();
+
 #ifdef _DEBUG
 	Get().m_width = windowInfo["debug-resolution"]["width"].as<uint32_t>();
 	Get().m_height = windowInfo["debug-resolution"]["height"].as<uint32_t>();
@@ -82,6 +86,7 @@ void Xeph2D::WindowManager::Initialize()
 	}
 
 	Get().m_resScale = Get().m_height / static_cast<float>(Get().m_refHeight);
+	Get().m_ppu = windowInfo["ppu"].as<uint32_t>();
 
 #ifdef _EDITOR
 	Get().m_viewport = std::make_unique<sf::RenderTexture>();
