@@ -74,6 +74,7 @@ namespace Xeph2D
 		WindowManager() {}
 		static WindowManager& Get();
 
+		friend class Debug;
 		static sf::RenderWindow* UnWrap();
 
 		friend class Camera;

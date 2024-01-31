@@ -48,9 +48,11 @@ void Xeph2D::Runtime::Update()
 		InputSystem::Update();
 
 		SceneManager::ActiveScene().Update();
+		Debug::Update();
 
 		WindowManager::Begin();
 		RenderStack::Draw();
+		Debug::DrawToWindow();
 		WindowManager::End();
 	}
 }
