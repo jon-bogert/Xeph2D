@@ -91,7 +91,7 @@ void Xeph2D::WindowManager::Initialize()
 
 #ifdef _EDITOR
 	Get().m_viewport = std::make_unique<sf::RenderTexture>();
-	Get().m_viewport->create(Get().m_width, Get().m_height);
+	Get().m_viewport->create(Get().m_refWidth, Get().m_refHeight);
 #else
 	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(Get().m_width, Get().m_height), title, SFStyle(style));
 	Get().m_handle = FindWindowA(NULL, title.c_str());

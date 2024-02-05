@@ -19,6 +19,9 @@ void Xeph2D::Runtime::Initialize(
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
 	Editor::Initialize(namingCallback);
+	AssetManager::Initialize();
+	SceneManager::Initialize(namingCallback, populateCallback);
+	SceneManager::LoadScene(0);
 }
 
 void Xeph2D::Runtime::Update()

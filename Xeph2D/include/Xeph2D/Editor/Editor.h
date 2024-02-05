@@ -4,6 +4,7 @@
 #ifdef _EDITOR
 
 #include "Xeph2D/Editor/EditorSceneData.h"
+#include "Xeph2D/Editor/EditorWindows/Viewport.h"
 
 #include <SFML.hpp>
 
@@ -46,9 +47,20 @@ namespace Xeph2D::Edit
         std::unordered_map<uint32_t, std::string> m_componentNames;
 
         Transform m_viewportTransform;
+        sf::Clock m_frameTimer;
 
         friend class SceneManager;
         EditorSceneData m_sceneData;
+
+        //Windows
+        using EditorWindows = std::vector<std::unique_ptr<EditorWindow>>;
+        EditorWindows m_editorWindows;
+        Viewport* m_viewportWindow;
+
+        std::unique_ptr<sf::Font> m_font = nullptr;
+        std::unique_ptr<unsigned char[]> m_fontData = nullptr;
+        size_t m_fontDataLength = 0;
+        void SetUIStyle();
     };
 }
 #endif //_EDITOR
