@@ -42,6 +42,9 @@ namespace Xeph2D
 		friend class Scene;
 		void Initialize(Ref<GameObject>& self);
 
+		void OnEditorStart();
+		void OnEditorUpdate();
+
 		void Awake();
 		void Start();
 		void Update();

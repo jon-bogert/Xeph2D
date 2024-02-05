@@ -17,6 +17,18 @@ void Xeph2D::GameObject::Initialize(Ref<GameObject>& self)
 	//remember to set component.gameObject to self;
 }
 
+void Xeph2D::GameObject::OnEditorStart()
+{
+	for (auto& compPtr : m_components)
+		compPtr->OnEditorStart();
+}
+
+void Xeph2D::GameObject::OnEditorUpdate()
+{
+	for (auto& compPtr : m_components)
+		compPtr->OnEditorUpdate();
+}
+
 void Xeph2D::GameObject::Awake()
 {
 	for (auto& compPtr : m_components)

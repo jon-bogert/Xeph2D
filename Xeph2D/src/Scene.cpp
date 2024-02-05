@@ -4,14 +4,27 @@
 
 void Xeph2D::Scene::Update()
 {
+#ifdef _EDITOR
+	for (auto& goPtr : m_gameObjects)
+	{
+		goPtr->OnEditorUpdate();
+	}
+#else
 	for (auto& goPtr : m_gameObjects)
 	{
 		goPtr->Update();
 	}
+#endif //_EDITOR
 }
 
 void Xeph2D::Scene::Initialize()
 {
+#ifdef _EDITOR
+	for (auto& goPtr : m_gameObjects)
+	{
+		goPtr->OnEditorStart();
+	}
+#else
 	for (auto& goPtr : m_gameObjects)
 	{
 		goPtr->Awake();
@@ -20,6 +33,7 @@ void Xeph2D::Scene::Initialize()
 	{
 		goPtr->Start();
 	}
+#endif //_EDITOR
 }
 
 void Xeph2D::Scene::Shutdown()

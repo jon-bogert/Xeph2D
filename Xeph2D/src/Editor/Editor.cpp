@@ -115,8 +115,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 			}
 			if (ImGui::MenuItem("Viewport"))
 			{
-				Debug::Log("Unimplemented");
-				//Get().m_viewportWindow->Open();
+				Get().m_viewportWindow->Open();
 			}
 			ImGui::EndMenu();
 		}

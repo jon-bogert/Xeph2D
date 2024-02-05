@@ -7,6 +7,11 @@
 
 #include <functional>
 
+void Xeph2D::SpriteRenderer::OnEditorStart()
+{
+	Awake();
+}
+
 void Xeph2D::SpriteRenderer::Serializables()
 {
 	SERIALIZE_STRING(m_textureKey);

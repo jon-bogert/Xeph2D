@@ -2,6 +2,11 @@
 
 #include "Xeph2D/Systems/WindowManager.h"
 
+void Xeph2D::Camera::OnEditorStart()
+{
+	Awake();
+}
+
 void Xeph2D::Camera::Awake()
 {
 	WindowManager::SetCamera(this);

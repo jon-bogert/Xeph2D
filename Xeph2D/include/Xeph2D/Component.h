@@ -40,6 +40,9 @@ namespace Xeph2D
 		virtual void OnDisable() {}
 		virtual void OnDestroy() {}
 
+		virtual void OnEditorStart() {}
+		virtual void OnEditorUpdate() {}
+
 
 		bool Enabled() const { return m_enabled; }
 		void SetEnabled(const bool enabled)
