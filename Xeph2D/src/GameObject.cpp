@@ -14,7 +14,8 @@ void Xeph2D::GameObject::SetIsActive(const bool isActive)
 
 void Xeph2D::GameObject::Initialize(Ref<GameObject>& self)
 {
-	//remember to set component.gameObject to self;
+	for (auto& compPtr : m_components)
+		compPtr->gameObject = self;
 }
 
 void Xeph2D::GameObject::OnEditorStart()
@@ -27,6 +28,12 @@ void Xeph2D::GameObject::OnEditorUpdate()
 {
 	for (auto& compPtr : m_components)
 		compPtr->OnEditorUpdate();
+}
+
+void Xeph2D::GameObject::OnEditorShutdown()
+{
+	for (auto& compPtr : m_components)
+		compPtr->OnEditorShutdown();
 }
 
 void Xeph2D::GameObject::Awake()
@@ -78,6 +85,10 @@ void Xeph2D::GameObject::OnDisable()
 
 void Xeph2D::GameObject::Shutdown()
 {
+#ifdef _EDITOR
+	for (auto& compPtr : m_components)
+		compPtr->OnEditorShutdown();
+#else
 	for (auto& compPtr : m_components)
 	{
 		if (compPtr->Enabled())
@@ -86,4 +97,5 @@ void Xeph2D::GameObject::Shutdown()
 
 	for (auto& compPtr : m_components)
 		compPtr->OnDestroy();
+#endif //_EDITOR
 }

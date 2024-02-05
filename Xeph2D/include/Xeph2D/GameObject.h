@@ -45,6 +45,7 @@ namespace Xeph2D
 
 		void OnEditorStart();
 		void OnEditorUpdate();
+		void OnEditorShutdown();
 
 		void Awake();
 		void Start();
