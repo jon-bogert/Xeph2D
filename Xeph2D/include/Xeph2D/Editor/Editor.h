@@ -6,6 +6,7 @@
 #include "Xeph2D/Editor/EditorSceneData.h"
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
 #include "Xeph2D/Editor/EditorWindows/Hierarchy.h"
+#include "Xeph2D/Editor/EditorWindows/Inspector.h"
 
 #include <SFML.hpp>
 
@@ -27,6 +28,10 @@ namespace Xeph2D::Edit
 
         static bool IsOpen();
         static void Close();
+
+        static bool IsSaved() { return Get().m_isSaved; }
+        static void SetIsSaved(const bool isSaved) { Get().m_isSaved = isSaved; };
+        static void Save();
 
     private:
         Editor() {}
@@ -51,13 +56,20 @@ namespace Xeph2D::Edit
         sf::Clock m_frameTimer;
 
         friend class SceneManager;
+        friend class Inspector;
         EditorSceneData m_sceneData;
+
+        bool m_isSaved = true;
 
         //Windows
         using EditorWindows = std::vector<std::unique_ptr<EditorWindow>>;
         EditorWindows m_editorWindows;
         Viewport* m_viewportWindow;
         Hierarchy* m_hierarchyWindow;
+        Inspector* m_inspectorWindow;
+
+        friend class Hierarchy;
+        Inspector* GetInspectorWindow() { return m_inspectorWindow; }
 
         std::unique_ptr<sf::Font> m_font = nullptr;
         std::unique_ptr<unsigned char[]> m_fontData = nullptr;

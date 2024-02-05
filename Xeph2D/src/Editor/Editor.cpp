@@ -19,6 +19,12 @@ void Xeph2D::Edit::Editor::Close()
 	Get().m_window->close();
 }
 
+void Xeph2D::Edit::Editor::Save()
+{
+	Debug::Log("Unimplemented");
+	SetIsSaved(true);
+}
+
 void Xeph2D::Edit::Editor::Initialize(
 	std::function<std::unordered_map<uint32_t, std::string>(void)>& compNameCallback)
 {
@@ -36,8 +42,8 @@ void Xeph2D::Edit::Editor::Initialize(
 	
 	Get().m_viewportWindow =
 		(Viewport*)Get().m_editorWindows.emplace_back(std::make_unique<Viewport>()).get();
-	//Get().m_inspector =
-	//	(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
+	Get().m_inspectorWindow =
+		(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get().m_hierarchyWindow =
 		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
 	//Get().m_scriptManager =
@@ -103,7 +109,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 			if (ImGui::MenuItem("Inspector"))
 			{
 				Debug::Log("Unimplemented");
-				//Get().m_inspector->Open();
+				Get().m_inspectorWindow->Open();
 			}
 			if (ImGui::MenuItem("Script Manager"))
 			{

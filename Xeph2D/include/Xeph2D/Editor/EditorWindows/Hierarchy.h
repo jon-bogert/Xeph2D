@@ -19,7 +19,6 @@ namespace Xeph2D::Edit
 
 		int m_selectionIndex = -1;
 		std::vector<std::string> m_objectNames;
-		std::vector<const char*> m_objectNamesCStr;
 	};
 }
 #endif //_EDITOR

@@ -79,13 +79,19 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
 
 #ifdef _EDITOR
         Edit::Editor& editor = Edit::Editor::Get();
-        Edit::EditorGameObject edActiveObject = 
+        Edit::EditorGameObject& edActiveObject = 
             editor.m_sceneData.gameObjects.emplace_back();
 
         edActiveObject.instID = activeObject->m_instID;
         edActiveObject.name.ptr = &activeObject->m_name;
+        edActiveObject.name.name = "Name";
+        edActiveObject.name.type = SerializableType::String;
         edActiveObject.transform.ptr = &activeObject->m_transform;
+        edActiveObject.transform.name = "Transform";
+        edActiveObject.transform.type = SerializableType::Transform;
         edActiveObject.isActive.ptr = &activeObject->m_isActive;
+        edActiveObject.isActive.name = "Active";
+        edActiveObject.isActive.type = SerializableType::Bool;
 #endif //_EDITOR
 
         if (objInfo["components"].IsDefined())
@@ -103,6 +109,8 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
                     edActiveObject.components.emplace_back();
                 edActiveComp.typeID = typeID;
                 edActiveComp.enabled.ptr = &activeComponent->m_enabled;
+                edActiveComp.enabled.name = "Enabled";
+                edActiveComp.enabled.type = SerializableType::Bool;
                 Get().m_editorCompBuffer = &edActiveComp;
                 activeComponent->Serializables();
                 Get().m_editorCompBuffer = nullptr;
@@ -154,14 +162,14 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
     default:
         Debug::LogErr("SceneLoader::__Deserialize -> Unimplemented Type");
         break;
+    }
 
 #ifdef _EDITOR
-        Edit::Field& edField = Get().m_editorCompBuffer->fields.emplace_back();
-        edField.name = field;
-        edField.type = type;
-        edField.ptr = ptr;
+    Edit::Field& edField = Get().m_editorCompBuffer->fields.emplace_back();
+    edField.name = field;
+    edField.type = type;
+    edField.ptr = ptr;
 #endif //_EDITOR
-    }
 }
 
 void Xeph2D::SceneManager::Initialize(

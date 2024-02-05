@@ -40,7 +40,8 @@ namespace Xeph2D
 {
 	enum class SerializableType
 	{
-		Int,
+		Undefined = -1,
+		Int = 0,
 		Float,
 		Bool,
 		Char,
