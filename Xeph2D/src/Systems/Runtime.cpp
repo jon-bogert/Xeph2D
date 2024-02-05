@@ -1,5 +1,9 @@
 #include "Xeph2D/Systems/Runtime.h"
 
+#ifdef _EDITOR
+#include "Xeph2D/Editor/Editor.h"
+#endif //_EDITOR
+
 #include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/SceneManager.h"
 #include "Xeph2D/Scene.h"
@@ -8,23 +12,28 @@
 using namespace Xeph2D;
 
 #ifdef _EDITOR
-
-void Xeph2D::Runtime::Initialize()
-{
-}
+using namespace Xeph2D::Edit;
 
 void Xeph2D::Runtime::Initialize(
 	std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
+	Editor::Initialize(namingCallback);
 }
 
 void Xeph2D::Runtime::Update()
 {
+	while (Editor::IsOpen())
+	{
+		Editor::Update();
+		Editor::OnGUI();
+		Editor::Draw();
+	}
 }
 
 void Xeph2D::Runtime::Terminate()
 {
+	Editor::Terminate();
 }
 
 #else

@@ -10,8 +10,9 @@
 using namespace Xeph2D;
 
 #ifdef _EDITOR
-#include "Editor/Editor.h"
-#define __CAMERA Edit::Editor::GetViewportTransform()
+#include "Xeph2D/Editor/Editor.h"
+#define __CAMERA Edit::Editor::Get().GetViewportTransform()
+#define __POSITION position
 #else
 #define __CAMERA Get().m_camera
 #define __POSITION LocalPosition()// TODO - Change to Global Position once implemented
@@ -90,7 +91,7 @@ void Xeph2D::WindowManager::Initialize()
 
 #ifdef _EDITOR
 	Get().m_viewport = std::make_unique<sf::RenderTexture>();
-	Get().m_viewport->create(width, height);
+	Get().m_viewport->create(Get().m_width, Get().m_height);
 #else
 	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(Get().m_width, Get().m_height), title, SFStyle(style));
 	Get().m_handle = FindWindowA(NULL, title.c_str());
@@ -132,8 +133,8 @@ void Xeph2D::WindowManager::PrepareTransformable(const Ref<GameObject>& gameObje
 	//}
 	
 	transformable->setPosition({ // TODO -> Change LocalPosition() to GlobalPosition()
-	(finalTransform.position.x * Get().m_ppu * Get().m_resScale) - (__CAMERA->LocalPosition().x * Get().m_ppu * Get().m_resScale),
-	Get().m_height - ((finalTransform.position.y * Get().m_ppu * Get().m_resScale) - (__CAMERA->LocalPosition().y * Get().m_ppu * Get().m_resScale)) });
+	(finalTransform.position.x * Get().m_ppu * Get().m_resScale) - (__CAMERA->__POSITION.x * Get().m_ppu * Get().m_resScale),
+	Get().m_height - ((finalTransform.position.y * Get().m_ppu * Get().m_resScale) - (__CAMERA->__POSITION.y * Get().m_ppu * Get().m_resScale)) });
 	
 	transformable->setScale(finalTransform.scale.x * Get().m_resScale, finalTransform.scale.y * Get().m_resScale);
 	transformable->setRotation(finalTransform.rotation.GetDeg());

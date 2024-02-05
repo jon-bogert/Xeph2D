@@ -1,6 +1,10 @@
 #ifndef __XEPH2D_SYSTEMS_SCENELOADER_H__
 #define __XEPH2D_SYSTEMS_SCENELOADER_H__
 
+#ifdef _EDITOR
+#include "Xeph2D/Editor/EditorSceneData.h"
+#endif //_EDITOR
+
 #include <Xeph2D/Structs.h>
 #include "Serialize.macros.h"
 
@@ -13,6 +17,12 @@
 
 namespace Xeph2D
 {
+#ifdef _EDITOR
+    namespace Edit
+    {
+        struct EditorGameObject;
+    }
+#endif //_EDITOR
     class Scene;
     class Component;
 
@@ -50,6 +60,9 @@ namespace Xeph2D
         std::shared_ptr<Scene> m_activeScene;
 
         YAML::iterator::value_type* m_componentInfoBuffer = nullptr;
+#ifdef _EDITOR
+        Edit::EditorComponent* m_editorCompBuffer= nullptr;
+#endif //_EDITOR
 
         std::function<std::unordered_map<uint32_t, std::string>(void)> m_namingCallback;
         std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> m_populateCallback;

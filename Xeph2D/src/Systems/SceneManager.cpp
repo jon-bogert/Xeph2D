@@ -5,6 +5,9 @@
 #include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/Debug.h"
 #include "Xeph2D/Utility.h"
+#ifdef _EDITOR
+#include "Xeph2D/Editor/Editor.h"
+#endif //_EDITOR
 
 #include "CustomSerialTypes.h"
 
@@ -72,6 +75,17 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
         activeObject->m_transform = CustomSerialTypes::TransformFromYAML(objInfo["transform"]);
         activeObject->m_isActive = objInfo["active"].as<bool>();
 
+#ifdef _EDITOR
+        Edit::Editor& editor = Edit::Editor::Get();
+        Edit::EditorGameObject edActiveObject = 
+            editor.m_sceneData.gameObjects.emplace_back();
+
+        edActiveObject.instID = activeObject->m_instID;
+        edActiveObject.name.ptr = &activeObject->m_name;
+        edActiveObject.transform.ptr = &activeObject->m_transform;
+        edActiveObject.isActive.ptr = &activeObject->m_isActive;
+#endif //_EDITOR
+
         if (objInfo["components"].IsDefined())
         {
             for (yaml_val& compInfo : objInfo["components"])
@@ -82,7 +96,17 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
                 activeComponent->m_enabled = compInfo["enabled"].as<bool>();
                 activeComponent->gameObject = Ref<GameObject>(activeObject);
                 Get().m_componentInfoBuffer = &compInfo;
+#ifdef _EDITOR
+                Edit::EditorComponent& edActiveComp =
+                    edActiveObject.components.emplace_back();
+                edActiveComp.typeID = typeID;
+                edActiveComp.enabled.ptr = &activeComponent->m_enabled;
+                Get().m_editorCompBuffer = &edActiveComp;
                 activeComponent->Serializables();
+                Get().m_editorCompBuffer = nullptr;
+#else
+                activeComponent->Serializables();
+#endif //_EDITOR
                 Get().m_componentInfoBuffer = nullptr;
             }
         }
@@ -128,6 +152,13 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
     default:
         Debug::LogErr("SceneLoader::__Deserialize -> Unimplemented Type");
         break;
+
+#ifdef _EDITOR
+        Edit::Field& edField = Get().m_editorCompBuffer->fields.emplace_back();
+        edField.name = field;
+        edField.type = type;
+        edField.ptr = ptr;
+#endif //_EDITOR
     }
 }
 
