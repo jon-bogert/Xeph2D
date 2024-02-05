@@ -18,6 +18,7 @@ namespace Xeph2D
 		friend class WindowManager;
 	public:
 		uint32_t InstID() { return m_instID; }
+		std::string GetName() { return m_name; }
 
 		bool IsActive() const { return m_isActive; };
 		void SetIsActive(const bool isActive);

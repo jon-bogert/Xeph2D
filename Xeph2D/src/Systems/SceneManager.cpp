@@ -60,6 +60,8 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
     YAML::Node contents;
     contents = YAML::LoadFile(filePath);
 
+    Get().m_activeScene->m_name = Get().m_manifest[buildIndex];
+
     //Load Assets
     for (yaml_val& texture : contents["textures"])
     {

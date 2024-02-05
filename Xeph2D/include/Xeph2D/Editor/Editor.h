@@ -5,6 +5,7 @@
 
 #include "Xeph2D/Editor/EditorSceneData.h"
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
+#include "Xeph2D/Editor/EditorWindows/Hierarchy.h"
 
 #include <SFML.hpp>
 
@@ -56,6 +57,7 @@ namespace Xeph2D::Edit
         using EditorWindows = std::vector<std::unique_ptr<EditorWindow>>;
         EditorWindows m_editorWindows;
         Viewport* m_viewportWindow;
+        Hierarchy* m_hierarchyWindow;
 
         std::unique_ptr<sf::Font> m_font = nullptr;
         std::unique_ptr<unsigned char[]> m_fontData = nullptr;

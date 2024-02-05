@@ -27,8 +27,6 @@ void Xeph2D::Edit::Editor::Initialize(
 	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), EDITOR_WINDOW_TITLE);
 	Get().m_handle = FindWindowA(NULL, EDITOR_WINDOW_TITLE);
 
-	WindowManager::Initialize();
-
 	ImGui::SFML::Init(*Get().m_window);
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -40,8 +38,8 @@ void Xeph2D::Edit::Editor::Initialize(
 		(Viewport*)Get().m_editorWindows.emplace_back(std::make_unique<Viewport>()).get();
 	//Get().m_inspector =
 	//	(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
-	//Get().m_hierarchyWindow =
-	//	(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
+	Get().m_hierarchyWindow =
+		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
 	//Get().m_scriptManager =
 	//	(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
 	//Get().m_scriptCreator =
@@ -100,8 +98,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 		{
 			if (ImGui::MenuItem("Hierarchy"))
 			{
-				Debug::Log("Unimplemented");
-				//Get().m_hierarchyWindow->Open();
+				Get().m_hierarchyWindow->Open();
 			}
 			if (ImGui::MenuItem("Inspector"))
 			{
