@@ -29,6 +29,7 @@ void Xeph2D::Runtime::Update()
 {
 	while (Editor::IsOpen())
 	{
+		InputSystem::Update();
 		Editor::Update();
 		SceneManager::ActiveScene().Update();
 		Editor::OnGUI();

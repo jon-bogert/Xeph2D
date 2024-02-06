@@ -40,6 +40,7 @@ namespace Xeph2D::Edit
 
         friend class Runtime;
         static void Initialize(std::function<std::unordered_map<uint32_t, std::string>(void)>& compNameCallback);
+        static void InputProc();
         static void Update();
         static void OnGUI();
         static void Draw();

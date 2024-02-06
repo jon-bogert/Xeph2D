@@ -98,6 +98,57 @@ void Xeph2D::Edit::Editor::Initialize(
 		window->Initialize();
 }
 
+void Xeph2D::Edit::Editor::InputProc()
+{
+	if (Get().m_viewportWindow->IsHovered())
+	{
+		if (InputSystem::GetMouseHold(Mouse::Button::Right) ||
+			(InputSystem::GetKeyHold(Key::LAlt) && InputSystem::GetMouseHold(Mouse::Button::Left)))
+		{
+			Vector2 delta{};
+			InputSystem::GetMouseDelta(&delta.x);
+			Get().m_viewportTransform.position.x -= WindowManager::PixelToUnit(delta).x;
+			Get().m_viewportTransform.position.y += WindowManager::PixelToUnit(delta).y;
+		}
+	}
+	if (Get().m_viewportWindow->IsFocused())
+	{
+		if (InputSystem::GetKeyDown(Key::W))
+		{
+			Get().m_transformGizmo->SetMode(TransformGizmo::Mode::Position);
+		}
+		if (InputSystem::GetKeyDown(Key::E))
+		{
+			Get().m_transformGizmo->SetMode(TransformGizmo::Mode::Rotation);
+		}
+		if (InputSystem::GetKeyDown(Key::R))
+		{
+			Get().m_transformGizmo->SetMode(TransformGizmo::Mode::Scale);
+		}
+	}
+	if (InputSystem::GetKeyHold(Key::Ctrl))
+	{
+		if (InputSystem::GetKeyHold(Key::Shift))
+		{
+			//if (InputSystem::GetKeyDown(Key::N))
+			//{
+			//	Get().m_scriptCreator->Open();
+			//}
+		}
+		else //============
+		{
+			if (InputSystem::GetKeyDown(Key::S))
+			{
+				Save();
+			}
+			if (InputSystem::GetKeyDown(Key::Q))
+			{
+				Close();
+			}
+		}
+	}
+}
+
 void Xeph2D::Edit::Editor::Update()
 {
 	sf::Event winEvent{};
@@ -111,6 +162,7 @@ void Xeph2D::Edit::Editor::Update()
 		}
 	}
 
+	Editor::InputProc();
 	Get().m_transformGizmo->UpdateMouse(Get().m_viewportWindow->GetMousePos());
 	ImGui::SFML::Update(*Get().m_window, Get().m_frameTimer.restart());
 }
