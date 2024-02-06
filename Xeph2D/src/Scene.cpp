@@ -5,6 +5,7 @@
 Xeph2D::Ref<Xeph2D::GameObject> Xeph2D::Scene::CreateObject()
 {
 	std::shared_ptr<GameObject>& obj = m_addBuffer.emplace_back(std::make_shared<GameObject>());
+	obj->m_instID = Math::Random::UInt32();
 	return Ref<GameObject>(obj);
 }
 

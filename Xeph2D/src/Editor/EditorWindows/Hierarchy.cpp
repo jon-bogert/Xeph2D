@@ -25,6 +25,7 @@ void Xeph2D::Edit::Hierarchy::OnGUI()
 	if (ImGui::Button("+##AddObject"))
 	{
 		Editor::AddObject();
+		Editor::Get().GetInspectorWindow()->SetActiveIndex(m_selectionIndex);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("-##RemObject"))
