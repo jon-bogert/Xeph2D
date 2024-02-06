@@ -6,6 +6,7 @@ void TestScript::Serializables()
 {
 	SERIALIZE_COLOR(m_colors[0]);
 	SERIALIZE_COLOR(m_colors[1]);
+	SERIALIZE_BOOL(m_isMain);
 }
 
 void TestScript::Start()
@@ -32,12 +33,23 @@ void TestScript::Update()
 	if (InputSystem::GetKeyDown(Key::One))
 		SceneManager::LoadScene(0);
 
-	if (InputSystem::GetKeyDown(Key::Space))
+	if (m_isMain && InputSystem::GetKeyDown(Key::Space))
 	{
-		m_colorIndex = (m_colorIndex + 1) % 2;
-		m_spriteRenderer->SetColor(m_colors[m_colorIndex]);
+		//m_colorIndex = (m_colorIndex + 1) % 2;
+		//m_spriteRenderer->SetColor(m_colors[m_colorIndex]);
 		//m_spriteRenderer->SetEnabled(!m_spriteRenderer->Enabled());
 		//gameObject->SetIsActive(!gameObject->IsActive());
+		Ref<GameObject> obj = SceneManager::ActiveScene().CreateObject();
+		obj->AddComponent<TestScript>();
+		Ref<SpriteRenderer> sr = obj->AddComponent<SpriteRenderer>();
+		sr->SetTexture("test2");
+
+		m_others.push_back(obj);
+	}
+	if (m_isMain && InputSystem::GetKeyDown(Key::Backspace) && m_others.size() > 0)
+	{
+		SceneManager::ActiveScene().DestroyObject(m_others.back());
+		m_others.pop_back();
 	}
 }
 

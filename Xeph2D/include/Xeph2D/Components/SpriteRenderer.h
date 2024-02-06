@@ -15,6 +15,9 @@ namespace Xeph2D
 		Color GetColor() const { return m_color; }
 		void SetColor(const Color& color);
 
+		std::string GetTextureKey() const { return m_textureKey; }
+		void SetTexture(const std::string& key);
+
 	private:
 		void OnEditorStart() override;
 		void OnEditorShutdown() override;

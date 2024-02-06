@@ -62,6 +62,22 @@ namespace Xeph2D
 			return SceneManager::ActiveScene().FindObjectOfType<Comp>();
 		}
 
+		template <typename Comp>
+		std::vector<Ref<Comp>> FindObjectsOfType()
+		{
+			return SceneManager::ActiveScene().FindObjectsOfType<Comp>();
+		}
+
+		template <typename Comp>
+		Ref<Comp> AddComponent()
+		{
+			static_assert(std::is_base_of_v<Component, Comp>, "AddComponent Type must be of type Component");
+			std::shared_ptr<Component> ptr = m_components.emplace_back(std::make_shared<Comp>());
+			return Ref<Comp>(ptr);
+		}
+
+		void DestroyComponent(const Ref<Component>& component);
+
 	private:
 		friend class Scene;
 		void Initialize(Ref<GameObject>& self);
@@ -82,18 +98,26 @@ namespace Xeph2D
 		friend class SceneManager;
 		void Shutdown();
 
+		void CheckComponentBuffers();
+
 		std::string m_name = "GameObject";
 		bool m_isActive = true;
 
 		friend class SceneManager;
 		uint32_t m_instID = NULL;
 
+		bool m_initialized = false;
+
 		using Components = std::vector<std::shared_ptr<Component>>;
 		Components m_components;
+		Components m_addBuffer;
+		std::vector<Ref<Component>> m_destroyBuffer;
 
 		//Ref<GameObject> m_parent;
 
 		Transform m_transform;
+
+
 		
 	};
 }

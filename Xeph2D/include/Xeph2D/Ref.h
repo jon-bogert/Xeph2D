@@ -20,7 +20,7 @@ namespace Xeph2D
 			static_assert(std::is_base_of_v<Component, ComponentType> || std::is_base_of_v<GameObject, ComponentType>, "Ref Component Type must inherit from Component or be a GameObject");
 			m_ptr.reset();
 		}
-		constexpr Ref(std::shared_ptr<ComponentType>& ptr)
+		constexpr Ref(std::shared_ptr<GameObject>& ptr)
 		{
 			static_assert(std::is_base_of_v<Component, ComponentType> || std::is_base_of_v<GameObject, ComponentType>, "Ref Component Type must inherit from Component or be a GameObject");
 			m_ptr = ptr;

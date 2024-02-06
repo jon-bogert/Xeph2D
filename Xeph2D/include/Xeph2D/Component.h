@@ -80,7 +80,7 @@ namespace Xeph2D
 		template <typename ComponentType>
 		friend class Ref; // and GameObject
 
-		bool m_enabled;
+		bool m_enabled = true;
 	};
 }
 

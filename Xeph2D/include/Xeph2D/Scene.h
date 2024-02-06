@@ -49,6 +49,9 @@ namespace Xeph2D
 			return result;
 		}
 
+		Ref<GameObject> CreateObject();
+		void DestroyObject(const Ref<GameObject>& object);
+
 	private:
 		friend class Runtime;
 		void Update();
@@ -57,13 +60,18 @@ namespace Xeph2D
 		void Initialize();
 		void Shutdown();
 
+		void CheckObjectBuffers();
+
 #ifdef _EDITOR
 		friend class Edit::Hierarchy;
 #endif //EDITOR
 		using GameObjects = std::vector<std::shared_ptr<GameObject>>;
 		GameObjects m_gameObjects;
+		GameObjects m_addBuffer;
+		std::vector<Ref<GameObject>> m_destroyBuffer;
 
 		std::string m_name = "Untitled";
+		bool m_initialized = false;
 	};
 }
 

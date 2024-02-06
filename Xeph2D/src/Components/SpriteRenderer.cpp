@@ -13,6 +13,19 @@ void Xeph2D::SpriteRenderer::SetColor(const Color& color)
 	m_sprite.setColor(color);
 }
 
+void Xeph2D::SpriteRenderer::SetTexture(const std::string& key)
+{
+	sf::Texture* texture = AssetManager::GetTexture(key);
+	if (texture == nullptr)
+	{
+		Debug::LogErr("SpriteRenderer -> Could not find texture with key: %s", key.c_str());
+		return;
+	}
+	m_textureKey = key;
+	m_sprite.setTexture(*texture);
+	m_sprite.setOrigin(Vector2(texture->getSize()) * 0.5f);
+}
+
 void Xeph2D::SpriteRenderer::OnEditorStart()
 {
 	Awake();
@@ -32,10 +45,7 @@ void Xeph2D::SpriteRenderer::Serializables()
 void Xeph2D::SpriteRenderer::Awake()
 {
 	RenderStack::SubscribeDrawCall(this, std::bind(&SpriteRenderer::Draw, this));
-
-	sf::Texture* texture = AssetManager::GetTexture(m_textureKey);
-	m_sprite.setTexture(*texture);
-	m_sprite.setOrigin(Vector2(texture->getSize()) * 0.5f);
+	SetTexture(m_textureKey);
 }
 
 void Xeph2D::SpriteRenderer::OnDestroy()
