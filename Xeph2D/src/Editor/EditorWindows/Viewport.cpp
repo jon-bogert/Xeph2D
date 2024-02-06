@@ -28,6 +28,42 @@ void Xeph2D::Edit::Viewport::OnGUI()
 	}
 }
 
+void Xeph2D::Edit::Viewport::DebugUI()
+{
+	//TODO Guard against min max of longlong
+	Vector2 x0_min = Vector2(WindowManager::WorldWindowMinimum().x, 0);
+	Vector2 x0_max = Vector2(WindowManager::WorldWindowMaximum().x, 0);
+	Vector2 y0_min = Vector2(0, WindowManager::WorldWindowMinimum().y);
+	Vector2 y0_max = Vector2(0, WindowManager::WorldWindowMaximum().y);
+
+	Color worldOriginColor = { 0.75, 0.75, 0.75, 1.f };
+	Color worldUnitColor = { 0.2, 0.2, 0.2, 1.f };
+
+	Debug::DrawLine(x0_min, x0_max, worldOriginColor);
+	Debug::DrawLine(y0_min, y0_max, worldOriginColor);
+
+	//X-Lines
+	for (long long y = (long long)WindowManager::WorldWindowMinimum().y;
+		y < WindowManager::WorldWindowMaximum().y; ++y)
+	{
+		if (y == 0)
+			continue;
+		Vector2 min = Vector2(WindowManager::WorldWindowMinimum().x, y);
+		Vector2 max = Vector2(WindowManager::WorldWindowMaximum().x, y);
+		Debug::DrawLine(min, max, worldUnitColor);
+	}
+	//Y-Lines
+	for (long long x = (long long)WindowManager::WorldWindowMinimum().x;
+		x < WindowManager::WorldWindowMaximum().x; ++x)
+	{
+		if (x == 0)
+			continue;
+		Vector2 min = Vector2(x, WindowManager::WorldWindowMinimum().y);
+		Vector2 max = Vector2(x, WindowManager::WorldWindowMaximum().y);
+		Debug::DrawLine(min, max, worldUnitColor);
+	}
+}
+
 Vector2 Xeph2D::Edit::Viewport::GetMousePos() const
 {
 	return m_mouseInViewport;

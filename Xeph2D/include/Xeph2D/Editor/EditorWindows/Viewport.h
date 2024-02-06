@@ -14,6 +14,8 @@ namespace Xeph2D::Edit
 		void Initialize() override;
 		void OnGUI() override;
 
+		void DebugUI();
+
 		Vector2 GetMousePos() const;
 
 	private:

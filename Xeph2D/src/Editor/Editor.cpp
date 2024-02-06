@@ -92,6 +92,8 @@ void Xeph2D::Edit::Editor::Initialize(
 	//Get().m_scriptCreator =
 	//	(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
 
+	Get().m_transformGizmo = std::make_unique<TransformGizmo>();
+
 	for (auto& window : Get().m_editorWindows)
 		window->Initialize();
 }
@@ -109,7 +111,7 @@ void Xeph2D::Edit::Editor::Update()
 		}
 	}
 
-	//Get().m_transformGizmo.UpdateMouse(Get().m_viewportWindow->GetMousePos());
+	Get().m_transformGizmo->UpdateMouse(Get().m_viewportWindow->GetMousePos());
 	ImGui::SFML::Update(*Get().m_window, Get().m_frameTimer.restart());
 }
 
@@ -211,8 +213,12 @@ void Xeph2D::Edit::Editor::OnGUI()
 
 void Xeph2D::Edit::Editor::Draw()
 {
+	Get().m_viewportWindow->DebugUI();
+	Get().m_transformGizmo->Draw();
+
 	WindowManager::Begin();
 	RenderStack::Draw();
+	Debug::DrawToWindow();
 	WindowManager::End();
 
 	Get().m_window->clear({ 5, 5, 5, 255 });

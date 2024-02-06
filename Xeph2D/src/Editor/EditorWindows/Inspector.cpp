@@ -51,6 +51,12 @@ void Xeph2D::Edit::Inspector::OnGUI()
 void Xeph2D::Edit::Inspector::SetActiveIndex(int index)
 {
 	m_activeIndex = index;
+	if (index >= 0)
+	{
+		Editor::Get().GetTransformGizmo()->SetCurrentObject(&Editor::Get().m_sceneData.gameObjects[m_activeIndex]);
+		return;
+	}
+	Editor::Get().GetTransformGizmo()->SetCurrentObject(nullptr);
 }
 
 void Xeph2D::Edit::Inspector::ShowData(Field& field, uint32_t compID, bool showName, SerializableType type)

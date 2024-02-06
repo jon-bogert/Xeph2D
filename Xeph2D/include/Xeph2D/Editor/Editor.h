@@ -7,6 +7,7 @@
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
 #include "Xeph2D/Editor/EditorWindows/Hierarchy.h"
 #include "Xeph2D/Editor/EditorWindows/Inspector.h"
+#include "Xeph2D/Editor/TransformGizmo.h"
 
 #include <SFML.hpp>
 
@@ -70,8 +71,12 @@ namespace Xeph2D::Edit
         Hierarchy* m_hierarchyWindow;
         Inspector* m_inspectorWindow;
 
+        std::unique_ptr<TransformGizmo> m_transformGizmo;
+
         friend class Hierarchy;
         Inspector* GetInspectorWindow() { return m_inspectorWindow; }
+        TransformGizmo* GetTransformGizmo() { return m_transformGizmo.get(); }
+
 
         std::unique_ptr<sf::Font> m_font = nullptr;
         std::unique_ptr<unsigned char[]> m_fontData = nullptr;
