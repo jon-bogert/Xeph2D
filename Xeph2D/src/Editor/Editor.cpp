@@ -22,6 +22,11 @@ bool Xeph2D::Edit::Editor::IsOpen()
 
 void Xeph2D::Edit::Editor::Close()
 {
+	if (!Get().m_isSaved)
+	{
+		Get().m_showSaveWindow = true;
+		return;
+	}
 	Get().m_window->close();
 }
 
@@ -229,38 +234,38 @@ void Xeph2D::Edit::Editor::OnGUI()
 		window->OnGUI();
 		ImGui::End();
 	}
-	//if (Get().m_showSaveWindow)
-	//{
-	//	ImGui::Begin("Save Your Progress?", &Get().m_showSaveWindow,
-	//		ImGuiWindowFlags_AlwaysAutoResize |
-	//		ImGuiWindowFlags_NoResize |
-	//		ImGuiWindowFlags_NoDocking |
-	//		ImGuiWindowFlags_NoCollapse |
-	//		ImGuiWindowFlags_NoMove);
-	//	ImGui::SetWindowPos({ (ImGui::GetMainViewport()->Size.x - ImGui::GetWindowWidth()) * 0.5f, (ImGui::GetMainViewport()->Size.y - ImGui::GetWindowHeight()) * 0.5f });
-	//	ImGui::Text("Would you like to save the Active Scene?");
-	//	ImGui::NewLine();
-	//	if (ImGui::Button("Save"))
-	//	{
-	//		Get().m_hasSaved = true;
-	//		Serializer::SaveToFile(SceneManager::GetCurrentName());
-	//		Close();
-	//		Get().m_showSaveWindow = false;
-	//	}
-	//	ImGui::SameLine();
-	//	if (ImGui::Button("Don't Save"))
-	//	{
-	//		Get().m_hasSaved = true;
-	//		Close();
-	//		Get().m_showSaveWindow = false;
-	//	}
-	//	ImGui::SameLine();
-	//	if (ImGui::Button("Cancel"))
-	//	{
-	//		Get().m_showSaveWindow = false;
-	//	}
-	//	ImGui::End();
-	//}
+	if (Get().m_showSaveWindow)
+	{
+		ImGui::Begin("Save Your Progress?", &Get().m_showSaveWindow,
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoMove);
+		ImGui::SetWindowPos({ (ImGui::GetMainViewport()->Size.x - ImGui::GetWindowWidth()) * 0.5f, (ImGui::GetMainViewport()->Size.y - ImGui::GetWindowHeight()) * 0.5f });
+		ImGui::Text("Would you like to save the Active Scene?");
+		ImGui::NewLine();
+		if (ImGui::Button("Save"))
+		{
+			Get().m_isSaved = true;
+			Save();
+			Close();
+			Get().m_showSaveWindow = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Don't Save"))
+		{
+			Get().m_isSaved = true;
+			Close();
+			Get().m_showSaveWindow = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			Get().m_showSaveWindow = false;
+		}
+		ImGui::End();
+	}
 }
 
 void Xeph2D::Edit::Editor::Draw()

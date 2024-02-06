@@ -46,6 +46,8 @@ namespace Xeph2D::Edit
         static void Draw();
         static void Terminate();
 
+        bool m_showSaveWindow = false;
+
         friend class WindowManager;
         Transform* GetViewportTransform() { return &m_viewportTransform; }
 
