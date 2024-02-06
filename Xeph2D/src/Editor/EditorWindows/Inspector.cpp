@@ -93,21 +93,21 @@ void Xeph2D::Edit::Inspector::ShowData(Field& field, uint32_t compID, bool showN
 		}
 		break;
 	case SerializableType::String:
-		strcpy(strBuff, static_cast<std::string*>(field.ptr)->c_str());
+		strcpy(strBuff, field.As<std::string>().c_str());
 		if (ImGui::InputText(display.c_str(), strBuff, MAX_PATH - 1))
 		{
-			*static_cast<std::string*>(field.ptr) = strBuff;
+			field.As<std::string>() = strBuff;
 			Editor::SetIsSaved(false);
 		}
 		break;
 	case SerializableType::Vector2:
-		if (ImGui::DragFloat2(display.c_str(), &((static_cast<Vector2*>(field.ptr))->x), 0.01f))
+		if (ImGui::DragFloat2(display.c_str(), &(field.As<Vector2>().x), 0.01f))
 		{
 			Editor::SetIsSaved(false);
 		}
 		break;
 	case SerializableType::Color:
-		if (ImGui::ColorEdit4(display.c_str(), &((static_cast<Color*>(field.ptr))->r), 0.01f))
+		if (ImGui::ColorEdit4(display.c_str(), &(field.As<Color>().r), 0.01f))
 		{
 			Editor::SetIsSaved(false);
 		}

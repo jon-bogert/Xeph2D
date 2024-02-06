@@ -47,6 +47,8 @@ namespace Xeph2D::Edit
         friend class WindowManager;
         Transform* GetViewportTransform() { return &m_viewportTransform; }
 
+        void YAMLSaver(YAML::Node& node, const Field& field);
+
         std::unique_ptr<sf::RenderWindow> m_window;
         HWND m_handle = nullptr;
 

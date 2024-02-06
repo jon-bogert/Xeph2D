@@ -1,6 +1,12 @@
 #ifdef _EDITOR
 #include "Xeph2D/Editor/Editor.h"
 
+#include "Xeph2D/Systems/AssetManager.h"
+#include "Xeph2D/Systems/SceneManager.h"
+#include "Xeph2D/Scene.h"
+
+#include "../Systems/CustomSerialTypes.h"
+
 #include "../res/BasierSquare_Medium_otf.h"
 #include "../res/JetBrainsMono_ttf.h"
 
@@ -21,7 +27,42 @@ void Xeph2D::Edit::Editor::Close()
 
 void Xeph2D::Edit::Editor::Save()
 {
-	Debug::Log("Unimplemented");
+	YAML::Node sceneData;
+	//TEXTURES
+	for (auto& tex : AssetManager::Get().m_textureManifest)
+	{
+		sceneData["textures"].push_back(tex.first);
+	}
+
+	//OBJECTS
+	for (EditorGameObject& currObject : Get().m_sceneData.gameObjects)
+	{
+		YAML::Node obj;
+		obj["instID"] = Utility::ToHex32String(currObject.instID);
+		obj["name"] = currObject.name.As<std::string>();
+		CustomSerialTypes::TransformToYAML(obj["transform"], currObject.transform.As<Transform>());
+		obj["active"] = currObject.isActive.As<bool>();
+		for (EditorComponent currComp : currObject.components)
+		{
+			YAML::Node comp;
+			comp["typeID"] = Utility::ToHex32String(currComp.typeID);
+			comp["enabled"] = currComp.enabled.As<bool>();
+			for (Field& field : currComp.fields)
+			{
+				Get().YAMLSaver(comp, field);
+			}
+			obj["components"].push_back(comp);
+		}
+		sceneData["objects"].push_back(obj);
+	}
+
+	std::string path = "Assets/Scenes/" + SceneManager::ActiveScene().GetName();
+	std::ofstream file(path);
+
+	//TODO - if file doesn't exist, open dialogue save there 
+	file << sceneData;
+	file.close();
+
 	SetIsSaved(true);
 }
 
@@ -79,9 +120,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	{
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
-			Debug::Log("Unimplemented");
-			//Serializer::SaveToFile(SceneManager::GetCurrentName());
-			//Get().m_hasSaved = true;
+			Save();
 		}
 		if (ImGui::MenuItem("Close", "Ctrl+Q"))
 		{
@@ -184,6 +223,39 @@ void Xeph2D::Edit::Editor::Draw()
 void Xeph2D::Edit::Editor::Terminate()
 {
 	ImGui::SFML::Shutdown();
+}
+
+void Xeph2D::Edit::Editor::YAMLSaver(YAML::Node& node, const Field& field)
+{
+	switch (field.type)
+	{
+	case SerializableType::Int:
+		node[field.name] = field.As<int>();
+		break;
+	case SerializableType::Float:
+		node[field.name] = field.As<float>();
+		break;
+	case SerializableType::Bool:
+		node[field.name] = field.As<bool>();
+		break;
+	case SerializableType::Char:
+		node[field.name] = field.As<char>();
+		break;
+	case SerializableType::String:
+		node[field.name] = field.As<std::string>();
+		break;
+	case SerializableType::Vector2:
+		CustomSerialTypes::Vector2ToYAML(node, field.As<Vector2>());
+		break;
+	case SerializableType::Color:
+		CustomSerialTypes::ColorToYAML(node, field.As<Color>());
+		break;
+	case SerializableType::Transform:
+		CustomSerialTypes::TransformToYAML(node, field.As<Transform>());
+		break;
+	default:
+		Debug::LogErr("Editor::YAMLSaver -> Unimplemented Type");
+	}
 }
 
 void Xeph2D::Edit::Editor::SetUIStyle()

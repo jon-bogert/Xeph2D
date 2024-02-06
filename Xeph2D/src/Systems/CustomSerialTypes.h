@@ -36,4 +36,32 @@ namespace Xeph2D::CustomSerialTypes
 		result.a = node["a"].as<float>();
 		return result;
 	}
+
+	 // ===== SAVE =====
+
+	template<typename NODE>
+	void TransformToYAML(NODE& node, const Transform& transform)
+	{
+		node["position"]["x"] = transform.position.x;
+		node["position"]["y"] = transform.position.y;
+		node["rotation"] = transform.rotation.GetDeg();
+		node["scale"]["x"] = transform.scale.x;
+		node["scale"]["y"] = transform.scale.y;
+	}
+
+	template<typename NODE>
+	void Vector2ToYAML(NODE& node, const Vector2& vector2)
+	{
+		node["x"] = vector2.x;
+		node["y"] = vector2.y;
+	}
+
+	template<typename NODE>
+	void ColorToYAML(NODE& node, const Color& color)
+	{
+		node["r"] = color.r;
+		node["g"] = color.g;
+		node["b"] = color.b;
+		node["a"] = color.a;
+	}
 }

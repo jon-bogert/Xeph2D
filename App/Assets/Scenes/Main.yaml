@@ -8,7 +8,7 @@ objects:
         x: 0
         y: 0
       rotation: 0
-      scale: 
+      scale:
         x: 1
         y: 1
     active: true
@@ -16,13 +16,13 @@ objects:
       - typeID: 0x00000001
         enabled: true
   - instID: 0x00000002
-    name: SprRender
+    name: My Object
     transform:
       position:
         x: 1
         y: 1
       rotation: 0
-      scale: 
+      scale:
         x: 1
         y: 1
     active: true

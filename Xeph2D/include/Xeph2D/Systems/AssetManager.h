@@ -7,6 +7,12 @@
 
 namespace Xeph2D
 {
+#ifdef _EDITOR
+	namespace Edit
+	{
+		class Editor;
+	}
+#endif //_EDITOR
 	class AssetManager
 	{
 	public:
@@ -28,6 +34,9 @@ namespace Xeph2D
 		using Manifest = std::unordered_map<std::string, std::string>;
 
 		friend class SceneManager;
+#ifdef _EDITOR
+		friend class Edit::Editor;
+#endif //_EDITOR
 		void LoadTexture(const std::string& key);
 		void ClearTextures();
 

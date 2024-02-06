@@ -24,6 +24,16 @@ namespace Xeph2D::Edit
 		std::string name;
 		SerializableType type;
 		void* ptr;
+		template<typename T>
+		T& As()
+		{
+			return *static_cast<T*>(ptr);
+		}
+		template<typename T>
+		const T& As() const
+		{
+			return *static_cast<const T*>(ptr);
+		}
 	};
 
 	struct EditorComponent
