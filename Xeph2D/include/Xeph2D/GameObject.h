@@ -2,6 +2,8 @@
 #define __XEPH2D_GAMEOBJECT_H__
 
 #include "Xeph2D/Structs.h"
+#include "Xeph2D/Systems/SceneManager.h"
+#include "Xeph2D/Scene.h"
 
 #include <memory>
 #include <string>
@@ -38,6 +40,27 @@ namespace Xeph2D
 		const Vector2& LocalPosition() const { return m_transform.position; }
 		const Rotator& LocalRotation() const { return m_transform.rotation; }
 		const Vector2& LocalScale() const { return m_transform.scale; }
+
+		template <typename Comp>
+		Ref<Comp> GetComponent()
+		{
+			static_assert(std::is_base_of_v<Component, Comp>, "GetComponent Type must be of type Component");
+			Comp tmp{};
+			for (auto& sp_comp : m_components)
+			{
+				if (sp_comp->TypeID() == tmp.TypeID())
+				{
+					return Ref<Comp>(sp_comp);
+				}
+			}
+			return Ref<Comp>();
+		}
+
+		template <typename Comp>
+		Ref<Comp> FindObjectOfType()
+		{
+			return SceneManager::ActiveScene().FindObjectOfType<Comp>();
+		}
 
 	private:
 		friend class Scene;

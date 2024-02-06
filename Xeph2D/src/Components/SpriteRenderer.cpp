@@ -7,6 +7,12 @@
 
 #include <functional>
 
+void Xeph2D::SpriteRenderer::SetColor(const Color& color)
+{
+	m_color = color;
+	m_sprite.setColor(color);
+}
+
 void Xeph2D::SpriteRenderer::OnEditorStart()
 {
 	Awake();
@@ -20,6 +26,7 @@ void Xeph2D::SpriteRenderer::OnEditorShutdown()
 void Xeph2D::SpriteRenderer::Serializables()
 {
 	SERIALIZE_STRING(m_textureKey);
+	SERIALIZE_COLOR(m_color);
 }
 
 void Xeph2D::SpriteRenderer::Awake()
@@ -27,8 +34,8 @@ void Xeph2D::SpriteRenderer::Awake()
 	RenderStack::SubscribeDrawCall(this, std::bind(&SpriteRenderer::Draw, this));
 
 	sf::Texture* texture = AssetManager::GetTexture(m_textureKey);
-	m_tempSprite.setTexture(*texture);
-	m_tempSprite.setOrigin(Vector2(texture->getSize()) * 0.5f);
+	m_sprite.setTexture(*texture);
+	m_sprite.setOrigin(Vector2(texture->getSize()) * 0.5f);
 }
 
 void Xeph2D::SpriteRenderer::OnDestroy()
@@ -38,5 +45,9 @@ void Xeph2D::SpriteRenderer::OnDestroy()
 
 void Xeph2D::SpriteRenderer::Draw()
 {
-	RenderStack::AddDrawable(gameObject, &m_tempSprite, &m_tempSprite, m_order);
+#ifdef _EDITOR
+	SetColor(m_color);
+#endif //_EDITOR
+	if (IsActiveAndEnabled())
+		RenderStack::AddDrawable(gameObject, &m_sprite, &m_sprite, m_order);
 }

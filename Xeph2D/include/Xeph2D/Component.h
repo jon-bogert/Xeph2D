@@ -5,9 +5,10 @@
 #include "Xeph2D/Ref.h"
 #include "Xeph2D/GameObject.h"
 
-#define XEPH2D_REG_COMP(id)\
+#define XEPH2D_REG_COMP(id)public:\
 inline static uint32_t typeID = id;\
 uint32_t TypeID() override { return typeID; }\
+private:
 
 namespace Xeph2D
 {
@@ -26,6 +27,33 @@ namespace Xeph2D
 		Rotator& LocalRotation() { return gameObject->LocalRotation(); }
 		Vector2& LocalScale() { return gameObject->LocalScale(); }
 
+		bool Enabled() const { return m_enabled; }
+		void SetEnabled(const bool enabled)
+		{
+			m_enabled = enabled;
+			if (m_enabled)
+				OnEnable();
+			else
+				OnDisable();
+		}
+
+		bool IsActiveAndEnabled() const
+		{
+			return gameObject->IsActive() && m_enabled;
+		}
+
+		template <typename Comp>
+		Ref<Comp> GetComponent()
+		{
+			return gameObject->GetComponent<Comp>();
+		}
+
+		template <typename Comp>
+		Ref<Comp> FindObjectOfType()
+		{
+			return SceneManager::ActiveScene().FindObjectOfType<Comp>();
+		}
+
 	protected:
 		friend class GameObject;
 		virtual void Serializables() {}
@@ -43,17 +71,6 @@ namespace Xeph2D
 		virtual void OnEditorStart() {}
 		virtual void OnEditorUpdate() {}
 		virtual void OnEditorShutdown() {}
-
-
-		bool Enabled() const { return m_enabled; }
-		void SetEnabled(const bool enabled)
-		{
-			m_enabled = enabled;
-			if (m_enabled)
-				OnEnable();
-			else
-				OnDisable();
-		}
 
 		Ref<GameObject> gameObject;
 

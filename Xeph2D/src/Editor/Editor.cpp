@@ -308,13 +308,13 @@ void Xeph2D::Edit::Editor::YAMLSaver(YAML::Node& node, const Field& field)
 		node[field.name] = field.As<std::string>();
 		break;
 	case SerializableType::Vector2:
-		CustomSerialTypes::Vector2ToYAML(node, field.As<Vector2>());
+		CustomSerialTypes::Vector2ToYAML(node[field.name], field.As<Vector2>());
 		break;
 	case SerializableType::Color:
-		CustomSerialTypes::ColorToYAML(node, field.As<Color>());
+		CustomSerialTypes::ColorToYAML(node[field.name], field.As<Color>());
 		break;
 	case SerializableType::Transform:
-		CustomSerialTypes::TransformToYAML(node, field.As<Transform>());
+		CustomSerialTypes::TransformToYAML(node[field.name], field.As<Transform>());
 		break;
 	default:
 		Debug::LogErr("Editor::YAMLSaver -> Unimplemented Type");

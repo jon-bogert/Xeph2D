@@ -12,7 +12,8 @@ void Xeph2D::Scene::Update()
 #else
 	for (auto& goPtr : m_gameObjects)
 	{
-		goPtr->Update();
+		if (goPtr->IsActive())
+			goPtr->Update();
 	}
 #endif //_EDITOR
 }

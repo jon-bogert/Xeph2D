@@ -30,5 +30,20 @@ objects:
       - typeID: 0x00000002
         enabled: true
         m_textureKey: test2
+        m_color:
+          r: 1
+          g: 1
+          b: 1
+          a: 1
       - typeID: 0xa45ff78b
         enabled: true
+        m_colors[0]:
+          r: 1
+          g: 1
+          b: 1
+          a: 1
+        m_colors[1]:
+          r: 1
+          g: 0
+          b: 0
+          a: 1

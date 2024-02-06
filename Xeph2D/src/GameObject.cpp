@@ -56,13 +56,19 @@ void Xeph2D::GameObject::Start()
 void Xeph2D::GameObject::Update()
 {
 	for (auto& compPtr : m_components)
-		compPtr->Update();
+	{
+		if (compPtr->Enabled())
+			compPtr->Update();
+	}
 }
 
 void Xeph2D::GameObject::LateUpdate()
 {
 	for (auto& compPtr : m_components)
-		compPtr->LateUpdate();
+	{
+		if (compPtr->Enabled())
+			compPtr->LateUpdate();
+	}
 }
 
 void Xeph2D::GameObject::OnDestroy()

@@ -8,7 +8,14 @@ namespace Xeph2D
 	class SpriteRenderer : public Component
 	{
 		XEPH2D_REG_COMP(0x00000002);
+	public:
+		int GetOrder() const { return m_order; }
+		void SetOrder(const int order) { m_order = order; }
 
+		Color GetColor() const { return m_color; }
+		void SetColor(const Color& color);
+
+	private:
 		void OnEditorStart() override;
 		void OnEditorShutdown() override;
 
@@ -18,10 +25,11 @@ namespace Xeph2D
 
 		void Draw();
 
-		sf::Sprite m_tempSprite;
+		sf::Sprite m_sprite;
 
 		std::string m_textureKey = "";
 		int m_order = 0;
+		Color m_color = Color::White;
 	};
 }
 

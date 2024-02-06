@@ -25,6 +25,11 @@ namespace Xeph2D
 			static_assert(std::is_base_of_v<Component, ComponentType> || std::is_base_of_v<GameObject, ComponentType>, "Ref Component Type must inherit from Component or be a GameObject");
 			m_ptr = ptr;
 		}
+		constexpr Ref(std::shared_ptr<Component>& ptr)
+		{
+			static_assert(std::is_base_of_v<Component, ComponentType> || std::is_base_of_v<GameObject, ComponentType>, "Ref Component Type must inherit from Component or be a GameObject");
+			m_ptr = std::dynamic_pointer_cast<ComponentType>(ptr);
+		}
 
 		ComponentType& operator*(){ return *m_ptr.lock(); }
 		ComponentType& operator*() const { return *m_ptr.lock(); }
@@ -38,7 +43,7 @@ namespace Xeph2D
 				Debug::LogWarn("Ref -> cannot perform comparison with raw pointer");
 				return false;
 			}
-			return !m_ptr.expired();
+			return m_ptr.expired();
 		}
 
 		bool operator==(Ref<ComponentType>& other) const
@@ -53,7 +58,7 @@ namespace Xeph2D
 				Debug::LogWarn("Ref -> cannot perform comparison with raw pointer");
 				return true;
 			}
-			return m_ptr.expired();
+			return !m_ptr.expired();
 		}
 
 		bool operator!=(Ref<ComponentType>& other) const
