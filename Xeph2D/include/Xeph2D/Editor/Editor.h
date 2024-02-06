@@ -46,6 +46,11 @@ namespace Xeph2D::Edit
         static void Draw();
         static void Terminate();
 
+        static void AddObject();
+        static void RemoveObject(int index);
+        static bool ObjectOrderUp(int index);
+        static bool ObjectOrderDown(int index);
+
         bool m_showSaveWindow = false;
 
         friend class WindowManager;

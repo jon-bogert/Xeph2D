@@ -31,8 +31,8 @@ void Xeph2D::Scene::Update()
 		if (goPtr->IsActive())
 			goPtr->LateUpdate();
 	}
-	CheckObjectBuffers();
 #endif //_EDITOR
+	CheckObjectBuffers();
 }
 
 void Xeph2D::Scene::Initialize()

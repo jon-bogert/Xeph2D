@@ -288,6 +288,55 @@ void Xeph2D::Edit::Editor::Terminate()
 	ImGui::SFML::Shutdown();
 }
 
+void Xeph2D::Edit::Editor::AddObject()
+{
+	SetIsSaved(false);
+	GameObject* obj = SceneManager::ActiveScene().CreateObject().m_ptr.lock().get();
+	EditorGameObject& edObj = Get().m_sceneData.gameObjects.emplace_back();
+	edObj.name.name = "Name";
+	edObj.name.type = SerializableType::String;
+	edObj.name.ptr = &obj->m_name;
+	edObj.isActive.name = "Active";
+	edObj.isActive.type = SerializableType::Bool;
+	edObj.isActive.ptr = &obj->m_isActive;
+	edObj.transform.name = "Transform";
+	edObj.transform.type = SerializableType::Transform;
+	edObj.transform.ptr = &obj->m_transform;
+	edObj.instID = obj->InstID();
+}
+
+void Xeph2D::Edit::Editor::RemoveObject(int index)
+{
+	SetIsSaved(false);
+	std::shared_ptr<GameObject>& obj = SceneManager::ActiveScene().m_gameObjects[index];
+	SceneManager::ActiveScene().DestroyObject(Ref<GameObject>(obj));
+	Get().m_sceneData.gameObjects.erase(Get().m_sceneData.gameObjects.begin() + index);
+}
+
+bool Xeph2D::Edit::Editor::ObjectOrderUp(int index)
+{
+	if (index <= 0)
+		return false;
+
+	SetIsSaved(false);
+	Scene& s = SceneManager::ActiveScene();
+	std::swap(s.m_gameObjects[index], s.m_gameObjects[index - 1]);
+	std::swap(Get().m_sceneData.gameObjects[index], Get().m_sceneData.gameObjects[index - 1]);
+	return true;
+}
+
+bool Xeph2D::Edit::Editor::ObjectOrderDown(int index)
+{
+	Scene& s = SceneManager::ActiveScene();
+	if (index >= s.m_gameObjects.size() - 1)
+		return false;
+
+	SetIsSaved(false);
+	std::swap(s.m_gameObjects[index], s.m_gameObjects.begin()[index + 1]);
+	std::swap(Get().m_sceneData.gameObjects[index], Get().m_sceneData.gameObjects[index + 1]);
+	return true;
+}
+
 void Xeph2D::Edit::Editor::YAMLSaver(YAML::Node& node, const Field& field)
 {
 	switch (field.type)

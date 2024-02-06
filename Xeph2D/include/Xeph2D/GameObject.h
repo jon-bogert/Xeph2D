@@ -11,12 +11,21 @@
 
 namespace Xeph2D
 {
+#ifdef _EDITOR
+	namespace Edit
+	{
+		class Editor;
+	}
+#endif //_EDITOR
 	template <typename ComponentType>
 	class Ref;
 
 	class Component;
 	class GameObject final
 	{
+#ifdef _EDITOR
+		friend class Edit::Editor;
+#endif //_EDITOR
 		friend class WindowManager;
 	public:
 		uint32_t InstID() { return m_instID; }

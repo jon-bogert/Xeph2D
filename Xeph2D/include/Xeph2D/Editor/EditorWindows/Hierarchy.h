@@ -15,6 +15,7 @@ namespace Xeph2D::Edit
 		void OnGUI() override;
 
 	private:
+		friend class Editor;
 		void ConstructNameList();
 
 		int m_selectionIndex = -1;

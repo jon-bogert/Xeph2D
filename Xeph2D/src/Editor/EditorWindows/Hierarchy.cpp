@@ -22,6 +22,35 @@ void Xeph2D::Edit::Hierarchy::OnGUI()
 	{
 		Editor::Get().GetInspectorWindow()->SetActiveIndex(m_selectionIndex);
 	}
+	if (ImGui::Button("+##AddObject"))
+	{
+		Editor::AddObject();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("-##RemObject"))
+	{
+		if (m_selectionIndex < 0)
+			return;
+		Editor::RemoveObject(m_selectionIndex);
+		m_selectionIndex = -1;
+		Editor::Get().GetInspectorWindow()->SetActiveIndex(m_selectionIndex);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("^##UpObject"))
+	{
+		if (Editor::ObjectOrderUp(m_selectionIndex))
+		{
+			Editor::Get().GetInspectorWindow()->SetActiveIndex(--m_selectionIndex);
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("v##DownObject"))
+	{
+		if (Editor::ObjectOrderDown(m_selectionIndex))
+		{
+			Editor::Get().GetInspectorWindow()->SetActiveIndex(++m_selectionIndex);
+		}
+	}
 }
 
 void Xeph2D::Edit::Hierarchy::ConstructNameList()

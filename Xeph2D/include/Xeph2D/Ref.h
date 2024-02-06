@@ -10,10 +10,19 @@ namespace Xeph2D
 {
 	class Component;
 	class GameObject;
+#ifdef _EDITOR
+	namespace Edit
+	{
+		class Editor;
+	}
+#endif //_EDITOR
 
 	template <typename ComponentType>
 	class Ref final
 	{
+#ifdef _EDITOR
+		friend class Edit::Editor;
+#endif //_EDITOR
 	public:
 		Ref()
 		{

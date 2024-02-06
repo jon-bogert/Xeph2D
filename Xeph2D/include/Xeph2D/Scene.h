@@ -13,6 +13,7 @@ namespace Xeph2D
 	namespace Edit
 	{
 		class Hierarchy;
+		class Editor;
 	}
 #endif //_EDITOR
 	class GameObject;
@@ -64,6 +65,7 @@ namespace Xeph2D
 
 #ifdef _EDITOR
 		friend class Edit::Hierarchy;
+		friend class Edit::Editor;
 #endif //EDITOR
 		using GameObjects = std::vector<std::shared_ptr<GameObject>>;
 		GameObjects m_gameObjects;

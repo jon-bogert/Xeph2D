@@ -35,6 +35,7 @@ void Xeph2D::GameObject::OnEditorUpdate()
 {
 	for (auto& compPtr : m_components)
 		compPtr->OnEditorUpdate();
+	CheckComponentBuffers();
 }
 
 void Xeph2D::GameObject::OnEditorShutdown()
