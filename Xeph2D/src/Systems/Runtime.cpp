@@ -15,14 +15,13 @@ using namespace Xeph2D;
 using namespace Xeph2D::Edit;
 
 void Xeph2D::Runtime::Initialize(
-	std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
 	WindowManager::Initialize();
 	AssetManager::Initialize();
-	SceneManager::Initialize(namingCallback, populateCallback);
+	SceneManager::Initialize(populateCallback);
 	SceneManager::LoadScene(0);
-	Editor::Initialize(namingCallback);
+	Editor::Initialize();
 }
 
 void Xeph2D::Runtime::Update()
@@ -47,12 +46,11 @@ void Xeph2D::Runtime::Terminate()
 #else
 
 void Xeph2D::Runtime::Initialize(
-	std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
 	WindowManager::Initialize();
 	AssetManager::Initialize();
-	SceneManager::Initialize(namingCallback, populateCallback);
+	SceneManager::Initialize(populateCallback);
 	SceneManager::LoadScene(0);
 }
 

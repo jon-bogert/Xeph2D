@@ -40,7 +40,7 @@ namespace Xeph2D::Edit
         static Editor& Get() { static Editor instance; return instance; }
 
         friend class Runtime;
-        static void Initialize(std::function<std::unordered_map<uint32_t, std::string>(void)>& compNameCallback);
+        static void Initialize();
         static void InputProc();
         static void Update();
         static void OnGUI();
@@ -61,8 +61,6 @@ namespace Xeph2D::Edit
 
         std::unique_ptr<sf::RenderWindow> m_window;
         HWND m_handle = nullptr;
-
-        std::unordered_map<uint32_t, std::string> m_componentNames;
 
         Transform m_viewportTransform;
         sf::Clock m_frameTimer;
@@ -86,6 +84,7 @@ namespace Xeph2D::Edit
         friend class Hierarchy;
         Inspector* GetInspectorWindow() { return m_inspectorWindow; }
         TransformGizmo* GetTransformGizmo() { return m_transformGizmo.get(); }
+        ScriptManager* GetScriptManager() { return m_scriptManagerWindow; }
 
 
         std::unique_ptr<sf::Font> m_font = nullptr;

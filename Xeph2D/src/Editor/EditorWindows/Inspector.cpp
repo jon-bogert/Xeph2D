@@ -35,7 +35,7 @@ void Xeph2D::Edit::Inspector::OnGUI()
 
 	for (EditorComponent& component : activeObject.components)
 	{
-		std::string compName = Editor::Get().m_componentNames[component.typeID];
+		std::string compName = Editor::Get().GetScriptManager()->GetScriptName(component.typeID);
 		if (ImGui::CollapsingHeader(compName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ShowData(component.enabled, component.typeID);

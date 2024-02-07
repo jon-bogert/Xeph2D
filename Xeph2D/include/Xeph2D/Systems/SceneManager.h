@@ -50,7 +50,6 @@ namespace Xeph2D
 
         friend class Runtime;
         static void Initialize(
-            std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
             std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback
         );
 
@@ -64,7 +63,6 @@ namespace Xeph2D
         Edit::EditorComponent* m_editorCompBuffer= nullptr;
 #endif //_EDITOR
 
-        std::function<std::unordered_map<uint32_t, std::string>(void)> m_namingCallback;
         std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> m_populateCallback;
     };
 }

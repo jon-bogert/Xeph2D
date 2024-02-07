@@ -14,6 +14,8 @@ namespace Xeph2D::Edit
 		void Initialize() override;
 		void OnGUI() override;
 
+		std::string GetScriptName(uint32_t typeID) const;
+
 	private:
 		void LoadFromFile();
 		void GenerateHeader();

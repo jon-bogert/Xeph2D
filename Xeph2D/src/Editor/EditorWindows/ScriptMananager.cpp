@@ -26,6 +26,17 @@ void Xeph2D::Edit::ScriptManager::OnGUI()
 	}
 }
 
+std::string Xeph2D::Edit::ScriptManager::GetScriptName(uint32_t typeID) const
+{
+	if (m_defaultScripts.find(typeID) != m_defaultScripts.end())
+		return m_defaultScripts.at(typeID);
+
+	if (m_userScripts.find(typeID) != m_userScripts.end())
+		return m_userScripts.at(typeID);
+
+	return std::string();
+}
+
 void Xeph2D::Edit::ScriptManager::LoadFromFile()
 {
 	if (!std::filesystem::exists(MANIFEST_PATH))
@@ -60,7 +71,6 @@ void Xeph2D::Edit::ScriptManager::GenerateHeader()
 #include <Xeph2D.h>
 
 #include <memory>
-#include <unordered_map>
 #include <cstdint>
 )" << '\n';
 	for (auto& scriptPair : m_userScripts)
@@ -68,28 +78,10 @@ void Xeph2D::Edit::ScriptManager::GenerateHeader()
 		file << "#include \"" << scriptPair.second << ".h\"\n";
 	}
 	file << R"(
-#define __X2D_REGISTER_COMP_NAMES &Xeph2D::__RegisterComponentNames
 #define __X2D_POPULATE_COMP_PTR &Xeph2D::__PopulateComponentPtr
 
 namespace Xeph2D
 {
-    std::unordered_map<uint32_t, std::string> __RegisterComponentNames()
-    {
-        return{)" << '\n';
-
-	for (auto& scriptPair : m_defaultScripts)
-	{
-		file << "        {" << Utility::ToHex32String(scriptPair.first) << ", \"" << scriptPair.second << "\"},\n";
-	}
-	for (auto& scriptPair : m_userScripts)
-	{
-		file << "        {" << Utility::ToHex32String(scriptPair.first) << ", \"" << scriptPair.second << "\"},\n";
-	}
-	file.seekp(-3, std::ios_base::cur);
-	file << "};\n";
-
-	file << R"(    };
-
     void __PopulateComponentPtr(std::shared_ptr<Component>& ptr, uint32_t compID)
     {
         switch (compID)

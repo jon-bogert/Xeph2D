@@ -71,11 +71,8 @@ void Xeph2D::Edit::Editor::Save()
 	SetIsSaved(true);
 }
 
-void Xeph2D::Edit::Editor::Initialize(
-	std::function<std::unordered_map<uint32_t, std::string>(void)>& compNameCallback)
+void Xeph2D::Edit::Editor::Initialize()
 {
-	Get().m_componentNames = compNameCallback();
-
 	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), EDITOR_WINDOW_TITLE);
 	Get().m_handle = FindWindowA(NULL, EDITOR_WINDOW_TITLE);
 

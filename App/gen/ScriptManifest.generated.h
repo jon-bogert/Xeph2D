@@ -6,24 +6,14 @@
 #include <Xeph2D.h>
 
 #include <memory>
-#include <unordered_map>
 #include <cstdint>
 
 #include "TestScript.h"
 
-#define __X2D_REGISTER_COMP_NAMES &Xeph2D::__RegisterComponentNames
 #define __X2D_POPULATE_COMP_PTR &Xeph2D::__PopulateComponentPtr
 
 namespace Xeph2D
 {
-    std::unordered_map<uint32_t, std::string> __RegisterComponentNames()
-    {
-        return{
-        {0x00000001, "Camera"},
-        {0x00000002, "SpriteRenderer"},
-        {0xa45ff78b, "TestScript"}};
-    };
-
     void __PopulateComponentPtr(std::shared_ptr<Component>& ptr, uint32_t compID)
     {
         switch (compID)

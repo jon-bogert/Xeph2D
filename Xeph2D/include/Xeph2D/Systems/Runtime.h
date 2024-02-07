@@ -19,7 +19,6 @@ namespace Xeph2D
         Runtime operator=(const Runtime&& other) = delete;
 
         static void Initialize(
-            std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
             std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback
         );
         static void Update();

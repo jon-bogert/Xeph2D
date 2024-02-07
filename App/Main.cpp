@@ -8,7 +8,7 @@ int wmain(int argc, wchar_t argv[])
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 #endif //_CONSOLE
 {
-	Xeph2D::Runtime::Initialize(__X2D_REGISTER_COMP_NAMES, __X2D_POPULATE_COMP_PTR);
+	Xeph2D::Runtime::Initialize(__X2D_POPULATE_COMP_PTR);
 	Xeph2D::Runtime::Update();
 	Xeph2D::Runtime::Terminate();
 

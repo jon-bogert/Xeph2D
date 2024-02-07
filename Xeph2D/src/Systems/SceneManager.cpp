@@ -181,10 +181,8 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
 }
 
 void Xeph2D::SceneManager::Initialize(
-	std::function<std::unordered_map<uint32_t, std::string>(void)> namingCallback,
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
-	Get().m_namingCallback = namingCallback;
 	Get().m_populateCallback = populateCallback;
 
 	YAML::Node buildInfo = YAML::LoadFile(BUILD_INFO_FILE);
