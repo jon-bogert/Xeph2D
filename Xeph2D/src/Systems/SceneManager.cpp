@@ -127,49 +127,46 @@ void Xeph2D::SceneManager::LoadScene(const int buildIndex)
 
 void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const std::string& field)
 {
-	if (Get().m_componentInfoBuffer == nullptr)
+	if (Get().m_componentInfoBuffer != nullptr) // will be null if adding a new component in editor
 	{
-		Debug::LogErr("SceneLoader -> Component info buffer was null while Loading");
-		return;
-	}
-
-	if ((*Get().m_componentInfoBuffer)[field].IsDefined())
-	{
-		switch (type)
+		if ((*Get().m_componentInfoBuffer)[field].IsDefined()) // field could not be defined if added on this compile
 		{
-		case SerializableType::Int:
-			*static_cast<int*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<int>();
-			break;
-		case SerializableType::Float:
-			*static_cast<float*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<float>();
-			break;
-		case SerializableType::Bool:
-			*static_cast<bool*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<bool>();
-			break;
-		case SerializableType::Char:
-			*static_cast<char*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<char>();
-			break;
-		case SerializableType::String:
-			*static_cast<std::string*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<std::string>();
-			break;
-		case SerializableType::Vector2:
-			*static_cast<Vector2*>(ptr) = CustomSerialTypes::Vector2FromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
-			break;
-		case SerializableType::Color:
-			*static_cast<Color*>(ptr) = CustomSerialTypes::ColorFromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
-			break;
-		case SerializableType::Transform:
-			*static_cast<Transform*>(ptr) = CustomSerialTypes::TransformFromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
-			break;
-		default:
-			Debug::LogErr("SceneLoader::__Deserialize -> Unimplemented Type");
-			break;
+			switch (type)
+			{
+			case SerializableType::Int:
+				*static_cast<int*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<int>();
+				break;
+			case SerializableType::Float:
+				*static_cast<float*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<float>();
+				break;
+			case SerializableType::Bool:
+				*static_cast<bool*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<bool>();
+				break;
+			case SerializableType::Char:
+				*static_cast<char*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<char>();
+				break;
+			case SerializableType::String:
+				*static_cast<std::string*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<std::string>();
+				break;
+			case SerializableType::Vector2:
+				*static_cast<Vector2*>(ptr) = CustomSerialTypes::Vector2FromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
+				break;
+			case SerializableType::Color:
+				*static_cast<Color*>(ptr) = CustomSerialTypes::ColorFromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
+				break;
+			case SerializableType::Transform:
+				*static_cast<Transform*>(ptr) = CustomSerialTypes::TransformFromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
+				break;
+			default:
+				Debug::LogErr("SceneLoader::__Deserialize -> Unimplemented Type");
+				break;
+			}
 		}
-	}
-	else
-	{
-		Debug::LogColor(Color::Green);
-		Debug::Log("Adding new field %s on next save", field.c_str());
+		else
+		{
+			Debug::LogColor(Color::Green);
+			Debug::Log("Adding new field %s on next save", field.c_str());
+		}
 	}
 
 #ifdef _EDITOR
@@ -189,3 +186,13 @@ void Xeph2D::SceneManager::Initialize(
 	for (yaml_val& scene : buildInfo["scenes"])
 		Get().m_manifest.push_back(scene.as<std::string>());
 }
+
+#ifdef _EDITOR
+std::shared_ptr<Xeph2D::Component>& Xeph2D::SceneManager::AddComponentByID(int gameObjectIndex, uint32_t typeID)
+{
+	GameObject* obj = ActiveScene().m_gameObjects[gameObjectIndex].get();
+	std::shared_ptr<Component>& comp = obj->m_components.emplace_back();
+	m_populateCallback(comp, typeID);
+	return comp;
+}
+#endif //_EDITOR

@@ -15,6 +15,7 @@
 void Xeph2D::Edit::ScriptManager::Initialize()
 {
 	name = "Script Manager";
+	Close();
 	LoadFromFile();
 }
 
@@ -35,6 +36,31 @@ std::string Xeph2D::Edit::ScriptManager::GetScriptName(uint32_t typeID) const
 		return m_userScripts.at(typeID);
 
 	return std::string();
+}
+
+std::vector<std::string> Xeph2D::Edit::ScriptManager::GetAllNames()
+{
+	std::vector<std::string> result;
+
+	for (auto& scriptPair : m_defaultScripts)
+		result.push_back(scriptPair.second);
+	for (auto& scriptPair : m_userScripts)
+		result.push_back(scriptPair.second);
+
+	return result;
+}
+
+uint32_t Xeph2D::Edit::ScriptManager::GetID(std::string name) const
+{
+	auto iter = std::find_if(m_defaultScripts.begin(), m_defaultScripts.end(), [&](const auto& c) { return c.second == name; });
+	if (iter != m_defaultScripts.end())
+		return iter->first;
+
+	iter = std::find_if(m_userScripts.begin(), m_userScripts.end(), [&](const auto& c) { return c.second == name; });
+	if (iter != m_userScripts.end())
+		return iter->first;
+
+	return 0;
 }
 
 void Xeph2D::Edit::ScriptManager::LoadFromFile()

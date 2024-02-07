@@ -75,11 +75,18 @@ namespace Xeph2D
 			return other.m_ptr.lock().get() != m_ptr.lock().get();
 		}
 
-		Ref<ComponentType>& operator=(const Ref<ComponentType>&) = default;
+		Ref<ComponentType>& operator=(const Ref<ComponentType>& other)
+		{
+			static_assert(std::is_base_of_v<Component, ComponentType> || std::is_base_of_v<GameObject, ComponentType>, "Ref Component Type must inherit from Component or be a GameObject");
+			m_ptr = other.m_ptr;
+			return *this;
+		}
+
 		Ref<ComponentType>& operator=(const std::shared_ptr<ComponentType>& ptr)
 		{
 			static_assert(std::is_base_of_v<Component, ComponentType> || std::is_base_of_v<GameObject, ComponentType>, "Ref Component Type must inherit from Component or be a GameObject");
 			m_ptr = ptr;
+			return *this;
 		}
 
 		Ref<ComponentType>& operator=(const ComponentType* ptr)
@@ -90,6 +97,7 @@ namespace Xeph2D
 				return *this;
 			}
 			m_ptr.reset();
+			return *this;
 		}
 
 	private:

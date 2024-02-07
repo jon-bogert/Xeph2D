@@ -5,6 +5,8 @@
 #include "Xeph2D/Editor/EditorWindow.h"
 
 #include <map>
+#include <vector>
+#include <string>
 
 namespace Xeph2D::Edit
 {
@@ -15,7 +17,8 @@ namespace Xeph2D::Edit
 		void OnGUI() override;
 
 		std::string GetScriptName(uint32_t typeID) const;
-
+		std::vector<std::string> GetAllNames();
+		uint32_t GetID(std::string name) const;
 	private:
 		void LoadFromFile();
 		void GenerateHeader();

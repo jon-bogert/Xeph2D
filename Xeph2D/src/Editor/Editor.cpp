@@ -225,7 +225,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 		if (!window->isOpen)
 			continue;
 	
-		ImGui::Begin(window->GetName(), &window->isOpen, window->flags);
+		ImGui::Begin(window->GetWindowName(), &window->isOpen, window->flags);
 		window->UpdateValues();
 		window->OnGUI();
 		ImGui::End();
@@ -330,6 +330,56 @@ bool Xeph2D::Edit::Editor::ObjectOrderDown(int index)
 	SetIsSaved(false);
 	std::swap(s.m_gameObjects[index], s.m_gameObjects.begin()[index + 1]);
 	std::swap(Get().m_sceneData.gameObjects[index], Get().m_sceneData.gameObjects[index + 1]);
+	return true;
+}
+
+void Xeph2D::Edit::Editor::AddComponent(int index, uint32_t compID)
+{
+	SetIsSaved(false);
+	std::shared_ptr<Component>& comp = SceneManager::Get().AddComponentByID(index, compID);
+	comp->gameObject = SceneManager::ActiveScene().m_gameObjects[index];
+	
+	EditorComponent& edComp = Get().m_sceneData.gameObjects[index].components.emplace_back();
+	edComp.typeID = compID;
+	edComp.enabled.name = ("Enabled");
+	edComp.enabled.type = SerializableType::Bool;
+	edComp.enabled.ptr = &comp->m_enabled;
+
+	SceneManager::Get().m_editorCompBuffer = &edComp;
+	comp->Serializables();
+	SceneManager::Get().m_editorCompBuffer = nullptr;
+}
+
+void Xeph2D::Edit::Editor::RemoveComponent(int objIndex, int compIndex)
+{
+	SetIsSaved(false);
+	std::shared_ptr<GameObject>& obj = SceneManager::ActiveScene().m_gameObjects[objIndex];
+	obj->DestroyComponent(obj->m_components[compIndex]);
+	EditorGameObject& edObj = Get().m_sceneData.gameObjects[objIndex];
+	edObj.components.erase(edObj.components.begin() + compIndex);
+}
+
+bool Xeph2D::Edit::Editor::ComponentOrderUp(int objIndex, int compIndex)
+{
+	if (compIndex <= 0)
+		return false;
+
+	SetIsSaved(false);
+	Scene& s = SceneManager::ActiveScene();
+	std::swap(s.m_gameObjects[objIndex]->m_components[compIndex], s.m_gameObjects[objIndex]->m_components[compIndex - 1]);
+	std::swap(Get().m_sceneData.gameObjects[objIndex].components[compIndex], Get().m_sceneData.gameObjects[objIndex].components[compIndex - 1]);
+	return true;
+}
+
+bool Xeph2D::Edit::Editor::ComponentOrderDown(int objIndex, int compIndex)
+{
+	Scene& s = SceneManager::ActiveScene();
+	if (compIndex >= s.m_gameObjects[objIndex]->m_components.size() - 1)
+		return false;
+
+	SetIsSaved(false);
+	std::swap(s.m_gameObjects[objIndex]->m_components[compIndex], s.m_gameObjects[objIndex]->m_components[compIndex + 1]);
+	std::swap(Get().m_sceneData.gameObjects[objIndex].components[compIndex], Get().m_sceneData.gameObjects[objIndex].components[compIndex + 1]);
 	return true;
 }
 

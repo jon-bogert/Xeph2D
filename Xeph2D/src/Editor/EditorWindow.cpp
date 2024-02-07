@@ -8,7 +8,7 @@ void Xeph2D::Edit::EditorWindow::UpdateValues()
 	m_isHovered = ImGui::IsWindowHovered();
 }
 
-const char* Xeph2D::Edit::EditorWindow::GetName() const
+const char* Xeph2D::Edit::EditorWindow::GetWindowName() const
 {
 	return name.c_str();
 }

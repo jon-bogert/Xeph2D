@@ -19,7 +19,7 @@ namespace Xeph2D::Edit
 		virtual void Initialize() {};
 		virtual void OnGUI() {};
 
-		const char* GetName() const;
+		const char* GetWindowName() const;
 		//ImGuiWindowFlags GetFlags() const;
 		bool IsOpen() const;
 		void Close();

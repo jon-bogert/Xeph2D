@@ -3,6 +3,7 @@
 #include "Xeph2D/Editor/Editor.h"
 
 #include <variant>
+#include <regex>
 
 void Xeph2D::Edit::Inspector::Initialize()
 {
@@ -13,6 +14,12 @@ void Xeph2D::Edit::Inspector::OnGUI()
 {
 	if (m_activeIndex < 0)
 		return;
+
+	if (m_showEdit)
+	{
+		DrawEdit();
+		return;
+	}
 
 	EditorGameObject& activeObject = Editor::Get().m_sceneData.gameObjects[m_activeIndex];
 	char buffer[MAX_PATH];
@@ -46,11 +53,20 @@ void Xeph2D::Edit::Inspector::OnGUI()
 		}
 		ImGui::NewLine();
 	}
+	ImGui::Separator();
+	ImGui::NewLine();
+	if (ImGui::Button("Edit Components##Insp"))
+	{
+		m_showEdit = true;
+		m_editSelection = -1;
+	}
 }
 
 void Xeph2D::Edit::Inspector::SetActiveIndex(int index)
 {
 	m_activeIndex = index;
+	m_showEdit = false;
+	m_showAdd = false;
 	if (index >= 0)
 	{
 		Editor::Get().GetTransformGizmo()->SetCurrentObject(&Editor::Get().m_sceneData.gameObjects[m_activeIndex]);
@@ -200,5 +216,82 @@ std::string Xeph2D::Edit::Inspector::Var2DisplayName(std::string varName)
 
 	return varName;
 }
+
+void Xeph2D::Edit::Inspector::DrawEdit()
+{
+	std::vector<std::string> itemNames;
+	ScriptManager& scriptManager = *Editor::Get().GetScriptManager();
+	for (EditorComponent& activeComp : Editor::Get().m_sceneData.gameObjects[m_activeIndex].components)
+	{
+		itemNames.push_back(scriptManager.GetScriptName(activeComp.typeID));
+	}
+	if (ImGui::ListBox("##HItems", &m_editSelection, Utility::CStrVect(itemNames).data(), itemNames.size()))
+	{
+
+	}
+	if (ImGui::Button("+##Insp"))
+	{
+		m_showAdd = true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("-##Insp"))
+	{
+		if (m_editSelection < 0)
+			return;
+
+		Editor::RemoveComponent(m_activeIndex, m_editSelection);
+		m_editSelection = -1;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("^##Insp"))
+	{
+		if (Editor::ComponentOrderUp(m_activeIndex, m_editSelection))
+		{
+			--m_editSelection;
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("v##Insp"))
+	{
+		if (Editor::ComponentOrderDown(m_activeIndex, m_editSelection))
+		{
+			++m_editSelection;
+		}
+	}
+	if (m_showAdd)
+	{
+		ImVec2 nextPos = (Vector2)ImGui::GetCursorPos() + ImGui::GetWindowPos();
+		ImGui::SetNextWindowPos(nextPos);
+		ImGui::Begin("Add Component##Insp", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+		if (InputSystem::GetMouseDown(Mouse::Button::Left) && !ImGui::IsWindowHovered())
+			m_showAdd = false;
+	
+		std::vector<std::string> compNames = Editor::Get().GetScriptManager()->GetAllNames();
+		ImGui::InputText("##SearchAddComp", m_editSearchBuff, MAX_PATH - 1);
+		for (auto& comp : compNames)
+		{
+			if (!std::regex_search(comp, std::regex(m_editSearchBuff)))
+				continue;
+			if (ImGui::MenuItem((comp + "##AddComp").c_str()))
+			{
+				uint32_t id = Editor::Get().GetScriptManager()->GetID(comp);
+				Editor::AddComponent(m_activeIndex, id);
+				Editor::SetIsSaved(false);
+				m_showAdd = false;
+				break;
+			}
+		}
+		ImGui::End();
+	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+	if (ImGui::Button("Show Components##Insp"))
+	{
+		m_showEdit = false;
+	}
+}
+
 
 #endif //_EDITOR

@@ -21,6 +21,7 @@ namespace Xeph2D
     namespace Edit
     {
         struct EditorGameObject;
+        class Editor;
     }
 #endif //_EDITOR
     class Scene;
@@ -53,15 +54,19 @@ namespace Xeph2D
             std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback
         );
 
+        YAML::iterator::value_type* m_componentInfoBuffer = nullptr;
+
+#ifdef _EDITOR
+        Edit::EditorComponent* m_editorCompBuffer = nullptr;
+
+        friend class Edit::Editor;
+        std::shared_ptr<Component>& AddComponentByID(const int gameObjectIndex, const uint32_t typeID);
+#endif //_EDITOR
+
         using SceneManifest = std::vector<SceneInfo>;
         SceneManifest m_manifest;
         int m_index = -1;
         std::shared_ptr<Scene> m_activeScene;
-
-        YAML::iterator::value_type* m_componentInfoBuffer = nullptr;
-#ifdef _EDITOR
-        Edit::EditorComponent* m_editorCompBuffer= nullptr;
-#endif //_EDITOR
 
         std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> m_populateCallback;
     };

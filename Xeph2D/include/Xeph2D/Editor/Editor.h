@@ -52,6 +52,11 @@ namespace Xeph2D::Edit
         static bool ObjectOrderUp(int index);
         static bool ObjectOrderDown(int index);
 
+        static void AddComponent(int index, uint32_t compID);
+        static void RemoveComponent(int objIndex, int compIndex);
+        static bool ComponentOrderUp(int objIndex, int compIndex);
+        static bool ComponentOrderDown(int objIndex, int compIndex);
+
         bool m_showSaveWindow = false;
 
         friend class WindowManager;
