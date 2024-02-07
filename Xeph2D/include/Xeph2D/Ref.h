@@ -100,6 +100,11 @@ namespace Xeph2D
 			return *this;
 		}
 
+		bool IsNull() const
+		{
+			return m_ptr.expired();
+		}
+
 	private:
 		std::weak_ptr<ComponentType> m_ptr {};
 	};
