@@ -92,8 +92,8 @@ void Xeph2D::Edit::Editor::Initialize(
 		(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get().m_hierarchyWindow =
 		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
-	//Get().m_scriptManager =
-	//	(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
+	Get().m_scriptManagerWindow =
+		(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
 	//Get().m_scriptCreator =
 	//	(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
 
@@ -211,8 +211,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 			}
 			if (ImGui::MenuItem("Script Manager"))
 			{
-				Debug::Log("Unimplemented");
-				//Get().m_scriptManager->Open();
+				Get().m_scriptManagerWindow->Open();
 			}
 			if (ImGui::MenuItem("Viewport"))
 			{

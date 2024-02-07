@@ -7,6 +7,7 @@
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
 #include "Xeph2D/Editor/EditorWindows/Hierarchy.h"
 #include "Xeph2D/Editor/EditorWindows/Inspector.h"
+#include "Xeph2D/Editor/EditorWindows/ScriptManager.h"
 #include "Xeph2D/Editor/TransformGizmo.h"
 
 #include <SFML.hpp>
@@ -78,6 +79,7 @@ namespace Xeph2D::Edit
         Viewport* m_viewportWindow;
         Hierarchy* m_hierarchyWindow;
         Inspector* m_inspectorWindow;
+        ScriptManager* m_scriptManagerWindow;
 
         std::unique_ptr<TransformGizmo> m_transformGizmo;
 

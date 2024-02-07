@@ -1,6 +1,6 @@
 #pragma once
 
-//ScriptManifest.h is Auto-Generated and managed by the Xeph2D Editor.
+//ScriptManifest.generated.h is Auto-Generated and managed by the Xeph2D Editor.
 //Use the Editor to add or remove scripts
 
 #include <Xeph2D.h>
@@ -19,8 +19,8 @@ namespace Xeph2D
     std::unordered_map<uint32_t, std::string> __RegisterComponentNames()
     {
         return{
-        {0x00000001,"Camera"},
-        {0x00000002,"SpriteRenderer"},
+        {0x00000001, "Camera"},
+        {0x00000002, "SpriteRenderer"},
         {0xa45ff78b, "TestScript"}};
     };
 
@@ -28,9 +28,9 @@ namespace Xeph2D
     {
         switch (compID)
         {
-        case 0x00000001: ptr = std::make_unique<Camera>(); break;
-        case 0x00000002: ptr = std::make_unique<SpriteRenderer>(); break;
-        case 0xa45ff78b: ptr = std::make_unique<TestScript>(); break;
+        case 0x00000001: ptr = std::make_shared<Camera>(); break;
+        case 0x00000002: ptr = std::make_shared<SpriteRenderer>(); break;
+        case 0xa45ff78b: ptr = std::make_shared<TestScript>(); break;
         }
     }
 }
