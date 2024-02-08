@@ -387,12 +387,16 @@ bool Xeph2D::Edit::Editor::ComponentOrderDown(int objIndex, int compIndex)
 void Xeph2D::Edit::Editor::RemoveAllComponents(uint32_t typeID)
 {
 	Scene& scene = SceneManager::ActiveScene();
+	Editor& e = Get();
 	for (EditorGameObject& edObj : Get().m_sceneData.gameObjects)
 	{
-		std::remove_if(
-			edObj.components.begin(),
-			edObj.components.end(),
-			[=](const EditorComponent& edComp) { return edComp.typeID == typeID; });
+		for (auto iter = edObj.components.begin(); iter != edObj.components.end();)
+		{
+			if (iter->typeID == typeID)
+				iter = edObj.components.erase(iter);
+			else
+				++iter;
+		}
 	}
 	for (auto& sp_obj : scene.m_gameObjects)
 	{

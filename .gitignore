@@ -20,6 +20,7 @@ Makefile
 
 # Tools
 !reload-sln.exe
+!premake5.exe
 
 # Required Library Exceptions
 !openal32.dll

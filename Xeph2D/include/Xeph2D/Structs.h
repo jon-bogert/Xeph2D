@@ -78,7 +78,9 @@ namespace Xeph2D
 		bool operator==(const Vector2& rhs) { return (x == rhs.x && y == rhs.y); }
 		bool operator!=(const Vector2& rhs) { return (x != rhs.x || y != rhs.y); }
 
-		friend std::ostream& operator<<(std::ostream& os, const Vector2& v2) { os << "X:" << v2.x << " Y:" << v2.y; return os; } // **EDIT**
+		friend std::ostream& operator<<(std::ostream& os, const Vector2& v2) { os << v2.ToString(); return os; } // **EDIT**
+		std::string ToString() const { return "X:" + std::to_string(x) + " Y:" + std::to_string(y); }
+
 		operator sf::Vector2f() const { return { x, y }; };							// **EDIT** Added for SFML Compatibility
 		operator sf::Vector2i() const { return { (int)x, (int)y }; };				// **EDIT** Added for SFML Compatibility
 		operator sf::Vector2u() const { return { (unsigned)x, (unsigned)y }; };		// **EDIT** Added for SFML Compatibility
@@ -134,7 +136,8 @@ namespace Xeph2D
 			}
 			return false;
 		}
-		friend std::ostream& operator<<(std::ostream& os, const Vector3& v3) { os << "X:" << v3.x << " Y:" << v3.y << " Z:" << v3.z; return os; } // **EDIT**
+		friend std::ostream& operator<<(std::ostream& os, const Vector3& v3) { os << v3.ToString(); return os; } // **EDIT**
+		std::string ToString() const { return "X:" + std::to_string(x) + " Y:" + std::to_string(y) + " Z:" + std::to_string(z); }
 		operator sf::Vector3f() const { return { x, y, z }; };						// **EDIT** Added for SFML Compatibility
 		operator sf::Vector3i() const { return { (int)x, (int)y, (int)z }; };		// **EDIT** Added for SFML Compatibility
 	};
