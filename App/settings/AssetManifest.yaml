@@ -1,3 +1,7 @@
 textures:
   - key: test2
-    path: test2.png  
+    path: test2.png
+  - key: test2-round
+    path: test2-round.png
+  - key: test3
+    path: test3.png

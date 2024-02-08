@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <cstring>
+#include <cstdlib>
 
 namespace Xeph2D::Utility
 {
@@ -32,6 +34,28 @@ namespace Xeph2D::Utility
 	{
 		uint32_t val = std::stoul(hexStr, nullptr, 16);
 		return val;
+	}
+
+	inline std::string ToShortString(const std::wstring& wstr)
+	{
+		const wchar_t* cwstr = wstr.c_str();
+		const size_t size = wstr.size() + 1;
+		char* buffer = new char[size];
+		wcstombs(buffer, cwstr, size);
+		std::string result(buffer);
+		delete[] buffer;
+		return result;
+	}
+
+	inline std::wstring ToWideString(const std::string& str)
+	{
+		const char* cstr = str.c_str();
+		const size_t size = str.size() + 1;
+		wchar_t* buffer = new wchar_t[size];
+		mbstowcs(buffer, cstr, size);
+		std::wstring result(buffer);
+		delete[] buffer;
+		return result;
 	}
 
 	

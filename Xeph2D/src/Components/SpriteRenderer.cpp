@@ -28,7 +28,27 @@ void Xeph2D::SpriteRenderer::SetTexture(const std::string& key)
 
 void Xeph2D::SpriteRenderer::OnEditorStart()
 {
+#ifdef _EDITOR
 	Awake();
+	m_textureKeyPrev = m_textureKey;
+	m_refreshTimer.SetLengthSeconds(m_timeToRefresh);
+	m_refreshTimer.SetIsUnscaled(true);
+#endif //_EDITOR
+}
+
+void Xeph2D::SpriteRenderer::OnEditorUpdate()
+{
+#ifdef _EDITOR
+	if (m_refreshTimer.ExpiredThisFrame())
+	{
+		SetTexture(m_textureKey);
+	}
+	if (m_textureKeyPrev == m_textureKey)
+		return;
+
+	m_refreshTimer.Restart();
+	m_textureKeyPrev = m_textureKey;
+#endif //_EDITOR
 }
 
 void Xeph2D::SpriteRenderer::OnEditorShutdown()

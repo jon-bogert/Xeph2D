@@ -11,6 +11,7 @@ namespace Xeph2D
 	namespace Edit
 	{
 		class Editor;
+		class AssetManagerWindow;
 	}
 #endif //_EDITOR
 	class AssetManager
@@ -36,13 +37,21 @@ namespace Xeph2D
 		friend class SceneManager;
 #ifdef _EDITOR
 		friend class Edit::Editor;
+		friend class Edit::AssetManagerWindow;
+		void SetIsSaved(const bool isSaved) { m_isSaved = isSaved; }
+		void SaveToFile();
+		bool m_isSaved = true;
 #endif //_EDITOR
 		void LoadTexture(const std::string& key);
+		void UnloadTexture(const std::string& key);
 		void ClearTextures();
 
 		Manifest m_textureManifest;
 		TextureMap m_loadedTextures;
+		std::unique_ptr<sf::Texture> m_defaultTexture;
+		std::unique_ptr<unsigned char[]> m_defaultTextureData;
+		size_t m_defaultTextureSize = 0;
 	};
 }
 
-#endif __X2D_SYSTEMS_ASSETMANAGER_H__
+#endif //__X2D_SYSTEMS_ASSETMANAGER_H__

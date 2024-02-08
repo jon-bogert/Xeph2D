@@ -2,6 +2,7 @@
 #define __XEPH2D_COMPONENTS_SPRITERENDERER_H__
 
 #include "Xeph2D/Component.h"
+#include "Xeph2D/Timer.h"
 
 namespace Xeph2D
 {
@@ -20,6 +21,7 @@ namespace Xeph2D
 
 	private:
 		void OnEditorStart() override;
+		void OnEditorUpdate() override;
 		void OnEditorShutdown() override;
 
 		void Serializables() override;
@@ -33,6 +35,12 @@ namespace Xeph2D
 		std::string m_textureKey = "";
 		int m_order = 0;
 		Color m_color = Color::White;
+
+#ifdef _EDITOR
+		float m_timeToRefresh = 1.f;
+		Timer m_refreshTimer;
+		std::string m_textureKeyPrev = "";
+#endif //_EDITOR
 	};
 }
 

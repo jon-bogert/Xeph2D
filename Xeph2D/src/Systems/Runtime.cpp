@@ -6,6 +6,7 @@
 
 #include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/SceneManager.h"
+#include "Xeph2D/Systems/TimerService.h"
 #include "Xeph2D/Scene.h"
 #include "Xeph2D.h"
 
@@ -29,6 +30,7 @@ void Xeph2D::Runtime::Update()
 	while (Editor::IsOpen())
 	{
 		Time::Update();
+		TimerService::Update();
 		InputSystem::Update();
 		Editor::Update();
 		SceneManager::ActiveScene().Update();
@@ -60,6 +62,7 @@ void Xeph2D::Runtime::Update()
 	{
 		WindowManager::CheckWindowEvents();
 		Time::Update();
+		TimerService::Update();
 		InputSystem::Update();
 
 		SceneManager::ActiveScene().Update();

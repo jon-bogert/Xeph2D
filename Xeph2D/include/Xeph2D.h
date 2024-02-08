@@ -19,6 +19,7 @@
 #include <Xeph2D/Events.h>
 #include <Xeph2D/GameObject.h>
 #include <Xeph2D/Structs.h>
+#include <Xeph2D/Timer.h>
 #include <Xeph2D/Ref.h>
 #include <Xeph2D/Utility.h>
 

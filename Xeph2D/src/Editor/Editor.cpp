@@ -32,9 +32,16 @@ void Xeph2D::Edit::Editor::Close()
 
 void Xeph2D::Edit::Editor::Save()
 {
+	AssetManager& am = AssetManager::Get();
+	if (!AssetManager::Get().m_isSaved)
+	{
+		AssetManager::Get().m_isSaved = true;
+		AssetManager::Get().SaveToFile();
+	}
+
 	YAML::Node sceneData;
 	//TEXTURES
-	for (auto& tex : AssetManager::Get().m_textureManifest)
+	for (auto& tex : AssetManager::Get().m_loadedTextures)
 	{
 		sceneData["textures"].push_back(tex.first);
 	}
@@ -93,6 +100,8 @@ void Xeph2D::Edit::Editor::Initialize()
 		(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
 	Get().m_scriptCreatorWindow =
 		(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
+	Get().m_assetManagerWindow =
+		(AssetManagerWindow*)Get().m_editorWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
 
 	Get().m_transformGizmo = std::make_unique<TransformGizmo>();
 
@@ -196,6 +205,10 @@ void Xeph2D::Edit::Editor::OnGUI()
 	{
 		if (ImGui::BeginMenu("Windows##MainMenu"))
 		{
+			if (ImGui::MenuItem("Asset Manager"))
+			{
+				Get().m_assetManagerWindow->Open();
+			}
 			if (ImGui::MenuItem("Hierarchy"))
 			{
 				Get().m_hierarchyWindow->Open();

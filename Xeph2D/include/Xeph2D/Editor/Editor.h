@@ -9,6 +9,7 @@
 #include "Xeph2D/Editor/EditorWindows/Inspector.h"
 #include "Xeph2D/Editor/EditorWindows/ScriptCreator.h"
 #include "Xeph2D/Editor/EditorWindows/ScriptManager.h"
+#include "Xeph2D/Editor/EditorWindows/AssetManagerWindow.h"
 #include "Xeph2D/Editor/TransformGizmo.h"
 
 #include <SFML.hpp>
@@ -91,6 +92,7 @@ namespace Xeph2D::Edit
         Inspector* m_inspectorWindow;
         ScriptManager* m_scriptManagerWindow;
         ScriptCreator* m_scriptCreatorWindow;
+        AssetManagerWindow* m_assetManagerWindow;
 
         std::unique_ptr<TransformGizmo> m_transformGizmo;
 
