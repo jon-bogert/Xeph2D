@@ -21,10 +21,32 @@ namespace Xeph2D::Edit
 		uint32_t GetID(std::string name) const;
 	private:
 		void LoadFromFile();
+		void SaveToFile();
 		void GenerateHeader();
 
+		friend class ScriptCreator;
+		void CreateNew(const std::string& name, std::string& path);
+		bool EditScript(uint32_t id);
+		void GenerateFiles(const std::string& name, const std::string& path, uint32_t newID);
+
+		struct Entry
+		{
+			std::string name;
+			std::string path;
+
+			Entry() = default;
+			Entry(const std::string& name, const std::string& path) : name(name), path(path) {}
+		};
+
 		std::map<uint32_t, std::string> m_defaultScripts;
-		std::map<uint32_t, std::string> m_userScripts;
+		std::map<uint32_t, Entry> m_userScripts;
+
+		int m_editSelection = -1;
+
+		bool m_isRemoving = false;
+		bool m_isEditing = false;
+		char m_nameBuffer[256];
+		char m_pathBuffer[1024];
 	};
 }
 

@@ -7,6 +7,7 @@
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
 #include "Xeph2D/Editor/EditorWindows/Hierarchy.h"
 #include "Xeph2D/Editor/EditorWindows/Inspector.h"
+#include "Xeph2D/Editor/EditorWindows/ScriptCreator.h"
 #include "Xeph2D/Editor/EditorWindows/ScriptManager.h"
 #include "Xeph2D/Editor/TransformGizmo.h"
 
@@ -35,6 +36,8 @@ namespace Xeph2D::Edit
         static void SetIsSaved(const bool isSaved) { Get().m_isSaved = isSaved; };
         static void Save();
 
+        static void RebuildProject() { Get().m_rebuildProject = true; }
+
     private:
         Editor() {}
         static Editor& Get() { static Editor instance; return instance; }
@@ -47,6 +50,7 @@ namespace Xeph2D::Edit
         static void Draw();
         static void Terminate();
 
+
         static void AddObject();
         static void RemoveObject(int index);
         static bool ObjectOrderUp(int index);
@@ -56,6 +60,9 @@ namespace Xeph2D::Edit
         static void RemoveComponent(int objIndex, int compIndex);
         static bool ComponentOrderUp(int objIndex, int compIndex);
         static bool ComponentOrderDown(int objIndex, int compIndex);
+
+        void RemoveAllComponents(uint32_t id);
+        void DoProjectRebuild();
 
         bool m_showSaveWindow = false;
 
@@ -83,12 +90,16 @@ namespace Xeph2D::Edit
         Hierarchy* m_hierarchyWindow;
         Inspector* m_inspectorWindow;
         ScriptManager* m_scriptManagerWindow;
+        ScriptCreator* m_scriptCreatorWindow;
 
         std::unique_ptr<TransformGizmo> m_transformGizmo;
 
         friend class Hierarchy;
+        friend class ScriptCreator;
+        friend class ScriptManager;
         Inspector* GetInspectorWindow() { return m_inspectorWindow; }
         TransformGizmo* GetTransformGizmo() { return m_transformGizmo.get(); }
+        ScriptCreator* GetScriptCreator() { return m_scriptCreatorWindow; }
         ScriptManager* GetScriptManager() { return m_scriptManagerWindow; }
 
 
@@ -96,6 +107,8 @@ namespace Xeph2D::Edit
         std::unique_ptr<unsigned char[]> m_fontData = nullptr;
         size_t m_fontDataLength = 0;
         void SetUIStyle();
+
+        bool m_rebuildProject = false;
     };
 }
 #endif //_EDITOR

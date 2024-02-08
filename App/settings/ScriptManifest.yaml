@@ -3,7 +3,6 @@ default:
     name: Camera
   - id: 0x00000002
     name: SpriteRenderer
-
 user:
   - id: 0xa45ff78b
     name: TestScript

@@ -1,0 +1,18 @@
+#include "@NAME@.h"
+
+using namespace Xeph2D;
+
+void @NAME@::Serializables()
+{
+    //SERIALIZE_BOOL(m_doThings);
+}
+
+void @NAME@::Start()
+{
+    
+}
+
+void @NAME@::Update()
+{
+    
+}

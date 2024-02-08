@@ -91,8 +91,8 @@ void Xeph2D::Edit::Editor::Initialize()
 		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
 	Get().m_scriptManagerWindow =
 		(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
-	//Get().m_scriptCreator =
-	//	(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
+	Get().m_scriptCreatorWindow =
+		(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
 
 	Get().m_transformGizmo = std::make_unique<TransformGizmo>();
 
@@ -132,10 +132,10 @@ void Xeph2D::Edit::Editor::InputProc()
 	{
 		if (InputSystem::GetKeyHold(Key::Shift))
 		{
-			//if (InputSystem::GetKeyDown(Key::N))
-			//{
-			//	Get().m_scriptCreator->Open();
-			//}
+			if (InputSystem::GetKeyDown(Key::N))
+			{
+				Get().m_scriptCreatorWindow->Open();
+			}
 		}
 		else //============
 		{
@@ -188,8 +188,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	{
 		if (ImGui::MenuItem("Create New Script", "Ctrl+Shift+N"))
 		{
-			Debug::Log("Unimplemented");
-			//Get().m_scriptCreator->Open();
+			Get().m_scriptCreatorWindow->Open();
 		}
 		ImGui::EndMenu();
 	}
@@ -282,6 +281,8 @@ void Xeph2D::Edit::Editor::Draw()
 void Xeph2D::Edit::Editor::Terminate()
 {
 	ImGui::SFML::Shutdown();
+	if (Get().m_rebuildProject)
+		Get().DoProjectRebuild();
 }
 
 void Xeph2D::Edit::Editor::AddObject()
@@ -381,6 +382,31 @@ bool Xeph2D::Edit::Editor::ComponentOrderDown(int objIndex, int compIndex)
 	std::swap(s.m_gameObjects[objIndex]->m_components[compIndex], s.m_gameObjects[objIndex]->m_components[compIndex + 1]);
 	std::swap(Get().m_sceneData.gameObjects[objIndex].components[compIndex], Get().m_sceneData.gameObjects[objIndex].components[compIndex + 1]);
 	return true;
+}
+
+void Xeph2D::Edit::Editor::RemoveAllComponents(uint32_t typeID)
+{
+	Scene& scene = SceneManager::ActiveScene();
+	for (EditorGameObject& edObj : Get().m_sceneData.gameObjects)
+	{
+		std::remove_if(
+			edObj.components.begin(),
+			edObj.components.end(),
+			[=](const EditorComponent& edComp) { return edComp.typeID == typeID; });
+	}
+	for (auto& sp_obj : scene.m_gameObjects)
+	{
+		for (auto iter = sp_obj->m_components.begin(); iter != sp_obj->m_components.end();)
+		{
+			if (iter->get()->TypeID() == typeID)
+			{
+				iter->get()->OnEditorShutdown();
+				iter = sp_obj->m_components.erase(iter);
+			}
+			else
+				++iter;
+		}
+	}
 }
 
 void Xeph2D::Edit::Editor::YAMLSaver(YAML::Node& node, const Field& field)
@@ -487,6 +513,17 @@ void Xeph2D::Edit::Editor::SetUIStyle()
 	io.FontDefault = font;
 
 	ImGui::SFML::UpdateFontTexture();
+}
+
+void Xeph2D::Edit::Editor::DoProjectRebuild()
+{
+	int bufsize = GetWindowTextLength(m_handle) + 1;
+	char* title = new char[bufsize];
+	GetWindowTextA(m_handle, title, bufsize);
+
+	system((std::string("start ..\\reload-sln.exe \"") + title + "\"").c_str());
+
+	delete[] title;
 }
 
 #endif //_EDITOR
