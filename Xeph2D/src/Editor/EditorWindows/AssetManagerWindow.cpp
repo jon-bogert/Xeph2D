@@ -16,6 +16,7 @@
 void Xeph2D::Edit::AssetManagerWindow::Initialize()
 {
 	name = "Asset Manager";
+	Close();
 	AssetManager& assetManager = AssetManager::Get();
 	for (auto& texPair : assetManager.m_textureManifest)
 	{

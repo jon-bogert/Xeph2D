@@ -102,6 +102,8 @@ void Xeph2D::Edit::Editor::Initialize()
 		(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
 	Get().m_assetManagerWindow =
 		(AssetManagerWindow*)Get().m_editorWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
+	 Get().m_projectSettingsWindow =
+	 	(ProjectSettings*)Get().m_editorWindows.emplace_back(std::make_unique<ProjectSettings>()).get();
 
 	Get().m_transformGizmo = std::make_unique<TransformGizmo>();
 
@@ -225,6 +227,10 @@ void Xeph2D::Edit::Editor::OnGUI()
 			if (ImGui::MenuItem("Viewport"))
 			{
 				Get().m_viewportWindow->Open();
+			}
+			if (ImGui::MenuItem("ProjectSettings"))
+			{
+				Get().m_projectSettingsWindow->Open();
 			}
 			ImGui::EndMenu();
 		}
