@@ -41,7 +41,7 @@ void Xeph2D::Edit::AssetManagerWindow::OnGUI()
 		//	}
 		//}
 
-		if (ImGui::BeginTable("Texture Table", 4, ImGuiTableFlags_SizingFixedFit))
+		if (ImGui::BeginTable("Texture Table", 4, ImGuiTableFlags_Resizable))
 		{
 			ImGui::TableSetupColumn("In Scene");
 			ImGui::TableSetupColumn("Key");
@@ -54,6 +54,42 @@ void Xeph2D::Edit::AssetManagerWindow::OnGUI()
 			{
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
+				if (m_isEditing && count == m_editIndex)
+				{
+					ImGui::TableSetColumnIndex(1);
+					ImGui::InputText("##keyedit", m_keyBuffer, 255);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text(entry.path.c_str());
+					ImGui::TableSetColumnIndex(3);
+					if (ImGui::Button("Apply"))
+					{
+						m_isEditing = false;
+						AssetManager& assetManager = AssetManager::Get();
+						assetManager.m_textureManifest[m_keyBuffer] = assetManager.m_textureManifest[entry.key];
+						assetManager.m_textureManifest.erase(entry.key);
+
+						if (assetManager.m_loadedTextures.find(entry.key) != assetManager.m_loadedTextures.end())
+						{
+							assetManager.m_loadedTextures[m_keyBuffer] = std::make_unique<sf::Texture>(*assetManager.m_loadedTextures[entry.key]);
+							assetManager.m_loadedTextures.erase(entry.key);
+						}
+
+						std::vector<Ref<SpriteRenderer>> renderers = SceneManager::ActiveScene().FindObjectsOfType<SpriteRenderer>();
+						for (Ref<SpriteRenderer>& renderer : renderers)
+						{
+							if (renderer->GetTextureKey() == entry.key)
+								renderer->SetTexture(m_keyBuffer);
+						}
+
+						entry.key = m_keyBuffer;
+
+						Editor::SetIsSaved(false);
+						assetManager.SetIsSaved(false);
+					}
+					++count;
+					continue;
+				}
+
 				if (ImGui::Checkbox(("##in" + entry.key).c_str(), &entry.isInScene))
 				{
 					Editor::SetIsSaved(false);
@@ -79,6 +115,7 @@ void Xeph2D::Edit::AssetManagerWindow::OnGUI()
 					m_editType = Type::Texture;
 					m_showOptions = true;
 					m_optionsPos = (Vector2)ImGui::GetCursorPos() + ImGui::GetWindowPos();
+					m_isEditing = false;
 				}
 				++count;
 			}
@@ -94,7 +131,9 @@ void Xeph2D::Edit::AssetManagerWindow::OnGUI()
 
 			if (ImGui::MenuItem("Edit"))
 			{
-
+				m_isEditing = true;
+				Entry& entry = m_textures[m_editIndex];
+				strcpy(m_keyBuffer, entry.key.c_str());
 			}
 			if (ImGui::MenuItem("Remove"))
 			{

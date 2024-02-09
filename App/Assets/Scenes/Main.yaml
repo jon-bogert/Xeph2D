@@ -1,5 +1,6 @@
 textures:
   - test2
+  - test2-round
 objects:
   - instID: 0x00000001
     name: Camera
@@ -29,7 +30,7 @@ objects:
     components:
       - typeID: 0x00000002
         enabled: true
-        m_textureKey: test2
+        m_textureKey: test2-round
         m_color:
           r: 1
           g: 1

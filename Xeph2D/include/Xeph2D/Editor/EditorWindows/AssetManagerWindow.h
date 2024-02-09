@@ -38,6 +38,8 @@ namespace Xeph2D::Edit
 		bool m_showOptions = false;
 		ImVec2 m_optionsPos;
 		bool m_confirmRemove;
+		bool m_isEditing;
+		char m_keyBuffer[256];
 	};
 }
 

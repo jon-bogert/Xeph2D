@@ -22,7 +22,7 @@ namespace Xeph2D::Edit
 
         /// <summary>
         /// Adds file extention and tag to list of available file types
-        /// std::wstring ext: the extension (format -> L"*.cpp;h;hpp")
+        /// std::wstring ext: the extension (format -> L"*.cpp;*.h;*.hpp")
         /// (opt.) std::wstring desc: the description of the file (L"CPP Files")
         /// </summary>
         void PushFileType(const wchar_t* ext, const wchar_t* desc = L"")
