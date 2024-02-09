@@ -45,6 +45,41 @@ void Xeph2D::Runtime::Terminate()
 	Editor::Terminate();
 }
 
+void Xeph2D::Runtime::ParseArgs(int argc, wchar_t* argv[])
+{
+	for (int i = 0; i < argc; ++i)
+	{
+		Get().m_args.push_back(argv[i]);
+	}
+}
+
+void Xeph2D::Runtime::ParseArgs(wchar_t* pCmdLine)
+{
+	std::wistringstream stream(pCmdLine);
+	std::wstring arg;
+
+	while (stream >> arg)
+	{
+		Get().m_args.push_back(arg);
+	}
+}
+
+const std::vector<std::wstring>& Xeph2D::Runtime::Args()
+{
+	return Get().m_args;
+}
+
+std::vector<std::string> Xeph2D::Runtime::ArgsShort()
+{
+	std::vector<std::string> args{};
+	for (std::wstring& arg : Get().m_args)
+	{
+		args.push_back(Utility::ToShortString(arg));
+	}
+
+	return args;
+}
+
 #else
 
 void Xeph2D::Runtime::Initialize(

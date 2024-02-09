@@ -25,11 +25,18 @@ namespace Xeph2D
         static void Terminate();
         static bool IsOpen() { return Get().m_isOpen; }
 
+        static void ParseArgs(int argc, wchar_t* argv[]);
+        static void ParseArgs(wchar_t* pCmdLine);
+
+        static const std::vector<std::wstring>& Args();
+        static std::vector<std::string> ArgsShort();
+
     private:
         Runtime() {}
         static Runtime& Get() { static Runtime instance; return instance; }
 
         bool m_isOpen = true;
+        std::vector<std::wstring> m_args;
     };
 }
 
