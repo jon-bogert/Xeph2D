@@ -44,6 +44,7 @@ sf::Texture* Xeph2D::AssetManager::GetTexture(const std::string& key)
 	return Get().m_loadedTextures.at(key).get();
 }
 
+#ifdef _EDITOR
 void Xeph2D::AssetManager::SaveToFile()
 {
 	YAML::Node manifestInfo;
@@ -59,6 +60,7 @@ void Xeph2D::AssetManager::SaveToFile()
 	file << manifestInfo;
 	file.close();
 }
+#endif //_EDITOR
 
 void Xeph2D::AssetManager::LoadTexture(const std::string& key)
 {
