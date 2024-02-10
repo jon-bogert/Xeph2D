@@ -101,6 +101,8 @@ namespace Xeph2D::Edit
         friend class Hierarchy;
         friend class ScriptCreator;
         friend class ScriptManager;
+        friend class ProjectSettings;
+        Viewport* GetViewportWindow() { return m_viewportWindow; }
         Inspector* GetInspectorWindow() { return m_inspectorWindow; }
         TransformGizmo* GetTransformGizmo() { return m_transformGizmo.get(); }
         ScriptCreator* GetScriptCreator() { return m_scriptCreatorWindow; }

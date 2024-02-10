@@ -2,6 +2,8 @@
 #include "Xeph2D/Editor/EditorWindows/ProjectSettings.h"
 
 #include "Xeph2D/Utility.h"
+#include "Xeph2D/Systems/WindowManager.h"
+#include "Xeph2D/Editor/Editor.h"
 
 #include <fstream>
 
@@ -13,6 +15,7 @@ void Xeph2D::Edit::ProjectSettings::Initialize()
 
 	m_buildData = YAML::LoadFile(SETTINGS_DIR + m_buildFile);
 	m_displayData = YAML::LoadFile(SETTINGS_DIR + m_displayFile);
+	Close();
 }
 
 void Xeph2D::Edit::ProjectSettings::OnGUI()
@@ -43,6 +46,8 @@ void Xeph2D::Edit::ProjectSettings::OnGUI()
 	if (ImGui::Button("Save"))
 	{
 		SaveFiles();
+		WindowManager::Initialize();
+		Editor::Get().GetViewportWindow()->UpdateSize();
 	}
 }
 

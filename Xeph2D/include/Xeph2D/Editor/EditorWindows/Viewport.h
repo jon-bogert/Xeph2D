@@ -19,9 +19,16 @@ namespace Xeph2D::Edit
 		Vector2 GetMousePos() const;
 
 	private:
+#ifdef _EDITOR
+		friend class ProjectSettings;
+		void UpdateSize() { m_updateSize = true; }
+#endif //_EDITOR
+
 		Xeph2D::Vector2 m_size;
 		bool m_isHovered = false;
 		Vector2 m_mouseInViewport{};
+
+		bool m_updateSize = false;
 	};
 }
 #endif //_EDITOR

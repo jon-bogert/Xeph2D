@@ -217,8 +217,11 @@ void Xeph2D::Edit::Editor::OnGUI()
 			}
 			if (ImGui::MenuItem("Inspector"))
 			{
-				Debug::Log("Unimplemented");
 				Get().m_inspectorWindow->Open();
+			}
+			if (ImGui::MenuItem("ProjectSettings"))
+			{
+				Get().m_projectSettingsWindow->Open();
 			}
 			if (ImGui::MenuItem("Script Manager"))
 			{
@@ -227,10 +230,6 @@ void Xeph2D::Edit::Editor::OnGUI()
 			if (ImGui::MenuItem("Viewport"))
 			{
 				Get().m_viewportWindow->Open();
-			}
-			if (ImGui::MenuItem("ProjectSettings"))
-			{
-				Get().m_projectSettingsWindow->Open();
 			}
 			ImGui::EndMenu();
 		}

@@ -11,4 +11,4 @@ ref-resolution:
 style: 2
 debug-style: 0
 lock-framerate: 0
-ppu: 32
+ppu: 64

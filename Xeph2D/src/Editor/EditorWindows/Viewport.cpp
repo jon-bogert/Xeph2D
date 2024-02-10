@@ -21,8 +21,9 @@ void Xeph2D::Edit::Viewport::OnGUI()
 
 	ImGui::Image(*WindowManager::__Viewport());
 
-	if (Vector2(ImGui::GetWindowSize()) != m_size)
+	if (Vector2(ImGui::GetWindowSize()) != m_size || m_updateSize)
 	{
+		m_updateSize = false;
 		m_size = ImGui::GetWindowSize();
 		WindowManager::__UpdateViewportSize(m_size - Vector2(10.f, 30.f));
 	}
