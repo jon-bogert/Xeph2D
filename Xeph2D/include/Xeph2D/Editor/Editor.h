@@ -7,8 +7,8 @@
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
 #include "Xeph2D/Editor/EditorWindows/Hierarchy.h"
 #include "Xeph2D/Editor/EditorWindows/Inspector.h"
-#include "Xeph2D/Editor/EditorWindows/ScriptCreator.h"
-#include "Xeph2D/Editor/EditorWindows/ScriptManager.h"
+#include "Xeph2D/Editor/EditorWindows/ComponentCreator.h"
+#include "Xeph2D/Editor/EditorWindows/ComponentManager.h"
 #include "Xeph2D/Editor/EditorWindows/AssetManagerWindow.h"
 #include "Xeph2D/Editor/EditorWindows/ProjectSettings.h"
 #include "Xeph2D/Editor/TransformGizmo.h"
@@ -91,22 +91,22 @@ namespace Xeph2D::Edit
         Viewport* m_viewportWindow;
         Hierarchy* m_hierarchyWindow;
         Inspector* m_inspectorWindow;
-        ScriptManager* m_scriptManagerWindow;
-        ScriptCreator* m_scriptCreatorWindow;
+        ComponentManager* m_componentManagerWindow;
+        ComponentCreator* m_componentCreatorWindow;
         AssetManagerWindow* m_assetManagerWindow;
         ProjectSettings* m_projectSettingsWindow;
 
         std::unique_ptr<TransformGizmo> m_transformGizmo;
 
         friend class Hierarchy;
-        friend class ScriptCreator;
-        friend class ScriptManager;
+        friend class ComponentCreator;
+        friend class ComponentManager;
         friend class ProjectSettings;
         Viewport* GetViewportWindow() { return m_viewportWindow; }
         Inspector* GetInspectorWindow() { return m_inspectorWindow; }
         TransformGizmo* GetTransformGizmo() { return m_transformGizmo.get(); }
-        ScriptCreator* GetScriptCreator() { return m_scriptCreatorWindow; }
-        ScriptManager* GetScriptManager() { return m_scriptManagerWindow; }
+        ComponentCreator* GetComponentCreator() { return m_componentCreatorWindow; }
+        ComponentManager* GetComponentManager() { return m_componentManagerWindow; }
 
 
         std::unique_ptr<sf::Font> m_font = nullptr;

@@ -4,5 +4,7 @@ default:
   - id: 0x00000002
     name: SpriteRenderer
 user:
+  - id: 0x0867932b
+    name: CoolScript
   - id: 0xa45ff78b
     name: TestScript

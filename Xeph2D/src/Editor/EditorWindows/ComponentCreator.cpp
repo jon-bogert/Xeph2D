@@ -1,12 +1,12 @@
 #ifdef _EDITOR
-#include "Xeph2D/Editor/EditorWindows/ScriptCreator.h"
+#include "Xeph2D/Editor/EditorWindows/ComponentCreator.h"
 
 #include "Xeph2D/Editor/Editor.h"
 
-void Xeph2D::Edit::ScriptCreator::Initialize()
+void Xeph2D::Edit::ComponentCreator::Initialize()
 {
 	isOpen = false;
-	name = "Create New Script";
+	name = "Create New Component";
 	m_defaultFlags |=
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoResize |
@@ -15,7 +15,7 @@ void Xeph2D::Edit::ScriptCreator::Initialize()
 	flags = m_defaultFlags;
 }
 
-void Xeph2D::Edit::ScriptCreator::OnGUI()
+void Xeph2D::Edit::ComponentCreator::OnGUI()
 {
 	ImGui::SetWindowPos({ (ImGui::GetMainViewport()->Size.x - ImGui::GetWindowWidth()) * 0.5f, (ImGui::GetMainViewport()->Size.y - ImGui::GetWindowHeight()) * 0.5f });
 	if (m_isConfirmed)
@@ -42,7 +42,7 @@ void Xeph2D::Edit::ScriptCreator::OnGUI()
 	ImGui::Text("Path:");
 	ImGui::SameLine();
 	ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.f }, "(optional)");
-	ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.f }, "Assets/Scripts/");
+	ImGui::TextColored({ 0.5f, 0.5f, 0.5f, 1.f }, "Assets/Components/");
 	ImGui::SameLine();
 	ImGui::InputText("##Path", m_pathBuffer, 1024);
 	ImGui::NewLine();
@@ -53,7 +53,7 @@ void Xeph2D::Edit::ScriptCreator::OnGUI()
 			m_isConfirmed = true;
 			flags |= ImGuiWindowFlags_NoDecoration;
 			std::string pathFull = std::string(m_pathBuffer);
-			Editor::Get().GetScriptManager()->CreateNew(m_nameBuffer, pathFull);
+			Editor::Get().GetComponentManager()->CreateNew(m_nameBuffer, pathFull);
 			Editor::RebuildProject();
 		}
 	}

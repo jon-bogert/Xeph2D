@@ -10,13 +10,13 @@
 
 namespace Xeph2D::Edit
 {
-	class ScriptManager : public EditorWindow
+	class ComponentManager : public EditorWindow
 	{
 	public:
 		void Initialize() override;
 		void OnGUI() override;
 
-		std::string GetScriptName(uint32_t typeID) const;
+		std::string GetComponentName(uint32_t typeID) const;
 		std::vector<std::string> GetAllNames();
 		uint32_t GetID(std::string name) const;
 	private:
@@ -24,9 +24,9 @@ namespace Xeph2D::Edit
 		void SaveToFile();
 		void GenerateHeader();
 
-		friend class ScriptCreator;
+		friend class ComponentCreator;
 		void CreateNew(const std::string& name, std::string& path);
-		bool EditScript(uint32_t id);
+		bool EditComponent(uint32_t id);
 		void GenerateFiles(const std::string& name, const std::string& path, uint32_t newID);
 
 		struct Entry
@@ -38,8 +38,8 @@ namespace Xeph2D::Edit
 			Entry(const std::string& name, const std::string& path) : name(name), path(path) {}
 		};
 
-		std::map<uint32_t, std::string> m_defaultScripts;
-		std::map<uint32_t, Entry> m_userScripts;
+		std::map<uint32_t, std::string> m_defaultComponents;
+		std::map<uint32_t, Entry> m_userComponents;
 
 		int m_editSelection = -1;
 

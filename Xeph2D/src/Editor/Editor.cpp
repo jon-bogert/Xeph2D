@@ -96,10 +96,10 @@ void Xeph2D::Edit::Editor::Initialize()
 		(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get().m_hierarchyWindow =
 		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
-	Get().m_scriptManagerWindow =
-		(ScriptManager*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptManager>()).get();
-	Get().m_scriptCreatorWindow =
-		(ScriptCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ScriptCreator>()).get();
+	Get().m_componentManagerWindow =
+		(ComponentManager*)Get().m_editorWindows.emplace_back(std::make_unique<ComponentManager>()).get();
+	Get().m_componentCreatorWindow =
+		(ComponentCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ComponentCreator>()).get();
 	Get().m_assetManagerWindow =
 		(AssetManagerWindow*)Get().m_editorWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
 	 Get().m_projectSettingsWindow =
@@ -145,7 +145,7 @@ void Xeph2D::Edit::Editor::InputProc()
 		{
 			if (InputSystem::GetKeyDown(Key::N))
 			{
-				Get().m_scriptCreatorWindow->Open();
+				Get().m_componentCreatorWindow->Open();
 			}
 		}
 		else //============
@@ -199,7 +199,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	{
 		if (ImGui::MenuItem("Create New Script", "Ctrl+Shift+N"))
 		{
-			Get().m_scriptCreatorWindow->Open();
+			Get().m_componentCreatorWindow->Open();
 		}
 		ImGui::EndMenu();
 	}
@@ -225,7 +225,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 			}
 			if (ImGui::MenuItem("Script Manager"))
 			{
-				Get().m_scriptManagerWindow->Open();
+				Get().m_componentManagerWindow->Open();
 			}
 			if (ImGui::MenuItem("Viewport"))
 			{

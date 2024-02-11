@@ -1,5 +1,5 @@
 #include <Xeph2D.h>
-#include "gen/ScriptManifest.generated.h"
+#include "gen/ComponentManifest.generated.h"
 
 #ifdef _CONSOLE
 int wmain(int argc, wchar_t* argv[])

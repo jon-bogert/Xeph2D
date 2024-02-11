@@ -1,0 +1,15 @@
+objects:
+  - instID: 0x00000001
+    name: Camera
+    transform:
+      position:
+        x: 0
+        y: 0
+      rotation: 0
+      scale:
+        x: 1
+        y: 1
+    active: true
+    components:
+      - typeID: 0x00000001
+        enabled: true

@@ -7,7 +7,7 @@
 
 namespace Xeph2D::Edit
 {
-	class ScriptCreator : public EditorWindow
+	class ComponentCreator : public EditorWindow
 	{
 	public:
 		void Initialize() override;

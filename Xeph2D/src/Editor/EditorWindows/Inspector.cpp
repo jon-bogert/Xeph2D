@@ -42,7 +42,7 @@ void Xeph2D::Edit::Inspector::OnGUI()
 
 	for (EditorComponent& component : activeObject.components)
 	{
-		std::string compName = Editor::Get().GetScriptManager()->GetScriptName(component.typeID);
+		std::string compName = Editor::Get().GetComponentManager()->GetComponentName(component.typeID);
 		if (ImGui::CollapsingHeader(compName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ShowData(component.enabled, component.typeID);
@@ -220,10 +220,10 @@ std::string Xeph2D::Edit::Inspector::Var2DisplayName(std::string varName)
 void Xeph2D::Edit::Inspector::DrawEdit()
 {
 	std::vector<std::string> itemNames;
-	ScriptManager& scriptManager = *Editor::Get().GetScriptManager();
+	ComponentManager& scriptManager = *Editor::Get().GetComponentManager();
 	for (EditorComponent& activeComp : Editor::Get().m_sceneData.gameObjects[m_activeIndex].components)
 	{
-		itemNames.push_back(scriptManager.GetScriptName(activeComp.typeID));
+		itemNames.push_back(scriptManager.GetComponentName(activeComp.typeID));
 	}
 	if (ImGui::ListBox("##HItems", &m_editSelection, Utility::CStrVect(itemNames).data(), itemNames.size()))
 	{
@@ -266,7 +266,7 @@ void Xeph2D::Edit::Inspector::DrawEdit()
 		if (InputSystem::GetMouseDown(Mouse::Button::Left) && !ImGui::IsWindowHovered())
 			m_showAdd = false;
 	
-		std::vector<std::string> compNames = Editor::Get().GetScriptManager()->GetAllNames();
+		std::vector<std::string> compNames = Editor::Get().GetComponentManager()->GetAllNames();
 		ImGui::InputText("##SearchAddComp", m_editSearchBuff, MAX_PATH - 1);
 		for (auto& comp : compNames)
 		{
@@ -274,7 +274,7 @@ void Xeph2D::Edit::Inspector::DrawEdit()
 				continue;
 			if (ImGui::MenuItem((comp + "##AddComp").c_str()))
 			{
-				uint32_t id = Editor::Get().GetScriptManager()->GetID(comp);
+				uint32_t id = Editor::Get().GetComponentManager()->GetID(comp);
 				Editor::AddComponent(m_activeIndex, id);
 				Editor::SetIsSaved(false);
 				m_showAdd = false;

@@ -87,7 +87,7 @@ project "App"
 	
 	includedirs
 	{
-		"%{prj.name}/Assets/Scripts",
+		"%{prj.name}/Assets/Components",
 		"ext/box2d/include",
 		"ext/SFML/include",
 		"ext/yaml-cpp/include",
