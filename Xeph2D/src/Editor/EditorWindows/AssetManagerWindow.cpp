@@ -17,6 +17,9 @@ void Xeph2D::Edit::AssetManagerWindow::Initialize()
 {
 	name = "Asset Manager";
 	Close();
+
+	m_textures.clear();
+
 	AssetManager& assetManager = AssetManager::Get();
 	for (auto& texPair : assetManager.m_textureManifest)
 	{
@@ -159,14 +162,17 @@ void Xeph2D::Edit::AssetManagerWindow::OnGUI()
 void Xeph2D::Edit::AssetManagerWindow::AddTexture()
 {
 	FileBrowser browser;
-	std::filesystem::path startPath = "Assets/Textures";
+	std::filesystem::path startPath = "Assets\\Textures\\";
 	startPath = std::filesystem::absolute(startPath);
 	browser.PushFileType(L"*.bmp;*.png*;.tga;*.jpg;*.gif;*.psd;*.hdr;*.pic;*.pnm", L"Image files");
 	browser.SetStartPath(startPath);
 	std::filesystem::path path = browser.GetFile();
 
 	//Check path is within the start path
-	if (std::mismatch(startPath.begin(), startPath.end(), path.begin()).first != startPath.end())
+	//if (std::mismatch(startPath.begin(), startPath.end(), path.begin()).first != startPath.end())
+	if (path.empty())
+		return;
+	if (FileBrowser::IsRelativeTo(path, startPath))
 	{
 		Debug::LogErr("Asset selected wasn't located in \"Assets\\Textures\"");
 		return;

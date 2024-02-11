@@ -4,6 +4,7 @@
 #include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/SceneManager.h"
 #include "Xeph2D/Scene.h"
+#include "Xeph2D/Editor/FileBrowser.h"
 
 #include "../Systems/CustomSerialTypes.h"
 
@@ -25,6 +26,7 @@ void Xeph2D::Edit::Editor::Close()
 	if (!Get().m_isSaved)
 	{
 		Get().m_showSaveWindow = true;
+		Get().m_saveAction = Editor::Close;
 		return;
 	}
 	Get().m_window->close();
@@ -45,7 +47,7 @@ void Xeph2D::Edit::Editor::Save()
 	{
 		sceneData["textures"].push_back(tex.first);
 	}
-
+	EditorSceneData& sc = Get().m_sceneData;
 	//OBJECTS
 	for (EditorGameObject& currObject : Get().m_sceneData.gameObjects)
 	{
@@ -68,6 +70,25 @@ void Xeph2D::Edit::Editor::Save()
 		sceneData["objects"].push_back(obj);
 	}
 
+	if (!std::filesystem::exists("Assets/Scenes/" + SceneManager::ActiveScene().GetName()))
+	{
+		FileBrowser browser;
+		browser.PushFileType(L"*.scene", L"Xeph2D Scene");
+		browser.PushFileType(L"*.yaml", L"YAML File");
+		browser.SetDefaultExtension(L"*.scene");
+		std::filesystem::path startPath = L"Assets\\Scenes\\";
+		browser.SetStartPath(std::filesystem::absolute(startPath));
+		std::filesystem::path filePath = browser.SaveFile();
+		if (filePath.empty())
+			return;
+		if (!FileBrowser::IsRelativeTo(filePath, startPath))
+		{
+			Debug::LogErr("Couldn't save scene file outside of \"Assets/Scenes\" folder");
+			return;
+		}
+		SceneManager::ActiveScene().m_name = std::filesystem::relative(filePath, std::filesystem::absolute(startPath)).u8string();
+	}
+
 	std::string path = "Assets/Scenes/" + SceneManager::ActiveScene().GetName();
 	std::ofstream file(path);
 
@@ -76,6 +97,11 @@ void Xeph2D::Edit::Editor::Save()
 	file.close();
 
 	SetIsSaved(true);
+	YAML::Node editorData;
+	editorData["last"] = SceneManager::ActiveScene().GetName();
+	file.open("debug/Editor.yaml");
+	file << editorData;
+	file.close();
 }
 
 void Xeph2D::Edit::Editor::Initialize()
@@ -150,6 +176,14 @@ void Xeph2D::Edit::Editor::InputProc()
 		}
 		else //============
 		{
+			if (InputSystem::GetKeyDown(Key::N))
+			{
+				SceneManager::Get().EmptyScene();
+			}
+			if (InputSystem::GetKeyDown(Key::O))
+			{
+				SceneManager::Get().OpenSceneWindow();
+			}
 			if (InputSystem::GetKeyDown(Key::S))
 			{
 				Save();
@@ -185,6 +219,14 @@ void Xeph2D::Edit::Editor::OnGUI()
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("File##MainMenu"))
 	{
+		if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+		{
+			SceneManager::EmptyScene();
+		}
+		if (ImGui::MenuItem("Open", "Ctrl+O"))
+		{
+			SceneManager::OpenSceneWindow();
+		}
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
 			Save();
@@ -197,7 +239,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	}
 	if (ImGui::BeginMenu("Edit##MainMenu"))
 	{
-		if (ImGui::MenuItem("Create New Script", "Ctrl+Shift+N"))
+		if (ImGui::MenuItem("Create New Component", "Ctrl+Shift+N"))
 		{
 			Get().m_componentCreatorWindow->Open();
 		}
@@ -211,6 +253,10 @@ void Xeph2D::Edit::Editor::OnGUI()
 			{
 				Get().m_assetManagerWindow->Open();
 			}
+			if (ImGui::MenuItem("Component Manager"))
+			{
+				Get().m_componentManagerWindow->Open();
+			}
 			if (ImGui::MenuItem("Hierarchy"))
 			{
 				Get().m_hierarchyWindow->Open();
@@ -219,13 +265,9 @@ void Xeph2D::Edit::Editor::OnGUI()
 			{
 				Get().m_inspectorWindow->Open();
 			}
-			if (ImGui::MenuItem("ProjectSettings"))
+			if (ImGui::MenuItem("Project Settings"))
 			{
 				Get().m_projectSettingsWindow->Open();
-			}
-			if (ImGui::MenuItem("Script Manager"))
-			{
-				Get().m_componentManagerWindow->Open();
 			}
 			if (ImGui::MenuItem("Viewport"))
 			{
@@ -262,14 +304,14 @@ void Xeph2D::Edit::Editor::OnGUI()
 		{
 			Get().m_isSaved = true;
 			Save();
-			Close();
+			Get().m_handleSaveAction = true;
 			Get().m_showSaveWindow = false;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Don't Save"))
 		{
 			Get().m_isSaved = true;
-			Close();
+			Get().m_handleSaveAction = true;
 			Get().m_showSaveWindow = false;
 		}
 		ImGui::SameLine();
@@ -278,6 +320,11 @@ void Xeph2D::Edit::Editor::OnGUI()
 			Get().m_showSaveWindow = false;
 		}
 		ImGui::End();
+	}
+	if (Get().m_handleSaveAction)
+	{
+		Get().m_handleSaveAction = false;
+		Get().m_saveAction();
 	}
 }
 
@@ -546,6 +593,13 @@ void Xeph2D::Edit::Editor::DoProjectRebuild()
 	system((std::string("start ..\\reload-sln.exe \"") + title + "\"").c_str());
 
 	delete[] title;
+}
+
+void Xeph2D::Edit::Editor::ClearSceneData()
+{
+	m_sceneData.gameObjects.clear();
+	m_inspectorWindow->m_activeIndex = -1;
+	m_hierarchyWindow->m_selectionIndex = -1;
 }
 
 #endif //_EDITOR

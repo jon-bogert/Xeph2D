@@ -1,0 +1,76 @@
+textures:
+  - test2
+  - test2-round
+objects:
+  - instID: 0x00000001
+    name: Camera
+    transform:
+      position:
+        x: 0
+        y: 0
+      rotation: 0
+      scale:
+        x: 1
+        y: 1
+    active: true
+    components:
+      - typeID: 0x00000001
+        enabled: true
+  - instID: 0x00000002
+    name: My Object1
+    transform:
+      position:
+        x: 1
+        y: 1
+      rotation: 0
+      scale:
+        x: 1
+        y: 1
+    active: true
+    components:
+      - typeID: 0x00000002
+        enabled: true
+        m_textureKey: test2
+        m_color:
+          r: 1
+          g: 1
+          b: 1
+          a: 1
+      - typeID: 0xa45ff78b
+        enabled: true
+        m_colors[0]:
+          r: 1
+          g: 1
+          b: 1
+          a: 1
+        m_colors[1]:
+          r: 1
+          g: 0
+          b: 0
+          a: 1
+        m_isMain: true
+  - instID: 0x11a99c93
+    name: GameObject
+    transform:
+      position:
+        x: 0
+        y: 0
+      rotation: 0
+      scale:
+        x: 1
+        y: 1
+    active: true
+    components:
+      - typeID: 0xa45ff78b
+        enabled: true
+        m_colors[0]:
+          r: 1
+          g: 1
+          b: 1
+          a: 1
+        m_colors[1]:
+          r: 1
+          g: 0
+          b: 0
+          a: 1
+        m_isMain: false

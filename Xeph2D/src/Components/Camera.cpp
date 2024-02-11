@@ -7,6 +7,11 @@ void Xeph2D::Camera::OnEditorStart()
 	Awake();
 }
 
+void Xeph2D::Camera::OnEditorShutdown()
+{
+	OnDestroy();
+}
+
 void Xeph2D::Camera::Awake()
 {
 	WindowManager::SetCamera(this);
@@ -14,7 +19,7 @@ void Xeph2D::Camera::Awake()
 
 void Xeph2D::Camera::OnDestroy()
 {
-	if (!(WindowManager::Get().m_camera == this))
+	if (WindowManager::Get().m_camera != this)
 	{
 		Debug::LogErr("Camera -> Tried to clear camera when not active in WindowManager");
 		return;

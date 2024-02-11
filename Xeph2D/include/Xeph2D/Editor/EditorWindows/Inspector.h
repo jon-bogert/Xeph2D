@@ -16,13 +16,13 @@ namespace Xeph2D::Edit
 
 	private:
 		friend class Hierarchy;
+		friend class Editor;
 		void SetActiveIndex(int index);
 
 		void ShowData(Field& field, uint32_t compID, bool showName = true, SerializableType type = SerializableType::Undefined); // Undefined will get type from field;
 		std::string Var2DisplayName(std::string varName);
 
 		void DrawEdit();
-		void AddComponent(uint32_t id);
 
 		int m_activeIndex = -1;
 		int m_editSelection = -1;

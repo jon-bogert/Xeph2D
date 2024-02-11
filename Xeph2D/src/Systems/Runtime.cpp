@@ -21,7 +21,7 @@ void Xeph2D::Runtime::Initialize(
 	WindowManager::Initialize();
 	AssetManager::Initialize();
 	SceneManager::Initialize(populateCallback);
-	SceneManager::LoadScene(0);
+	SceneManager::LoadLast();
 	Editor::Initialize();
 }
 
@@ -53,7 +53,11 @@ void Xeph2D::Runtime::Initialize(
 	WindowManager::Initialize();
 	AssetManager::Initialize();
 	SceneManager::Initialize(populateCallback);
+#ifdef _DEBUG
+	SceneManager::LoadLast();
+#else
 	SceneManager::LoadScene(0);
+#endif //_DEBUG
 }
 
 void Xeph2D::Runtime::Update()

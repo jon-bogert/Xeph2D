@@ -74,6 +74,7 @@ namespace Xeph2D
 
 		std::string m_name = "Untitled";
 		bool m_initialized = false;
+		bool m_hasFile = false; // will be true if loaded fron existing file, false if just created and no file exists
 	};
 }
 

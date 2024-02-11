@@ -15,6 +15,10 @@
 #include <vector>
 #include <functional>
 
+#ifdef _DEBUG
+#define EDITOR_FILE "debug/Editor.yaml"
+#endif //_DEBUG
+
 namespace Xeph2D
 {
 #ifdef _EDITOR
@@ -22,12 +26,13 @@ namespace Xeph2D
     {
         struct EditorGameObject;
         class Editor;
+        class ProjectSettings;
     }
 #endif //_EDITOR
     class Scene;
     class Component;
 
-    using SceneInfo = std::string;
+    using ScenePath = std::string;
     class SceneManager final
     {
     public:
@@ -54,16 +59,25 @@ namespace Xeph2D
             std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback
         );
 
+        void LoadSceneFile(const std::string& filePath, const int buildIndex, bool isFullPath = false);
+
         YAML::iterator::value_type* m_componentInfoBuffer = nullptr;
 
 #ifdef _EDITOR
         Edit::EditorComponent* m_editorCompBuffer = nullptr;
 
         friend class Edit::Editor;
+        friend class Edit::ProjectSettings;
         std::shared_ptr<Component>& AddComponentByID(const int gameObjectIndex, const uint32_t typeID);
+        void SaveSceneManifest();
+        static void OpenSceneWindow();
+        static void EmptyScene();
 #endif //_EDITOR
+#ifdef _DEBUG
+        static void LoadLast();
+#endif //_DEBUG
 
-        using SceneManifest = std::vector<SceneInfo>;
+        using SceneManifest = std::vector<ScenePath>;
         SceneManifest m_manifest;
         int m_index = -1;
         std::shared_ptr<Scene> m_activeScene;

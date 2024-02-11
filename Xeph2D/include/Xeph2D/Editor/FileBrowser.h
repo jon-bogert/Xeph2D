@@ -4,6 +4,7 @@
 #ifdef _EDITOR
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include <Windows.h>
 #include <shobjidl.h> 
@@ -219,6 +220,13 @@ namespace Xeph2D::Edit
             }
             CoUninitialize();
             return path;
+        }
+
+        static bool IsRelativeTo(const std::filesystem::path& path, const std::filesystem::path& parent)
+        {
+            std::filesystem::path pathAbs = std::filesystem::absolute(path);
+            std::filesystem::path parentAbs = std::filesystem::absolute(parent);
+            return std::mismatch(parentAbs.begin(), parentAbs.end(), pathAbs.begin()).first != parentAbs.end();
         }
     };
 }

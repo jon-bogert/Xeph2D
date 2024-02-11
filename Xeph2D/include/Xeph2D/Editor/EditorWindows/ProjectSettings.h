@@ -23,6 +23,11 @@ namespace Xeph2D::Edit
 		void DisplayPage();
 		void BuildPage();
 
+		void AddBuildScene();
+		void RemoveBuildScene();
+		void BuildSceneUp();
+		void BuildSceneDown();
+
 		void SaveFiles();
 
 		enum class Page // NOTE: Maintain Alpha-older
@@ -44,6 +49,8 @@ namespace Xeph2D::Edit
 		YAML::Node m_displayData;
 		const std::string m_buildFile = "BuildInfo.yaml";
 		const std::string m_displayFile = "WindowProperties.yaml";
+
+		int m_buildIndexSelection = -1;
 	};
 }
 

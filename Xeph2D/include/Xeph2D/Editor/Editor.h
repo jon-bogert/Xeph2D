@@ -65,8 +65,11 @@ namespace Xeph2D::Edit
 
         void RemoveAllComponents(uint32_t id);
         void DoProjectRebuild();
+        void ClearSceneData();
 
         bool m_showSaveWindow = false;
+        std::function<void(void)> m_saveAction;
+        bool m_handleSaveAction = false;
 
         friend class WindowManager;
         Transform* GetViewportTransform() { return &m_viewportTransform; }

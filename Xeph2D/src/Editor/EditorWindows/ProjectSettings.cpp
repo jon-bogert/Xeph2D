@@ -4,8 +4,10 @@
 #include "Xeph2D/Utility.h"
 #include "Xeph2D/Systems/WindowManager.h"
 #include "Xeph2D/Editor/Editor.h"
+#include "Xeph2D/Editor/FileBrowser.h"
 
 #include <fstream>
+#include <filesystem>
 
 #define SETTINGS_DIR "settings/"
 
@@ -48,6 +50,7 @@ void Xeph2D::Edit::ProjectSettings::OnGUI()
 		SaveFiles();
 		WindowManager::Initialize();
 		Editor::Get().GetViewportWindow()->UpdateSize();
+		SceneManager::Get().SaveSceneManifest();
 	}
 }
 
@@ -157,7 +160,89 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 
 void Xeph2D::Edit::ProjectSettings::BuildPage()
 {
+	SceneManager& sceneManager = SceneManager::Get();
+	std::vector<std::string> scenes;
+	uint32_t count = 0;
+	for (ScenePath& path : sceneManager.m_manifest)
+	{
+		scenes.push_back(std::to_string(count++) + " - " + path);
+	}
+	ImGui::Text("Build Scene Order");
+	if (ImGui::ListBox("##SceneOrder", &m_buildIndexSelection, Utility::CStrVect(scenes).data(), scenes.size()))
+	{
+		
+	}
+	if (ImGui::Button("+##addScene"))
+	{
+		AddBuildScene();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("-##remScene"))
+	{
+		RemoveBuildScene();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("^##upScene"))
+	{
+		BuildSceneUp();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("v##downScene"))
+	{
+		BuildSceneDown();
+	}
+}
 
+void Xeph2D::Edit::ProjectSettings::AddBuildScene()
+{
+	FileBrowser browser;
+	browser.PushFileType(L"*.scene", L"Xeph2D Scene");
+	browser.PushFileType(L"*.yaml", L"YAML File");
+
+	std::filesystem::path startPath = std::filesystem::absolute("Assets\\Scenes\\");
+	browser.SetStartPath(startPath);
+
+	std::filesystem::path filePath = browser.GetFile();
+	if (filePath.empty())
+		return;
+	if (!FileBrowser::IsRelativeTo(filePath, startPath))
+	{
+		Debug::LogErr("ProjectSettings::AddBuildScene -> Selected file is not in \"Assets\\Scenes\" folder");
+		return;
+	}
+
+	filePath = std::filesystem::relative(filePath, startPath);
+
+	SceneManager::Get().m_manifest.push_back(filePath.u8string());
+}
+
+void Xeph2D::Edit::ProjectSettings::RemoveBuildScene()
+{
+	if (m_buildIndexSelection < 0)
+		return;
+
+	SceneManager::SceneManifest& manifest = SceneManager::Get().m_manifest;
+	manifest.erase(manifest.begin() + m_buildIndexSelection);
+}
+
+void Xeph2D::Edit::ProjectSettings::BuildSceneUp()
+{
+	if (m_buildIndexSelection <= 0)
+		return;
+
+	SceneManager::SceneManifest& manifest = SceneManager::Get().m_manifest;
+	std::swap(manifest[m_buildIndexSelection], manifest[m_buildIndexSelection - 1]);
+	--m_buildIndexSelection;
+}
+
+void Xeph2D::Edit::ProjectSettings::BuildSceneDown()
+{
+	SceneManager::SceneManifest& manifest = SceneManager::Get().m_manifest;
+	if (m_buildIndexSelection >= manifest.size() - 1)
+		return;
+
+	std::swap(manifest[m_buildIndexSelection], manifest[m_buildIndexSelection + 1]);
+	++m_buildIndexSelection;
 }
 
 void Xeph2D::Edit::ProjectSettings::SaveFiles()

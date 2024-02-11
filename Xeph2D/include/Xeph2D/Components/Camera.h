@@ -12,6 +12,7 @@ namespace Xeph2D
 		XEPH2D_REG_COMP(0x00000001);
 
 		void OnEditorStart() override;
+		void OnEditorShutdown() override;
 
 		void Awake() override;
 		void OnDestroy() override;
