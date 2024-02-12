@@ -8,4 +8,4 @@
 #define SERIALIZE_VEC2(var)		SceneManager::__Deserialize(SerializableType::Vector2, &var, #var)
 #define SERIALIZE_COLOR(var)	SceneManager::__Deserialize(SerializableType::Color, &var, #var)
 #define SERIALIZE_TRANSF(var)	SceneManager::__Deserialize(SerializableType::Transform, var, #var)
-#define SERIALIZE_REF(var)		SceneManager::__Deserialize(SerializableType::Reference, var, #var)
+#define SERIALIZE_REF(var)		SceneManager::__Deserialize(SerializableType::Reference, &var, #var)

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Xeph2D/Interfaces/Referenceable.h"
+#include "Xeph2D/Utility.h"
+
 #include <Xeph2D/Structs.h>
 #include <yaml-cpp/yaml.h>
 
@@ -63,5 +66,17 @@ namespace Xeph2D::CustomSerialTypes
 		node["g"] = color.g;
 		node["b"] = color.b;
 		node["a"] = color.a;
+	}
+
+	template<typename NODE>
+	void RefToYAML(NODE& node, const Ref<Referenceable>& ref)
+	{
+		if (ref.IsNull())
+		{
+			node = Utility::ToHex32String(NULL);
+			return;
+		}
+
+		node = Utility::ToHex32String(ref->InstID());
 	}
 }

@@ -1,6 +1,7 @@
 #ifndef __XEPH2D_GAMEOBJECT_H__
 #define __XEPH2D_GAMEOBJECT_H__
 
+#include "Xeph2D/Interfaces/Referenceable.h"
 #include "Xeph2D/Structs.h"
 #include "Xeph2D/Systems/SceneManager.h"
 #include "Xeph2D/Scene.h"
@@ -21,14 +22,14 @@ namespace Xeph2D
 	class Ref;
 
 	class Component;
-	class GameObject final
+	class GameObject final : public Referenceable
 	{
 #ifdef _EDITOR
 		friend class Edit::Editor;
 #endif //_EDITOR
 		friend class WindowManager;
 	public:
-		uint32_t InstID() { return m_instID; }
+		uint32_t InstID() override { return m_instID; }
 		std::string GetName() { return m_name; }
 
 		bool IsActive() const { return m_isActive; };

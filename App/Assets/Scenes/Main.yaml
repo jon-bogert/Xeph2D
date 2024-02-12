@@ -17,7 +17,7 @@ objects:
       - typeID: 0x00000001
         enabled: true
   - instID: 0x00000002
-    name: My Object1
+    name: VisualObject
     transform:
       position:
         x: 1
@@ -36,21 +36,8 @@ objects:
           g: 1
           b: 1
           a: 1
-      - typeID: 0xa45ff78b
-        enabled: true
-        m_colors[0]:
-          r: 1
-          g: 1
-          b: 1
-          a: 1
-        m_colors[1]:
-          r: 1
-          g: 0
-          b: 0
-          a: 1
-        m_isMain: true
-  - instID: 0x11a99c93
-    name: GameObject
+  - instID: 0x7f349aa6
+    name: ControllerObject
     transform:
       position:
         x: 0
@@ -73,4 +60,5 @@ objects:
           g: 0
           b: 0
           a: 1
-        m_isMain: false
+        m_isMain: true
+        m_spriteRenderer: 0x00000002

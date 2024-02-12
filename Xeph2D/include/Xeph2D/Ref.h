@@ -2,6 +2,8 @@
 #define __XEPH2D_REF_H__
 
 #include "Xeph2D/Systems/Debug.h"
+#include "Xeph2D/Systems/SceneManager.h"
+#include "Xeph2D/Scene.h"
 
 #include <type_traits>
 #include <memory>
@@ -103,6 +105,21 @@ namespace Xeph2D
 		bool IsNull() const
 		{
 			return m_ptr.expired();
+		}
+
+		void SetFromInstID(const uint32_t instID)
+		{
+			Ref<GameObject> obj = SceneManager::ActiveScene().FindObjectByID(instID);
+			if (obj.IsNull())
+				return;
+
+			if (!std::is_base_of_v<ComponentType, Component>) // should be GameObject
+			{
+				m_ptr = obj.m_ptr;
+			}
+
+			Ref<ComponentType> comp = obj->GetComponent<ComponentType>();
+			m_ptr = comp.m_ptr;
 		}
 
 	private:

@@ -1,6 +1,7 @@
 #ifndef __XEPH2D_COMPONENT_H__
 #define __XEPH2D_COMPONENT_H__
 
+#include "Xeph2D/Interfaces/Referenceable.h"
 #include "Xeph2D/Events.h"
 #include "Xeph2D/Ref.h"
 #include "Xeph2D/GameObject.h"
@@ -18,7 +19,7 @@ namespace Xeph2D
 		class Editor;
 	}
 #endif //_EDITOR
-	class Component
+	class Component : public Referenceable
 	{
 #ifdef _EDITOR
 		friend class Edit::Editor;
@@ -62,6 +63,9 @@ namespace Xeph2D
 		{
 			return SceneManager::ActiveScene().FindObjectOfType<Comp>();
 		}
+
+		Ref<GameObject> GetGameObject() { return gameObject; }
+		uint32_t InstID() override { return gameObject->InstID(); }
 
 	protected:
 		friend class GameObject;

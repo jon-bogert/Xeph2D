@@ -52,6 +52,7 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
 	{
 		if ((*Get().m_componentInfoBuffer)[field].IsDefined()) // field could not be defined if added on this compile
 		{
+			uint32_t instID{};
 			switch (type)
 			{
 			case SerializableType::Int:
@@ -77,6 +78,9 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
 				break;
 			case SerializableType::Transform:
 				*static_cast<Transform*>(ptr) = CustomSerialTypes::TransformFromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
+				break;
+			case SerializableType::Reference:
+				instID = Utility::FromHex32String((*Get().m_componentInfoBuffer)[field].as<std::string>());
 				break;
 			default:
 				Debug::LogErr("SceneLoader::__Deserialize -> Unimplemented Type");

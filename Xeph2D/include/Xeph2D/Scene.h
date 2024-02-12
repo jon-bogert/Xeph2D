@@ -50,6 +50,19 @@ namespace Xeph2D
 			return result;
 		}
 
+		Ref<GameObject>& FindObjectByID(uint32_t instID)
+		{
+			auto iter = std::find_if(
+				m_gameObjects.begin(),
+				m_gameObjects.end(),
+				[=](const auto& sp_object) { return sp_object->InstID() == instID; }
+			);
+			if (iter == m_gameObjects.end())
+				return Ref<GameObject>();
+
+			return Ref<GameObject>(*iter);
+		}
+
 		Ref<GameObject> CreateObject();
 		void DestroyObject(const Ref<GameObject>& object);
 

@@ -56,7 +56,7 @@ void Xeph2D::Edit::Editor::Save()
 		obj["name"] = currObject.name.As<std::string>();
 		CustomSerialTypes::TransformToYAML(obj["transform"], currObject.transform.As<Transform>());
 		obj["active"] = currObject.isActive.As<bool>();
-		for (EditorComponent currComp : currObject.components)
+		for (EditorComponent& currComp : currObject.components)
 		{
 			YAML::Node comp;
 			comp["typeID"] = Utility::ToHex32String(currComp.typeID);
@@ -505,6 +505,9 @@ void Xeph2D::Edit::Editor::YAMLSaver(YAML::Node& node, const Field& field)
 		break;
 	case SerializableType::Transform:
 		CustomSerialTypes::TransformToYAML(node[field.name], field.As<Transform>());
+		break;
+	case SerializableType::Reference:
+		CustomSerialTypes::RefToYAML(node[field.name], field.As<Ref<Referenceable>>());
 		break;
 	default:
 		Debug::LogErr("Editor::YAMLSaver -> Unimplemented Type");

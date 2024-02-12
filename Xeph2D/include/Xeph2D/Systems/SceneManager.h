@@ -83,6 +83,7 @@ namespace Xeph2D
         std::shared_ptr<Scene> m_activeScene;
 
         std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> m_populateCallback;
+        std::vector<std::function<void(void)>> m_refrenceLoadBuffer;
     };
 }
 
