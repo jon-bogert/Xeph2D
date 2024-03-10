@@ -4,6 +4,7 @@
 #include "Xeph2D/Editor/Editor.h"
 #endif //_EDITOR
 
+#include "Xeph2D/Systems/AppData.h"
 #include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/SceneManager.h"
 #include "Xeph2D/Systems/TimerService.h"
@@ -50,6 +51,9 @@ void Xeph2D::Runtime::Terminate()
 void Xeph2D::Runtime::Initialize(
 	std::function<void(std::shared_ptr<Component>& ptr, uint32_t compID)> populateCallback)
 {
+#ifdef NDEBUG
+	AppData::Initialize();
+#endif // NDEBUG
 	WindowManager::Initialize();
 	AssetManager::Initialize();
 	SceneManager::Initialize(populateCallback);
@@ -58,6 +62,9 @@ void Xeph2D::Runtime::Initialize(
 #else
 	SceneManager::LoadScene(0);
 #endif //_DEBUG
+#ifdef NDEBUG
+	AppData::ClearData();
+#endif // NDEBUG
 }
 
 void Xeph2D::Runtime::Update()

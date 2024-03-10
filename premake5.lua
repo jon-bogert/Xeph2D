@@ -36,7 +36,8 @@ project "Xeph2D"
 		"%{prj.name}/include",
 		"ext/box2d/include",
 		"ext/yaml-cpp/include",
-		"ext/SFML/include"
+		"ext/SFML/include",
+		"ext/xe-markup/include"
 	}
 	
 	filter "system:windows"
@@ -92,7 +93,8 @@ project "App"
 		"ext/SFML/include",
 		"ext/yaml-cpp/include",
 		"Xeph2D/include",
-		"%{prj.name}/gen"
+		"%{prj.name}/gen",
+		"ext/xe-markup/include"
 	}
 	
 	libdirs
@@ -131,6 +133,7 @@ project "App"
 			"sfml-window-s-d.lib",
 			"sfml-audio-s-d.lib",
 			"sfml-network-s-d.lib",
+			"xe-markup-d.lib",
 			"yaml-cpp-d.lib"
 		}
 
@@ -146,6 +149,7 @@ project "App"
 			"sfml-window-s-d.lib",
 			"sfml-audio-s-d.lib",
 			"sfml-network-s-d.lib",
+			"xe-markup-d.lib",
 			"yaml-cpp-d.lib"
 		}
 		
@@ -163,6 +167,7 @@ project "App"
 			"sfml-network-s-d.lib",
 			"imgui-sfml-s-d.lib",
 			"opengl32",
+			"xe-markup-d.lib",
 			"yaml-cpp-d.lib"
 		}
 
@@ -180,6 +185,7 @@ project "App"
 			"sfml-audio-s-d.lib",
 			"sfml-network-s-d.lib",
 			"imgui-sfml-s-d.lib",
+			"xe-markup-d.lib",
 			"yaml-cpp-d.lib"
 		}
 		
@@ -194,5 +200,6 @@ project "App"
 			"sfml-window-s.lib",
 			"sfml-audio-s.lib",
 			"sfml-network-s.lib",
+			"xe-markup.lib",
 			"yaml-cpp.lib"
 		}
