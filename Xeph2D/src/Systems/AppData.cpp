@@ -1,9 +1,14 @@
-#include "AppData.h"
+#include "Xeph2D/Systems/AppData.h"
 
-#include "Debug.h"
+#include "Xeph2D/Systems/Debug.h"
 
 #include <xe-markup/Format/BSON.h>
 #include <xe-markup/Format/YAML.h>
+
+#ifdef _EDITOR
+#include "Xeph2D/Editor/BundleFactory.h"
+#include "Xeph2D/Systems/AssetManager.h"
+#endif //_EDITOR
 
 #include <filesystem>
 
@@ -19,6 +24,7 @@
 
 #define RELEASE_FILE "core.dat"
 #define RELEASE_GRAPHICS_FILE "graphics.cfg"
+#define RELEASE_BUNDLE_FILE "bundle.dat"
 #define BUILD_DATA_DIRECTORY std::string("../bin/Release-windows-x86_64/data/")
 #define BUILD_DATA_LOCAL_DIRECTORY std::string("data/")
 
@@ -114,6 +120,27 @@ void Xeph2D::AppData::BuildForRelease()
     Markup::YAMLFormatter yaml;
     yaml.SaveToFile(graphics, BUILD_DATA_DIRECTORY + RELEASE_GRAPHICS_FILE);
     yaml.SaveToFile(graphics, BUILD_DATA_LOCAL_DIRECTORY + RELEASE_GRAPHICS_FILE);
+
+    //Build Bundle
+    Editor::BundleFactory factory;
+    
+    for (const Markup::Node& scene : root["build-info"]["scenes"])
+    {
+        Markup::Node node = yaml.LoadFromFile("Assets/Scenes/" + scene.As<std::string>());
+        factory.AddData(bson.Dump(node), "_scene_" + scene.As<std::string>());
+    }
+    
+    for (Markup::Node& texture : root["asset-manifest"]["textures"])
+    {
+        factory.AddFile("Assets/Textures/" + texture["path"].As<std::string>(),
+            "_texture_" + texture["key"].As<std::string>());
+    }
+    
+    //fonts
+    //audio
+    
+    factory.WriteToFile(BUILD_DATA_DIRECTORY + RELEASE_BUNDLE_FILE);
+    factory.WriteToFile(BUILD_DATA_LOCAL_DIRECTORY + RELEASE_BUNDLE_FILE);
 }
 
 #endif //_EDITOR
@@ -160,6 +187,9 @@ void Xeph2D::AppData::Initialize()
     Get().m_data["window-properties"]["resolution"]["height"] = graphics["resolution-height"];
     Get().m_data["window-properties"]["style"] = graphics["window-style"];
     Get().m_data["window-properties"]["lock-framerate"] = graphics["lock-framerate"];
+
+    //Asset Bundle
+    Get().m_bundleReader.Open(BUILD_DATA_LOCAL_DIRECTORY + RELEASE_BUNDLE_FILE);
 }
 
 void Xeph2D::AppData::ClearData()
@@ -167,4 +197,39 @@ void Xeph2D::AppData::ClearData()
     Get().m_data.Clear();
 }
 
+bool Xeph2D::AppData::GetAssetData(const AssetType type, const std::string& key, std::unique_ptr<std::vector<unsigned char>>& dataPtr)
+{
+    std::string fullKey;
+    switch (type)
+    {
+    case AssetType::Texture:
+        fullKey = "_texture_" + key;
+        break;
+    case AssetType::Font:
+        fullKey = "_font_" + key;
+        break;
+    }
+    bool result = Get().m_bundleReader.ReadDataParallel(fullKey, dataPtr);
+    return result;
+}
+
 #endif //_DEBUG
+
+Xeph2D::Markup::Node Xeph2D::AppData::GetSceneData(const std::string& scene)
+{
+#ifdef NDEBUG
+    std::string fullKey = "_scene_" + scene;
+    std::unique_ptr<std::vector<uint8_t>> data;
+    Get().m_bundleReader.ReadData(fullKey, data);
+
+    Markup::BSONFormatter bson;
+    Markup::Node result = bson.Read(*data);
+#else //!NDEBUG
+
+    Markup::YAMLFormatter yaml;
+    Markup::Node result = yaml.LoadFromFile("Assets/Scenes/" + scene);
+
+#endif //NDEBUG
+
+    return result;
+}

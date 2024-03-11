@@ -52,6 +52,12 @@ namespace Xeph2D
 		Reference
 	};
 
+	enum class AssetType
+	{
+		Texture,
+		Font
+	};
+
 	struct Vector2
 	{
 		float x, y;

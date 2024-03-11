@@ -74,6 +74,15 @@ namespace Xeph2D::Editor
 			file.read((char*)dataEntry.data.data(), size);
 		}
 
+		void AddData(const std::vector<unsigned char>& data, const std::string& key)
+		{
+			FileData& dataEntry = m_fileData.emplace_back();
+			dataEntry.name = key;
+			dataEntry.data.resize(data.size());
+
+			std::copy(data.begin(), data.end(), dataEntry.data.begin());
+		}
+
 	private:
 		std::vector<FileData> m_fileData;
 	};

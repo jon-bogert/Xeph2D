@@ -1,6 +1,7 @@
 #ifndef __X2D_EDITOR_BUNDLEREADER_H__
 #define __X2D_EDITOR_BUNDLEREADER_H__
 
+#include <filesystem>
 #include <fstream>
 #include <vector>
 #include <memory>

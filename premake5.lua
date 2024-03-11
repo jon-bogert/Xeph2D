@@ -37,7 +37,8 @@ project "Xeph2D"
 		"ext/box2d/include",
 		"ext/yaml-cpp/include",
 		"ext/SFML/include",
-		"ext/xe-markup/include"
+		"ext/xe-markup/include",
+		"ext/yaml-cpp/include"
 	}
 	
 	filter "system:windows"
@@ -94,7 +95,8 @@ project "App"
 		"ext/yaml-cpp/include",
 		"Xeph2D/include",
 		"%{prj.name}/gen",
-		"ext/xe-markup/include"
+		"ext/xe-markup/include",
+		"ext/yaml-cpp/include"
 	}
 	
 	libdirs

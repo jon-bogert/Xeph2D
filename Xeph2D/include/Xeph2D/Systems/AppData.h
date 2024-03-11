@@ -2,6 +2,8 @@
 #define __X2D_SYSTEMS_APPDATA_H__
 
 #include <xe-markup/Node.h>
+#include "../Structs.h"
+#include "../BundleReader.h"
 
 namespace Xeph2D
 {
@@ -37,7 +39,10 @@ namespace Xeph2D
 #ifdef NDEBUG
         static void Initialize();
         static void ClearData();
+        static bool GetAssetData(const AssetType type, const std::string& key, std::unique_ptr<std::vector<unsigned char>>& dataPtr);
 #endif //NDEBUG
+
+        static Markup::Node GetSceneData(const std::string& scene);
 
     private:
         AppData() {}
@@ -45,6 +50,7 @@ namespace Xeph2D
 
 #ifdef NDEBUG
         Markup::Node m_data;
+        BundleReader m_bundleReader;
 #endif //NDEBUG
 
     };
