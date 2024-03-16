@@ -1,34 +1,29 @@
 #ifndef __XEPH2D_SYSTEMS_SCENELOADER_H__
 #define __XEPH2D_SYSTEMS_SCENELOADER_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/EditorSceneData.h"
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 #include <Xeph2D/Structs.h>
 #include "Serialize.macros.h"
-
-#include <yaml-cpp/yaml.h>
+#include "../Systems/AppData.h"
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <functional>
 
-#ifdef _DEBUG
-#define EDITOR_FILE "debug/Editor.yaml"
-#endif //_DEBUG
-
 namespace Xeph2D
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
     namespace Edit
     {
         struct EditorGameObject;
         class Editor;
         class ProjectSettings;
     }
-#endif //_EDITOR
+#endif //IS_EDITOR
     class Scene;
     class Component;
 
@@ -61,10 +56,10 @@ namespace Xeph2D
 
         void LoadSceneFile(const std::string& filePath, const int buildIndex, bool isFullPath = false);
 
-        YAML::iterator::value_type* m_componentInfoBuffer = nullptr;
+        Markup::Node* m_componentInfoBuffer = nullptr;
 
-#ifdef _EDITOR
-        Edit::EditorComponent* m_editorCompBuffer = nullptr;
+#ifdef IS_EDITOR
+        Edit::EditorComponent* mIS_EDITORCompBuffer = nullptr;
 
         friend class Edit::Editor;
         friend class Edit::ProjectSettings;
@@ -72,10 +67,10 @@ namespace Xeph2D
         void SaveSceneManifest();
         static void OpenSceneWindow();
         static void EmptyScene();
-#endif //_EDITOR
-#ifdef _DEBUG
+#endif //IS_EDITOR
+#ifdef IS_DEBUG
         static void LoadLast();
-#endif //_DEBUG
+#endif //IS_DEBUG
 
         using SceneManifest = std::vector<ScenePath>;
         SceneManifest m_manifest;

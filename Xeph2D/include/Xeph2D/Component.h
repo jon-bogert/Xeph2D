@@ -12,17 +12,17 @@ private:
 
 namespace Xeph2D
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	namespace Edit
 	{
 		class Editor;
 	}
-#endif //_EDITOR
+#endif //IS_EDITOR
 	class Component
 	{
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		friend class Edit::Editor;
-#endif //_EDITOR
+#endif //IS_EDITOR
 	public:
 		//Global Transforms
 		//Vector2 Position() const { return gameObject->Position(); }

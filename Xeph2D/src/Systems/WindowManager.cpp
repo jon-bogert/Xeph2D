@@ -9,14 +9,14 @@
 
 using namespace Xeph2D;
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/Editor.h"
 #define __CAMERA Edit::Editor::Get().GetViewportTransform()
 #define __POSITION position
 #else
 #define __CAMERA Get().m_camera
 #define __POSITION LocalPosition()// TODO - Change to Global Position once implemented
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 namespace
 {
@@ -42,7 +42,7 @@ WindowManager& WindowManager::Get()
 	return instance;
 }
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 void Xeph2D::WindowManager::__UpdateViewportSize(Vector2 size)
 {
 	float windRatio = size.x / size.y;
@@ -59,25 +59,25 @@ void Xeph2D::WindowManager::__UpdateViewportSize(Vector2 size)
 	Get().m_resScale = Get().m_height / static_cast<float>(Get().m_refHeight);
 	Get().m_viewport->create(Get().m_width, Get().m_height);
 }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 void Xeph2D::WindowManager::Initialize()
 {
-	YAML::Node windowInfo = YAML::LoadFile(WINDOW_INFO_FILE);
-	std::string title = windowInfo["title"].as<std::string>();
+	Markup::Node windowInfo = AppData::Load(AppData::DataFile::WindowProperties);
+	std::string title = windowInfo["title"].As<std::string>();
 
-	Get().m_refWidth = windowInfo["ref-resolution"]["width"].as<uint32_t>();
-	Get().m_refHeight = windowInfo["ref-resolution"]["height"].as<uint32_t>();
+	Get().m_refWidth = windowInfo["ref-resolution"]["width"].As<uint32_t>();
+	Get().m_refHeight = windowInfo["ref-resolution"]["height"].As<uint32_t>();
 
-#ifdef _DEBUG
-	Get().m_width = windowInfo["debug-resolution"]["width"].as<uint32_t>();
-	Get().m_height = windowInfo["debug-resolution"]["height"].as<uint32_t>();
-	WindowStyle style = static_cast<WindowStyle>(windowInfo["debug-style"].as<int>());
+#ifdef IS_DEBUG
+	Get().m_width = windowInfo["debug-resolution"]["width"].As<uint32_t>();
+	Get().m_height = windowInfo["debug-resolution"]["height"].As<uint32_t>();
+	WindowStyle style = static_cast<WindowStyle>(windowInfo["debug-style"].As<int>());
 #else
-	Get().m_width = windowInfo["resolution"]["width"].as<uint32_t>();
-	Get().m_height = windowInfo["resolution"]["height"].as<uint32_t>();
-	WindowStyle style = static_cast<WindowStyle>(windowInfo["style"].as<int>());
-#endif //_DEBUG
+	Get().m_width = windowInfo["resolution"]["width"].As<uint32_t>();
+	Get().m_height = windowInfo["resolution"]["height"].As<uint32_t>();
+	WindowStyle style = static_cast<WindowStyle>(windowInfo["style"].As<int>());
+#endif //IS_DEBUG
 
 	if (Get().m_width == 0 || Get().m_height == 0)
 	{
@@ -87,29 +87,29 @@ void Xeph2D::WindowManager::Initialize()
 	}
 
 	Get().m_resScale = Get().m_height / static_cast<float>(Get().m_refHeight);
-	Get().m_ppu = windowInfo["ppu"].as<uint32_t>();
+	Get().m_ppu = windowInfo["ppu"].As<uint32_t>();
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	Get().m_viewport = std::make_unique<sf::RenderTexture>();
 	Get().m_viewport->create(Get().m_refWidth, Get().m_refHeight);
 #else
 	Get().m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(Get().m_width, Get().m_height), title, SFStyle(style));
 	Get().m_handle = FindWindowA(NULL, title.c_str());
 
-	uint32_t fps = windowInfo["lock-framerate"].as<uint32_t>();
+	uint32_t fps = windowInfo["lock-framerate"].As<uint32_t>();
 	if (fps > 0)
 		Get().m_window->setFramerateLimit(fps);
 
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 void Xeph2D::WindowManager::Draw(sf::Drawable* item)
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	Get().m_viewport->draw(*item);
 #else
 	Get().m_window->draw(*item);
-#endif // _EDITOR
+#endif // IS_EDITOR
 }
 
 void Xeph2D::WindowManager::PrepareTransformable(const Ref<GameObject>& gameObject, sf::Transformable* transformable)
@@ -160,20 +160,20 @@ void Xeph2D::WindowManager::CheckWindowEvents()
 
 void Xeph2D::WindowManager::Begin()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	Get().m_viewport->clear(Color(0.1f, 0.1f, 0.1f, 1.f));
 #else
 	Get().m_window->clear(sf::Color::Black);
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 void Xeph2D::WindowManager::End()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	Get().m_viewport->display();
 #else
 	Get().m_window->display();
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 bool Xeph2D::WindowManager::IsOpen()
@@ -263,9 +263,9 @@ Vector2 Xeph2D::WindowManager::UnitToPixel(const Vector2 val)
 
 void Xeph2D::WindowManager::SetTargetFramerate(uint32_t framerate)
 {
-#ifndef _EDITOR
+#ifndef IS_EDITOR
 	Get().m_window->setFramerateLimit(framerate);
-#endif //!_EDITOR
+#endif //!IS_EDITOR
 }
 
 sf::RenderWindow* Xeph2D::WindowManager::UnWrap()

@@ -7,13 +7,13 @@
 
 namespace Xeph2D
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	namespace Edit
 	{
 		class Editor;
 		class AssetManagerWindow;
 	}
-#endif //_EDITOR
+#endif //IS_EDITOR
 	class AssetManager
 	{
 	public:
@@ -35,13 +35,13 @@ namespace Xeph2D
 		using Manifest = std::unordered_map<std::string, std::string>;
 
 		friend class SceneManager;
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		friend class Edit::Editor;
 		friend class Edit::AssetManagerWindow;
 		void SetIsSaved(const bool isSaved) { m_isSaved = isSaved; }
 		void SaveToFile();
 		bool m_isSaved = true;
-#endif //_EDITOR
+#endif //IS_EDITOR
 		void LoadTexture(const std::string& key);
 		void UnloadTexture(const std::string& key);
 		void ClearTextures();

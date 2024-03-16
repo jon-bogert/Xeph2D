@@ -1,7 +1,7 @@
-#ifndef __X2D_EDITOR_EDITORWINDOW_H__
-#define __X2D_EDITOR_EDITORWINDOW_H__
+#ifndef __X2DIS_EDITORIS_EDITORWINDOW_H__
+#define __X2DIS_EDITORIS_EDITORWINDOW_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include <imgui.h>
 
 #include <string>
@@ -41,5 +41,5 @@ namespace Xeph2D::Edit
 	};
 }
 
-#endif //_EDITOR
-#endif //!__X2D_EDITOR_EDITORWINDOW_H__
+#endif //IS_EDITOR
+#endif //!__X2DIS_EDITORIS_EDITORWINDOW_H__

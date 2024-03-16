@@ -1,8 +1,8 @@
 #include "Xeph2D/Systems/Runtime.h"
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/Editor.h"
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 #include "Xeph2D/Systems/AppData.h"
 #include "Xeph2D/Systems/AssetManager.h"
@@ -13,7 +13,7 @@
 
 using namespace Xeph2D;
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 using namespace Xeph2D::Edit;
 
 void Xeph2D::Runtime::Initialize(
@@ -57,11 +57,11 @@ void Xeph2D::Runtime::Initialize(
 	WindowManager::Initialize();
 	AssetManager::Initialize();
 	SceneManager::Initialize(populateCallback);
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 	SceneManager::LoadLast();
 #else
 	SceneManager::LoadScene(0);
-#endif //_DEBUG
+#endif //IS_DEBUG
 #ifdef NDEBUG
 	AppData::ClearData();
 #endif // NDEBUG
@@ -90,7 +90,7 @@ void Xeph2D::Runtime::Terminate()
 {
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 void Xeph2D::Runtime::ParseArgs(int argc, wchar_t* argv[])
 {

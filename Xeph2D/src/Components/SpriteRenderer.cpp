@@ -28,17 +28,17 @@ void Xeph2D::SpriteRenderer::SetTexture(const std::string& key)
 
 void Xeph2D::SpriteRenderer::OnEditorStart()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	Awake();
 	m_textureKeyPrev = m_textureKey;
 	m_refreshTimer.SetLengthSeconds(m_timeToRefresh);
 	m_refreshTimer.SetIsUnscaled(true);
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 void Xeph2D::SpriteRenderer::OnEditorUpdate()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	if (m_refreshTimer.ExpiredThisFrame())
 	{
 		SetTexture(m_textureKey);
@@ -48,7 +48,7 @@ void Xeph2D::SpriteRenderer::OnEditorUpdate()
 
 	m_refreshTimer.Restart();
 	m_textureKeyPrev = m_textureKey;
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 void Xeph2D::SpriteRenderer::OnEditorShutdown()
@@ -75,9 +75,9 @@ void Xeph2D::SpriteRenderer::OnDestroy()
 
 void Xeph2D::SpriteRenderer::Draw()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	SetColor(m_color);
-#endif //_EDITOR
+#endif //IS_EDITOR
 	if (IsActiveAndEnabled())
 		RenderStack::AddDrawable(gameObject, &m_sprite, &m_sprite, m_order);
 }

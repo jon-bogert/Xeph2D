@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/EditorWindows/AssetManagerWindow.h"
 
 #include "Xeph2D/Systems/AssetManager.h"
@@ -188,4 +188,4 @@ void Xeph2D::Edit::AssetManagerWindow::AddTexture()
 	AssetManager::Get().SetIsSaved(false);
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR

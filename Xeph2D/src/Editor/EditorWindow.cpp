@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 #include "Xeph2D/Editor/EditorWindow.h"
 
@@ -43,4 +43,4 @@ bool Xeph2D::Edit::EditorWindow::IsHovered() const
 	return m_isHovered;
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR

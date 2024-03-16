@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/Editor.h"
 
 #include "Xeph2D/Systems/AssetManager.h"
@@ -10,6 +10,8 @@
 
 #include "../res/BasierSquare_Medium_otf.h"
 #include "../res/JetBrainsMono_ttf.h"
+
+#include <xe-markup/Format/YAML.h>
 
 #include <imgui-SFML.h>
 #include <imgui.h>
@@ -41,33 +43,35 @@ void Xeph2D::Edit::Editor::Save()
 		AssetManager::Get().SaveToFile();
 	}
 
-	YAML::Node sceneData;
+	Markup::Node sceneData;
 	//TEXTURES
 	for (auto& tex : AssetManager::Get().m_loadedTextures)
 	{
-		sceneData["textures"].push_back(tex.first);
+		Markup::Node texKey;
+		texKey = tex.first;
+		sceneData["textures"].PushBack(texKey);
 	}
 	EditorSceneData& sc = Get().m_sceneData;
 	//OBJECTS
 	for (EditorGameObject& currObject : Get().m_sceneData.gameObjects)
 	{
-		YAML::Node obj;
+		Markup::Node obj;
 		obj["instID"] = Utility::ToHex32String(currObject.instID);
 		obj["name"] = currObject.name.As<std::string>();
 		CustomSerialTypes::TransformToYAML(obj["transform"], currObject.transform.As<Transform>());
 		obj["active"] = currObject.isActive.As<bool>();
 		for (EditorComponent currComp : currObject.components)
 		{
-			YAML::Node comp;
+			Markup::Node comp;
 			comp["typeID"] = Utility::ToHex32String(currComp.typeID);
 			comp["enabled"] = currComp.enabled.As<bool>();
 			for (Field& field : currComp.fields)
 			{
 				Get().YAMLSaver(comp, field);
 			}
-			obj["components"].push_back(comp);
+			obj["components"].PushBack(comp);
 		}
-		sceneData["objects"].push_back(obj);
+		sceneData["objects"].PushBack(obj);
 	}
 
 	if (!std::filesystem::exists("Assets/Scenes/" + SceneManager::ActiveScene().GetName()))
@@ -90,18 +94,14 @@ void Xeph2D::Edit::Editor::Save()
 	}
 
 	std::string path = "Assets/Scenes/" + SceneManager::ActiveScene().GetName();
-	std::ofstream file(path);
-
-	//TODO - if file doesn't exist, open dialogue save there 
-	file << sceneData;
-	file.close();
+	
+	Markup::YAMLFormatter yaml;
+	yaml.SaveToFile(sceneData, path);
 
 	SetIsSaved(true);
-	YAML::Node editorData;
+	Markup::Node editorData;
 	editorData["last"] = SceneManager::ActiveScene().GetName();
-	file.open("debug/Editor.yaml");
-	file << editorData;
-	file.close();
+	AppData::Save(AppData::DataFile::Editor, editorData);
 }
 
 void Xeph2D::Edit::Editor::Initialize()
@@ -117,23 +117,23 @@ void Xeph2D::Edit::Editor::Initialize()
 	Get().SetUIStyle();
 	
 	Get().m_viewportWindow =
-		(Viewport*)Get().m_editorWindows.emplace_back(std::make_unique<Viewport>()).get();
+		(Viewport*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<Viewport>()).get();
 	Get().m_inspectorWindow =
-		(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
+		(Inspector*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get().m_hierarchyWindow =
-		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
+		(Hierarchy*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<Hierarchy>()).get();
 	Get().m_componentManagerWindow =
-		(ComponentManager*)Get().m_editorWindows.emplace_back(std::make_unique<ComponentManager>()).get();
+		(ComponentManager*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<ComponentManager>()).get();
 	Get().m_componentCreatorWindow =
-		(ComponentCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ComponentCreator>()).get();
+		(ComponentCreator*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<ComponentCreator>()).get();
 	Get().m_assetManagerWindow =
-		(AssetManagerWindow*)Get().m_editorWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
+		(AssetManagerWindow*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
 	 Get().m_projectSettingsWindow =
-	 	(ProjectSettings*)Get().m_editorWindows.emplace_back(std::make_unique<ProjectSettings>()).get();
+	 	(ProjectSettings*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<ProjectSettings>()).get();
 
 	Get().m_transformGizmo = std::make_unique<TransformGizmo>();
 
-	for (auto& window : Get().m_editorWindows)
+	for (auto& window : Get().mIS_EDITORWindows)
 		window->Initialize();
 }
 
@@ -279,7 +279,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	}
 	ImGui::EndMainMenuBar();
 	ImGui::DockSpaceOverViewport();
-	for (auto& window : Get().m_editorWindows)
+	for (auto& window : Get().mIS_EDITORWindows)
 	{
 		if (!window->isOpen)
 			continue;
@@ -411,9 +411,9 @@ void Xeph2D::Edit::Editor::AddComponent(int index, uint32_t compID)
 	edComp.enabled.type = SerializableType::Bool;
 	edComp.enabled.ptr = &comp->m_enabled;
 
-	SceneManager::Get().m_editorCompBuffer = &edComp;
+	SceneManager::Get().mIS_EDITORCompBuffer = &edComp;
 	comp->Serializables();
-	SceneManager::Get().m_editorCompBuffer = nullptr;
+	SceneManager::Get().mIS_EDITORCompBuffer = nullptr;
 }
 
 void Xeph2D::Edit::Editor::RemoveComponent(int objIndex, int compIndex)
@@ -478,7 +478,7 @@ void Xeph2D::Edit::Editor::RemoveAllComponents(uint32_t typeID)
 	}
 }
 
-void Xeph2D::Edit::Editor::YAMLSaver(YAML::Node& node, const Field& field)
+void Xeph2D::Edit::Editor::YAMLSaver(Markup::Node& node, const Field& field)
 {
 	switch (field.type)
 	{
@@ -602,4 +602,4 @@ void Xeph2D::Edit::Editor::ClearSceneData()
 	m_hierarchyWindow->m_selectionIndex = -1;
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR

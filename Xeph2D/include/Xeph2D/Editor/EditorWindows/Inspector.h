@@ -1,7 +1,7 @@
-#ifndef __X2D_EDITOR_EDITORWINDOWS_INSPECTOR_H__
-#define __X2D_EDITOR_EDITORWINDOWS_INSPECTOR_H__
+#ifndef __X2DIS_EDITORIS_EDITORWINDOWS_INSPECTOR_H__
+#define __X2DIS_EDITORIS_EDITORWINDOWS_INSPECTOR_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 #include <Xeph2D/Editor/EditorWindow.h>
 #include <Xeph2D.h>
@@ -32,6 +32,6 @@ namespace Xeph2D::Edit
 		char m_editSearchBuff[MAX_PATH];
 	};
 }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
-#endif //!__X2D_EDITOR_EDITORWINDOWS_INSPECTOR_H__
+#endif //!__X2DIS_EDITORIS_EDITORWINDOWS_INSPECTOR_H__

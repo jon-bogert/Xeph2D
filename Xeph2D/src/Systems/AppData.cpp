@@ -5,10 +5,10 @@
 #include <xe-markup/Format/BSON.h>
 #include <xe-markup/Format/YAML.h>
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/BundleFactory.h"
 #include "Xeph2D/Systems/AssetManager.h"
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 #include <filesystem>
 
@@ -17,10 +17,10 @@
 #define BUILD_INFO_FILE "settings/BuildInfo.yaml"
 #define WINDOW_PROPERTIES_FILE "settings/WindowProperties.yaml"
 
-#ifdef _EDITOR
+#ifdef IS_DEBUG
 #define COMPONENT_MANIFEST_FILE "settings/ComponentManifest.yaml"
 #define EDITOR_FILE "debug/Editor.yaml"
-#endif //_EDITOR
+#endif //IS_DEBUG
 
 #define RELEASE_FILE "core.dat"
 #define RELEASE_GRAPHICS_FILE "graphics.cfg"
@@ -29,7 +29,7 @@
 #define BUILD_DATA_LOCAL_DIRECTORY std::string("data/")
 
 
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 
 Xeph2D::Markup::Node Xeph2D::AppData::Load(const DataFile file)
 {
@@ -47,14 +47,14 @@ Xeph2D::Markup::Node Xeph2D::AppData::Load(const DataFile file)
     case DataFile::WindowProperties:
         result = yaml.LoadFromFile(WINDOW_PROPERTIES_FILE);
         break;
-#ifdef _EDITOR
+#ifdef IS_DEBUG
     case DataFile::ComponentManifest:
         result = yaml.LoadFromFile(COMPONENT_MANIFEST_FILE);
         break;
     case DataFile::Editor:
         result = yaml.LoadFromFile(EDITOR_FILE);
         break;
-#endif //_EDITOR
+#endif //IS_DEBUG
     default:
         Debug::LogErr("AppData::Load (Debug) -> DataFile enum not implemented");
         break;
@@ -63,7 +63,7 @@ Xeph2D::Markup::Node Xeph2D::AppData::Load(const DataFile file)
     return result;
 }
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 void Xeph2D::AppData::Save(const DataFile file, const Markup::Node& node)
 {
@@ -143,12 +143,13 @@ void Xeph2D::AppData::BuildForRelease()
     factory.WriteToFile(BUILD_DATA_LOCAL_DIRECTORY + RELEASE_BUNDLE_FILE);
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR
 
-#else //!_DEBUG
+#else //!IS_DEBUG
 
 Xeph2D::Markup::Node Xeph2D::AppData::Load(const DataFile file)
 {
+    AppData& appData = Get();
     if (!Get().m_data.IsDefined())
     {
         Debug::LogErr("AppData::Load -> AppData file was not loaded or was cleared");
@@ -171,13 +172,14 @@ Xeph2D::Markup::Node Xeph2D::AppData::Load(const DataFile file)
         Debug::LogErr("AppData::Loadd (Release) -> DataFile enum not implemented");
         break;
 
-        return result;
     }
+    return result;
 }
 
 void Xeph2D::AppData::Initialize()
 {
     Markup::BSONFormatter bson;
+    AppData& appData = Get();
     Get().m_data = bson.LoadFromFile(BUILD_DATA_LOCAL_DIRECTORY + RELEASE_FILE);
 
     Markup::YAMLFormatter yaml;
@@ -213,7 +215,7 @@ bool Xeph2D::AppData::GetAssetData(const AssetType type, const std::string& key,
     return result;
 }
 
-#endif //_DEBUG
+#endif //IS_DEBUG
 
 Xeph2D::Markup::Node Xeph2D::AppData::GetSceneData(const std::string& scene)
 {

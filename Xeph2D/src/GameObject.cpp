@@ -100,7 +100,7 @@ void Xeph2D::GameObject::OnDisable()
 
 void Xeph2D::GameObject::Shutdown()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	for (auto& compPtr : m_components)
 		compPtr->OnEditorShutdown();
 #else
@@ -112,7 +112,7 @@ void Xeph2D::GameObject::Shutdown()
 
 	for (auto& compPtr : m_components)
 		compPtr->OnDestroy();
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 void Xeph2D::GameObject::CheckComponentBuffers()
@@ -121,22 +121,22 @@ void Xeph2D::GameObject::CheckComponentBuffers()
 	{
 		if (m_initialized)
 		{
-#ifndef _EDITOR
+#ifndef IS_EDITOR
 			compPtr->Awake();
-#endif //!_EDITOR
+#endif //!IS_EDITOR
 		}
 	}
 	for (auto& compPtr : m_addBuffer)
 	{
 		if (m_initialized)
 		{
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 			compPtr->OnEditorStart();
 #else
 			compPtr->Start();
 			if (compPtr->Enabled())
 				compPtr->OnEnable();
-#endif //_EDITOR
+#endif //IS_EDITOR
 		}
 		m_components.push_back(compPtr);
 	}
@@ -144,13 +144,13 @@ void Xeph2D::GameObject::CheckComponentBuffers()
 
 	for (Ref<Component>& comp : m_destroyBuffer)
 	{
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		comp->OnEditorShutdown();
 #else
 		if (comp->Enabled())
 			comp->OnDisable();
 		comp->OnDestroy();
-#endif //_EDITOR
+#endif //IS_EDITOR
 		auto iter = std::find_if(
 			m_components.begin(),
 			m_components.end(),

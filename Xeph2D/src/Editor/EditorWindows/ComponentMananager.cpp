@@ -1,11 +1,10 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/EditorWindows/ComponentManager.h"
 
 #include "Xeph2D/Editor/Editor.h"
 #include "Xeph2D/Systems/Debug.h"
 #include "Xeph2D/Utility.h"
-
-#include <yaml-cpp/yaml.h>
+#include "Xeph2D/Systems/AppData.h"
 
 #include <filesystem>
 #include <fstream>
@@ -195,50 +194,42 @@ uint32_t Xeph2D::Edit::ComponentManager::GetID(std::string name) const
 
 void Xeph2D::Edit::ComponentManager::LoadFromFile()
 {
-	if (!std::filesystem::exists(MANIFEST_PATH))
+	Markup::Node info = AppData::Load(AppData::DataFile::ComponentManifest);
+	for (Markup::Node script : info["default"])
 	{
-		Debug::LogErr("Component Manager -> Could not find Manifest file");
-		return;
+		m_defaultComponents[Utility::FromHex32String(script["id"].As<std::string>())] = script["name"].As<std::string>();
 	}
-
-	YAML::Node info = YAML::LoadFile(MANIFEST_PATH);
-	for (yaml_val script : info["default"])
+	for (Markup::Node script : info["user"])
 	{
-		m_defaultComponents[Utility::FromHex32String(script["id"].as<std::string>())] = script["name"].as<std::string>();
-	}
-	for (yaml_val script : info["user"])
-	{
-		uint32_t id = Utility::FromHex32String(script["id"].as<std::string>());
-		m_userComponents[id].name = script["name"].as<std::string>();
+		uint32_t id = Utility::FromHex32String(script["id"].As<std::string>());
+		m_userComponents[id].name = script["name"].As<std::string>();
 		if (script["path"].IsDefined())
-			m_userComponents[id].path = script["path"].as<std::string>();
+			m_userComponents[id].path = script["path"].As<std::string>();
 	}
 }
 
 void Xeph2D::Edit::ComponentManager::SaveToFile()
 {
-	YAML::Node info;
+	Markup::Node info;
 
 	for (const auto& scriptPair : m_defaultComponents)
 	{
-		YAML::Node scriptInfo;
+		Markup::Node scriptInfo;
 		scriptInfo["id"] = Utility::ToHex32String(scriptPair.first);
 		scriptInfo["name"] = scriptPair.second;
-		info["default"].push_back(scriptInfo);
+		info["default"].PushBack(scriptInfo);
 	}
 	for (const auto& scriptPair : m_userComponents)
 	{
-		YAML::Node scriptInfo;
+		Markup::Node scriptInfo;
 		scriptInfo["id"] = Utility::ToHex32String(scriptPair.first);
 		scriptInfo["name"] = scriptPair.second.name;
 		if (!scriptPair.second.path.empty())
 			scriptInfo["path"] = scriptPair.second.path;
-		info["user"].push_back(scriptInfo);
+		info["user"].PushBack(scriptInfo);
 	}
 
-	std::ofstream file(MANIFEST_PATH);
-	file << info;
-	file.close();
+	AppData::Save(AppData::DataFile::ComponentManifest, info);
 }
 
 void Xeph2D::Edit::ComponentManager::GenerateHeader()
@@ -418,4 +409,4 @@ bool Xeph2D::Edit::ComponentManager::EditComponent(uint32_t id)
 	return true;
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR

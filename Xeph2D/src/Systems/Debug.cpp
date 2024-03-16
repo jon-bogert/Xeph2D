@@ -1,5 +1,5 @@
 #include "Xeph2D/Systems/Debug.h"
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 #include "Xeph2D/Systems/WindowManager.h"
 #include "Xeph2D/Systems/Time.h"
 #include <cstdio>
@@ -10,7 +10,7 @@
 #include "../../res/JetBrainsMono_ttf.h"
 
 #pragma warning (disable : 4996)
-#endif // _DEBUG
+#endif // IS_DEBUG
 
 using namespace Xeph2D;
 
@@ -20,7 +20,7 @@ using namespace Xeph2D;
 
 Xeph2D::Debug::Debug()
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     res::JetBrainsMono_ttf(m_fontData, m_fontDataLength);
 
     m_font = std::make_unique<sf::Font>();
@@ -54,15 +54,15 @@ Xeph2D::Debug::Debug()
 
         m_logFile.open("log/" + std::string(timebuffer) + ".log");
     }
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 Xeph2D::Debug::~Debug()
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     if (m_logFile.is_open())
         m_logFile.close();
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 Debug& Debug::Get()
@@ -73,11 +73,11 @@ Debug& Debug::Get()
 
 void Xeph2D::Debug::Update()
 {
-#ifdef _DEBUG
-#ifndef _EDITOR
+#ifdef IS_DEBUG
+#ifndef IS_EDITOR
     if (Get().m_closeOnEscape && InputSystem::GetKeyDown(Key::Esc))
         WindowManager::Close();
-#endif //!_EDITOR
+#endif //!IS_EDITOR
 
     for (size_t i = 0; i < Get().m_logBuffer.size(); ++i)
     {
@@ -88,12 +88,12 @@ void Xeph2D::Debug::Update()
             return;
         }
     }
-#endif //_DEBUG
+#endif //IS_DEBUG
 }
 
 void Xeph2D::Debug::Log(const char* format, ...)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     time_t now = time(0);
     struct tm* localtm = localtime(&now);
 
@@ -121,12 +121,12 @@ void Xeph2D::Debug::Log(const char* format, ...)
     OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
 #endif // _CONSOLE
     Get().LogToFile(entry.dateTime + entry.contents);
-#endif //_DEBUG
+#endif //IS_DEBUG
 }
 
 void Xeph2D::Debug::LogWarn(const char* format, ...)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     time_t now = time(0);
     struct tm* localtm = localtime(&now);
 
@@ -154,12 +154,12 @@ void Xeph2D::Debug::LogWarn(const char* format, ...)
     OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
 #endif // _CONSOLE
     Get().LogToFile(entry.dateTime + entry.contents);
-#endif //_DEBUG
+#endif //IS_DEBUG
 }
 
 void Xeph2D::Debug::LogErr(const char* format, ...)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     time_t now = time(0);
     struct tm* localtm = localtime(&now);
 
@@ -187,12 +187,12 @@ void Xeph2D::Debug::LogErr(const char* format, ...)
     OutputDebugStringA((entry.dateTime + entry.contents + "\n").c_str());
 #endif // _CONSOLE
     Get().LogToFile(entry.dateTime + entry.contents);
-#endif //_DEBUG
+#endif //IS_DEBUG
 }
 
 void Xeph2D::Debug::LogColor(Color color, LogType type)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     switch (type)
     {
     case LogType::Log:
@@ -205,37 +205,37 @@ void Xeph2D::Debug::LogColor(Color color, LogType type)
         Get().m_errColor = color;
         break;
     }
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Xeph2D::Debug::Monitor(const std::string& key, const std::string& valueStr)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     Get().m_monitorBuffer[key] = valueStr;
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Xeph2D::Debug::ClearMonitorBuffer()
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     Get().m_monitorBuffer.clear();
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawLine(Vector2 start, Vector2 end, Color color, bool isWorldSpace)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     sf::VertexArray line = sf::VertexArray(sf::LinesStrip, 2);
     line[0].position = (isWorldSpace) ? WindowManager::WorldToPixel(start) : WindowManager::ScreenToPixel(start);
     line[1].position = (isWorldSpace) ? WindowManager::WorldToPixel(end) : WindowManager::ScreenToPixel(end);
     line[0].color = line[1].color = color;
     Get().m_lineBuffer.push_back(line);
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawChainLine(const VertexChain& vertBuffer, Color color, bool isWorldSpace)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     sf::VertexArray chain = sf::VertexArray(sf::LinesStrip, vertBuffer.size());
     for (int i = 0; i < vertBuffer.size(); ++i)
     {
@@ -243,12 +243,12 @@ void Debug::DrawChainLine(const VertexChain& vertBuffer, Color color, bool isWor
         chain[i].color = color;
     }
     Get().m_lineBuffer.push_back(chain);
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawBoxOutline(Vector2 center, Vector2 span, float rotation, Color color, bool isWorldSpace)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     sf::RectangleShape shape;
     shape.setFillColor(Color::Transparent);
     shape.setOutlineColor(color);
@@ -259,12 +259,12 @@ void Debug::DrawBoxOutline(Vector2 center, Vector2 span, float rotation, Color c
     shape.setPosition((isWorldSpace) ? WindowManager::WorldToPixel(center) : WindowManager::ScreenToPixel(center));
     shape.setRotation(rotation);
     Get().m_rectBuffer.push_back(shape);
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawBoxFilled(Vector2 center, Vector2 span, float rotation, Color color, bool isWorldSpace)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     sf::RectangleShape shape;
     shape.setFillColor(color);
     Vector2 size = WindowManager::UnitToPixel(span);
@@ -273,12 +273,12 @@ void Debug::DrawBoxFilled(Vector2 center, Vector2 span, float rotation, Color co
     shape.setPosition((isWorldSpace) ? WindowManager::WorldToPixel(center) : WindowManager::ScreenToPixel(center));
     shape.setRotation(rotation);
     Get().m_rectBuffer.insert(Get().m_rectBuffer.begin(), shape);
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawCircleOutline(Vector2 center, float radius, Color color, bool isWorldSpace)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     sf::CircleShape shape;
     shape.setFillColor(Color::Transparent);
     shape.setOutlineColor(color);
@@ -288,12 +288,12 @@ void Debug::DrawCircleOutline(Vector2 center, float radius, Color color, bool is
     shape.setOrigin(rad, rad);
     shape.setPosition((isWorldSpace) ? WindowManager::WorldToPixel(center) : WindowManager::ScreenToPixel(center));
     Get().m_circleBuffer.push_back(shape);
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawCircleFilled(Vector2 center, float radius, Color color, bool isWorldSpace)
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
     sf::CircleShape shape;
     shape.setFillColor(color);
     float rad = WindowManager::UnitToPixel(radius);
@@ -301,14 +301,14 @@ void Debug::DrawCircleFilled(Vector2 center, float radius, Color color, bool isW
     shape.setOrigin(rad, rad);
     shape.setPosition((isWorldSpace) ? WindowManager::WorldToPixel(center) : WindowManager::ScreenToPixel(center));
     Get().m_circleBuffer.insert(Get().m_circleBuffer.begin(), shape);
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
 void Debug::DrawToWindow()
 {
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
     if (Get().m_drawGraphics)
     {
         for (sf::RectangleShape& r : Get().m_rectBuffer)
@@ -366,15 +366,15 @@ void Debug::DrawToWindow()
             WindowManager::UnWrap()->draw(t);
         }
     }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
     Get().m_rectBuffer.clear();
     Get().m_circleBuffer.clear();
     Get().m_lineBuffer.clear();
-#endif // _DEBUG
+#endif // IS_DEBUG
 }
 
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 void Xeph2D::Debug::UpdateTextBuffer()
 {
     m_textBuffer.resize(1 + m_monitorBuffer.size() + m_logBuffer.size(), m_textTemplate);
@@ -420,4 +420,4 @@ void Xeph2D::Debug::LogToFile(const std::string& msg)
     m_logFile << msg << std::endl;
     m_logFile.flush();
 }
-#endif // _DEBUG
+#endif // IS_DEBUG

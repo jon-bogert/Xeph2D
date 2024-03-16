@@ -1,7 +1,7 @@
-#ifndef __X2D_EDITOR_EDITORWINDOWS_HIERARCHY_H__
-#define __X2D_EDITOR_EDITORWINDOWS_HIERARCHY_H__
+#ifndef __X2DIS_EDITORIS_EDITORWINDOWS_HIERARCHY_H__
+#define __X2DIS_EDITORIS_EDITORWINDOWS_HIERARCHY_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 #include <Xeph2D/Editor/EditorWindow.h>
 #include <Xeph2D.h>
@@ -22,6 +22,6 @@ namespace Xeph2D::Edit
 		std::vector<std::string> m_objectNames;
 	};
 }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
-#endif //!__X2D_EDITOR_EDITORWINDOWS_HIERARCHY_H__
+#endif //!__X2DIS_EDITORIS_EDITORWINDOWS_HIERARCHY_H__

@@ -1,7 +1,7 @@
-#ifndef __X2D_EDITOR_EDITORWINDOWS_VIEWPORT_H__
-#define __X2D_EDITOR_EDITORWINDOWS_VIEWPORT_H__
+#ifndef __X2DIS_EDITORIS_EDITORWINDOWS_VIEWPORT_H__
+#define __X2DIS_EDITORIS_EDITORWINDOWS_VIEWPORT_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 #include <Xeph2D/Editor/EditorWindow.h>
 #include <Xeph2D.h>
@@ -19,10 +19,10 @@ namespace Xeph2D::Edit
 		Vector2 GetMousePos() const;
 
 	private:
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		friend class ProjectSettings;
 		void UpdateSize() { m_updateSize = true; }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 		Xeph2D::Vector2 m_size;
 		bool m_isHovered = false;
@@ -31,5 +31,5 @@ namespace Xeph2D::Edit
 		bool m_updateSize = false;
 	};
 }
-#endif //_EDITOR
-#endif //!__X2D_EDITOR_EDITORWINDOWS_VIEWPORT_H__
+#endif //IS_EDITOR
+#endif //!__X2DIS_EDITORIS_EDITORWINDOWS_VIEWPORT_H__

@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/EditorWindows/ProjectSettings.h"
 
 #include "Xeph2D/Utility.h"
@@ -15,8 +15,8 @@ void Xeph2D::Edit::ProjectSettings::Initialize()
 {
 	name = "Project Settings";
 
-	m_buildData = YAML::LoadFile(SETTINGS_DIR + m_buildFile);
-	m_displayData = YAML::LoadFile(SETTINGS_DIR + m_displayFile);
+	m_buildData = AppData::Load(AppData::DataFile::BuildInfo);
+	m_displayData = AppData::Load(AppData::DataFile::WindowProperties);
 	Close();
 }
 
@@ -57,18 +57,18 @@ void Xeph2D::Edit::ProjectSettings::OnGUI()
 void Xeph2D::Edit::ProjectSettings::ApplicationPage()
 {
 	char buffer[256];
-	strcpy(buffer, m_displayData["title"].as<std::string>().c_str());
+	strcpy(buffer, m_displayData["title"].As<std::string>().c_str());
 	if (ImGui::InputText("Title", buffer, 255))
 	{
-		m_displayData["title"] = buffer;
+		m_displayData["title"] = std::string(buffer);
 	}
 }
 
 void Xeph2D::Edit::ProjectSettings::DisplayPage()
 {
 	int resBuffer[2];
-	resBuffer[0] = m_displayData["ref-resolution"]["width"].as<int>();
-	resBuffer[1] = m_displayData["ref-resolution"]["height"].as<int>();
+	resBuffer[0] = m_displayData["ref-resolution"]["width"].As<int>();
+	resBuffer[1] = m_displayData["ref-resolution"]["height"].As<int>();
 	if (ImGui::DragInt2("Reference Resolution", resBuffer))
 	{
 		if (resBuffer[0] < 1)
@@ -78,14 +78,14 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 		m_displayData["ref-resolution"]["width"] = resBuffer[0];
 		m_displayData["ref-resolution"]["height"] = resBuffer[1];
 	}
-	int ppuBuffer = m_displayData["ppu"].as<int>();
+	int ppuBuffer = m_displayData["ppu"].As<int>();
 	if (ImGui::DragInt("Pixels per Unit", &ppuBuffer))
 	{
 		if (ppuBuffer < 1)
 			ppuBuffer = 1;
 		m_displayData["ppu"] = ppuBuffer;
 	}
-	bool lockFPS = m_displayData["lock-framerate"].as<int>() != 0;
+	bool lockFPS = m_displayData["lock-framerate"].As<int>() != 0;
 	if (ImGui::Checkbox("Lock Framerate", &lockFPS))
 	{
 		if (lockFPS)
@@ -96,7 +96,7 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 
 	if (lockFPS)
 	{
-		int fpsBuffer = m_displayData["lock-framerate"].as<int>();
+		int fpsBuffer = m_displayData["lock-framerate"].As<int>();
 		if (ImGui::DragInt("Framerate", &fpsBuffer))
 		{
 			if (fpsBuffer < 1)
@@ -108,7 +108,7 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 
 	ImGui::NewLine();
 	ImGui::Text("Release");
-	bool useNativeResolution = m_displayData["resolution"]["height"].as<int>() == 0;
+	bool useNativeResolution = m_displayData["resolution"]["height"].As<int>() == 0;
 	if (ImGui::Checkbox("Use Native Resolution", &useNativeResolution))
 	{
 		if (useNativeResolution)
@@ -118,14 +118,14 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 		}
 		else
 		{
-			m_displayData["resolution"]["width"] = m_displayData["ref-resolution"]["width"].as<int>();
-			m_displayData["resolution"]["height"] = m_displayData["ref-resolution"]["height"].as<int>();
+			m_displayData["resolution"]["width"] = m_displayData["ref-resolution"]["width"].As<int>();
+			m_displayData["resolution"]["height"] = m_displayData["ref-resolution"]["height"].As<int>();
 		}
 	}
 	if (!useNativeResolution)
 	{
-		resBuffer[0] = m_displayData["resolution"]["width"].as<int>();
-		resBuffer[1] = m_displayData["resolution"]["height"].as<int>();
+		resBuffer[0] = m_displayData["resolution"]["width"].As<int>();
+		resBuffer[1] = m_displayData["resolution"]["height"].As<int>();
 		if (ImGui::DragInt2("Render Resolution", resBuffer))
 		{
 			if (resBuffer[0] < 1)
@@ -137,7 +137,7 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 		}
 	}
 	char windowOptions[] = "Windowed\0Borderless\0Fullscreen\0Windowed With Resize\0Window No Close\0";
-	int currentStyleIndex = m_displayData["style"].as<int>();
+	int currentStyleIndex = m_displayData["style"].As<int>();
 	if (ImGui::Combo("Window Style", &currentStyleIndex, windowOptions))
 	{
 		m_displayData["style"] = currentStyleIndex;
@@ -145,8 +145,8 @@ void Xeph2D::Edit::ProjectSettings::DisplayPage()
 
 	ImGui::NewLine();
 	ImGui::Text("Debug");
-	resBuffer[0] = m_displayData["debug-resolution"]["width"].as<int>();
-	resBuffer[1] = m_displayData["debug-resolution"]["height"].as<int>();
+	resBuffer[0] = m_displayData["debug-resolution"]["width"].As<int>();
+	resBuffer[1] = m_displayData["debug-resolution"]["height"].As<int>();
 	if (ImGui::DragInt2("Debug Resolution", resBuffer))
 	{
 		if (resBuffer[0] < 1)
@@ -247,11 +247,7 @@ void Xeph2D::Edit::ProjectSettings::BuildSceneDown()
 
 void Xeph2D::Edit::ProjectSettings::SaveFiles()
 {
-	std::ofstream file;
-	file.open(SETTINGS_DIR + m_displayFile);
-	file << m_displayData;
-	file.close();
-	file.open(SETTINGS_DIR + m_buildFile);
-	file << m_buildData;
+	AppData::Save(AppData::DataFile::WindowProperties, m_displayData);
+	AppData::Save(AppData::DataFile::BuildInfo, m_buildData);
 }
-#endif //_EDITOR
+#endif //IS_EDITOR

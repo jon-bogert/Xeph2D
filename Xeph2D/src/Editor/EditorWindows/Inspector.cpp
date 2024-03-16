@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/EditorWindows/Inspector.h"
 #include "Xeph2D/Editor/Editor.h"
 
@@ -294,4 +294,4 @@ void Xeph2D::Edit::Inspector::DrawEdit()
 }
 
 
-#endif //_EDITOR
+#endif //IS_EDITOR

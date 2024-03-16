@@ -36,11 +36,11 @@ namespace Xeph2D
 		int m_order = 0;
 		Color m_color = Color::White;
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		float m_timeToRefresh = 1.f;
 		Timer m_refreshTimer;
 		std::string m_textureKeyPrev = "";
-#endif //_EDITOR
+#endif //IS_EDITOR
 	};
 }
 

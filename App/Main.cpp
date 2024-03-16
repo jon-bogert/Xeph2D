@@ -1,8 +1,6 @@
 #include <Xeph2D.h>
 #include "gen/ComponentManifest.generated.h"
 
-#include "Xeph2D/Systems/AppData.h"
-
 #ifdef _CONSOLE
 int wmain(int argc, wchar_t* argv[])
 {
@@ -13,8 +11,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {
 	Xeph2D::Runtime::ParseArgs(pCmdLine);
 #endif //_CONSOLE
-
-	Xeph2D::AppData::BuildForRelease();
 
 	Xeph2D::Runtime::Initialize(__X2D_POPULATE_COMP_PTR);
 	Xeph2D::Runtime::Update();

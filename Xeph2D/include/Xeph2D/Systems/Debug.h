@@ -49,7 +49,7 @@ namespace Xeph2D
 		Debug();
 		static Debug& Get();
 
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 		void UpdateTextBuffer();
 		void AddToLogBuffer(const LogEntry& entry);
 		void ToggleShowOutput(InputAction* ctx);
@@ -86,7 +86,7 @@ namespace Xeph2D
 		Color m_warnColor = m_defaultWarnColor;
 		Color m_errColor = m_defaultErrColor;
 		float m_logTime = 5.f;
-#endif // _DEBUG
+#endif // IS_DEBUG
 	};
 }
 

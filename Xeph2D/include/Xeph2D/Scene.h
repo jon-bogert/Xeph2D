@@ -9,13 +9,13 @@
 
 namespace Xeph2D
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	namespace Edit
 	{
 		class Hierarchy;
 		class Editor;
 	}
-#endif //_EDITOR
+#endif //IS_EDITOR
 	class GameObject;
 
 	class Scene final
@@ -63,7 +63,7 @@ namespace Xeph2D
 
 		void CheckObjectBuffers();
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		friend class Edit::Hierarchy;
 		friend class Edit::Editor;
 #endif //EDITOR

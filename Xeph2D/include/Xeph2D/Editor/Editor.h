@@ -1,7 +1,7 @@
-#ifndef __X2D_EDITOR_EDITOR_H__
-#define __X2D_EDITOR_EDITOR_H__
+#ifndef __X2DIS_EDITORIS_EDITOR_H__
+#define __X2DIS_EDITORIS_EDITOR_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 #include "Xeph2D/Editor/EditorSceneData.h"
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
@@ -74,7 +74,7 @@ namespace Xeph2D::Edit
         friend class WindowManager;
         Transform* GetViewportTransform() { return &m_viewportTransform; }
 
-        void YAMLSaver(YAML::Node& node, const Field& field);
+        void YAMLSaver(Markup::Node& node, const Field& field);
 
         std::unique_ptr<sf::RenderWindow> m_window;
         HWND m_handle = nullptr;
@@ -90,7 +90,7 @@ namespace Xeph2D::Edit
 
         //Windows
         using EditorWindows = std::vector<std::unique_ptr<EditorWindow>>;
-        EditorWindows m_editorWindows;
+        EditorWindows mIS_EDITORWindows;
         Viewport* m_viewportWindow;
         Hierarchy* m_hierarchyWindow;
         Inspector* m_inspectorWindow;
@@ -120,5 +120,5 @@ namespace Xeph2D::Edit
         bool m_rebuildProject = false;
     };
 }
-#endif //_EDITOR
-#endif //!__X2D_EDITOR_EDITOR_H__
+#endif //IS_EDITOR
+#endif //!__X2DIS_EDITORIS_EDITOR_H__

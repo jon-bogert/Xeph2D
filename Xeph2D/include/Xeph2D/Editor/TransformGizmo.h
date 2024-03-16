@@ -1,6 +1,6 @@
-#ifndef __X2D_EDITOR_TRANSFORMGIZMO_H__
-#define __X2D_EDITOR_TRANSFORMGIZMO_H__
-#ifdef _EDITOR
+#ifndef __X2DIS_EDITOR_TRANSFORMGIZMO_H__
+#define __X2DIS_EDITOR_TRANSFORMGIZMO_H__
+#ifdef IS_EDITOR
 
 namespace Xeph2D
 {
@@ -39,5 +39,5 @@ namespace Xeph2D::Edit
 	};
 }
 
-#endif //_EDITOR
-#endif //!__X2D_EDITOR_TRANSFORMGIZMO_H__
+#endif //IS_EDITOR
+#endif //!__X2DIS_EDITOR_TRANSFORMGIZMO_H__

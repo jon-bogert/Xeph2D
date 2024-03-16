@@ -16,7 +16,7 @@ void Xeph2D::Scene::DestroyObject(const Ref<GameObject>& object)
 
 void Xeph2D::Scene::Update()
 {
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	for (auto& goPtr : m_gameObjects)
 	{
 		goPtr->OnEditorUpdate();
@@ -32,7 +32,7 @@ void Xeph2D::Scene::Update()
 		if (goPtr->IsActive())
 			goPtr->LateUpdate();
 	}
-#endif //_EDITOR
+#endif //IS_EDITOR
 	CheckObjectBuffers();
 }
 
@@ -43,7 +43,7 @@ void Xeph2D::Scene::Initialize()
 	{
 		goPtr->Initialize(Ref<GameObject>(goPtr));
 	}
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 	for (auto& goPtr : m_gameObjects)
 	{
 		goPtr->OnEditorStart();
@@ -57,7 +57,7 @@ void Xeph2D::Scene::Initialize()
 	{
 		goPtr->Start();
 	}
-#endif //_EDITOR
+#endif //IS_EDITOR
 	m_initialized = true;
 }
 
@@ -76,20 +76,20 @@ void Xeph2D::Scene::CheckObjectBuffers()
 		if (m_initialized)
 		{
 			goPtr->Initialize(Ref<GameObject>(goPtr));
-#ifndef _EDITOR
+#ifndef IS_EDITOR
 			goPtr->Awake();
-#endif //!_EDITOR
+#endif //!IS_EDITOR
 		}
 	}
 	for (auto& goPtr : m_addBuffer)
 	{
 		if (m_initialized)
 		{
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 			goPtr->OnEditorStart();
 #else
 			goPtr->Start();
-#endif //_EDITOR
+#endif //IS_EDITOR
 		}
 		m_gameObjects.push_back(goPtr);
 	}
@@ -97,11 +97,11 @@ void Xeph2D::Scene::CheckObjectBuffers()
 
 	for (Ref<GameObject>& go : m_destroyBuffer)
 	{
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		go->OnEditorShutdown();
 #else
 		go->Shutdown();
-#endif //_EDITOR
+#endif //IS_EDITOR
 		auto iter = std::find_if(
 			m_gameObjects.begin(),
 			m_gameObjects.end(),

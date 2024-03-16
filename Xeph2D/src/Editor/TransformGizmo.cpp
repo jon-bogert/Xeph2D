@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/Editor.h"
 #include "Xeph2D/Editor/TransformGizmo.h"
 #include "Xeph2D/Systems/Debug.h"
@@ -206,6 +206,6 @@ void Xeph2D::Edit::TransformGizmo::ApplyTransform()
 	Editor::SetIsSaved(false);
 }
 
-#endif // _EDITOR
+#endif // IS_EDITOR
 
 

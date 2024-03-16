@@ -5,10 +5,10 @@
 #include "Xeph2D/Systems/AssetManager.h"
 #include "Xeph2D/Systems/Debug.h"
 #include "Xeph2D/Utility.h"
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/Editor.h"
 #include "Xeph2D/Editor/FileBrowser.h"
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 #include "CustomSerialTypes.h"
 
@@ -55,19 +55,19 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
 			switch (type)
 			{
 			case SerializableType::Int:
-				*static_cast<int*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<int>();
+				*static_cast<int*>(ptr) = (*Get().m_componentInfoBuffer)[field].As<int>();
 				break;
 			case SerializableType::Float:
-				*static_cast<float*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<float>();
+				*static_cast<float*>(ptr) = (*Get().m_componentInfoBuffer)[field].As<float>();
 				break;
 			case SerializableType::Bool:
-				*static_cast<bool*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<bool>();
+				*static_cast<bool*>(ptr) = (*Get().m_componentInfoBuffer)[field].As<bool>();
 				break;
 			case SerializableType::Char:
-				*static_cast<char*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<char>();
+				*static_cast<char*>(ptr) = (*Get().m_componentInfoBuffer)[field].As<char>();
 				break;
 			case SerializableType::String:
-				*static_cast<std::string*>(ptr) = (*Get().m_componentInfoBuffer)[field].as<std::string>();
+				*static_cast<std::string*>(ptr) = (*Get().m_componentInfoBuffer)[field].As<std::string>();
 				break;
 			case SerializableType::Vector2:
 				*static_cast<Vector2*>(ptr) = CustomSerialTypes::Vector2FromYAML((*Get().m_componentInfoBuffer)[field.c_str()]);
@@ -90,12 +90,12 @@ void Xeph2D::SceneManager::__Deserialize(SerializableType type, void* ptr, const
 		}
 	}
 
-#ifdef _EDITOR
-	Edit::Field& edField = Get().m_editorCompBuffer->fields.emplace_back();
+#ifdef IS_EDITOR
+	Edit::Field& edField = Get().mIS_EDITORCompBuffer->fields.emplace_back();
 	edField.name = field;
 	edField.type = type;
 	edField.ptr = ptr;
-#endif //_EDITOR
+#endif //IS_EDITOR
 }
 
 void Xeph2D::SceneManager::Initialize(
@@ -103,12 +103,12 @@ void Xeph2D::SceneManager::Initialize(
 {
 	Get().m_populateCallback = populateCallback;
 
-	YAML::Node buildInfo = YAML::LoadFile(BUILD_INFO_FILE);
+	Markup::Node buildInfo = AppData::Load(AppData::DataFile::BuildInfo);
 	if (!buildInfo["scenes"].IsDefined())
 		return;
 
-	for (yaml_val& scene : buildInfo["scenes"])
-		Get().m_manifest.push_back(scene.as<std::string>());
+	for (Markup::Node& scene : buildInfo["scenes"])
+		Get().m_manifest.push_back(scene.As<std::string>());
 }
 
 void Xeph2D::SceneManager::LoadSceneFile(const std::string& filePath, const int buildIndex, bool isFullPath)
@@ -118,45 +118,46 @@ void Xeph2D::SceneManager::LoadSceneFile(const std::string& filePath, const int 
 		//TODO - Check Asset similarities
 		Get().m_activeScene->Shutdown();
 		AssetManager::Get().ClearTextures();
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		Edit::Editor::Get().ClearSceneData();
-#endif //_EDITOR
+#endif //IS_EDITOR
 	}
 	Get().m_activeScene = std::make_shared<Scene>();
 
-	std::string fullFilePath = (isFullPath) ? filePath : SCENE_DIR + filePath;
+	//std::string fullFilePath = (isFullPath) ? filePath : SCENE_DIR + filePath;
 	
-	if (!std::filesystem::exists(fullFilePath))
-	{
-		Debug::LogErr("SceneLoader -> Could not find Scene file at path: %s", (fullFilePath).c_str());
-		return;
-	}
+	//if (!std::filesystem::exists(fullFilePath))
+	//{
+	//	Debug::LogErr("SceneLoader -> Could not find Scene file at path: %s", (fullFilePath).c_str());
+	//	return;
+	//}
 
 	Get().m_index = buildIndex;
 
-	YAML::Node contents;
-	contents = YAML::LoadFile(fullFilePath);
+	Markup::Node contents;
+	contents = AppData::GetSceneData(filePath);
+	//contents = YAML::LoadFile(fullFilePath);
 
 	Get().m_activeScene->m_name = (isFullPath) ?
 		"Untitled" :
 		filePath;
 
 	//Load Assets
-	for (yaml_val& texture : contents["textures"])
+	for (Markup::Node& texture : contents["textures"])
 	{
-		AssetManager::Get().LoadTexture(texture.as<std::string>());
+		AssetManager::Get().LoadTexture(texture.As<std::string>());
 	}
 
 	//Load Objects
-	for (yaml_val& objInfo : contents["objects"])
+	for (Markup::Node& objInfo : contents["objects"])
 	{
 		std::shared_ptr<GameObject>& activeObject = Get().m_activeScene->m_gameObjects.emplace_back(std::make_shared<GameObject>());
-		activeObject->m_instID = Utility::FromHex32String(objInfo["instID"].as<std::string>());
-		activeObject->m_name = objInfo["name"].as<std::string>();
+		activeObject->m_instID = Utility::FromHex32String(objInfo["instID"].As<std::string>());
+		activeObject->m_name = objInfo["name"].As<std::string>();
 		activeObject->m_transform = CustomSerialTypes::TransformFromYAML(objInfo["transform"]);
-		activeObject->m_isActive = objInfo["active"].as<bool>();
+		activeObject->m_isActive = objInfo["active"].As<bool>();
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		Edit::Editor& editor = Edit::Editor::Get();
 		Edit::EditorGameObject& edActiveObject =
 			editor.m_sceneData.gameObjects.emplace_back();
@@ -171,31 +172,31 @@ void Xeph2D::SceneManager::LoadSceneFile(const std::string& filePath, const int 
 		edActiveObject.isActive.ptr = &activeObject->m_isActive;
 		edActiveObject.isActive.name = "Active";
 		edActiveObject.isActive.type = SerializableType::Bool;
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 		if (objInfo["components"].IsDefined())
 		{
-			for (yaml_val& compInfo : objInfo["components"])
+			for (Markup::Node& compInfo : objInfo["components"])
 			{
-				uint32_t typeID = Utility::FromHex32String(compInfo["typeID"].as<std::string>());
+				uint32_t typeID = Utility::FromHex32String(compInfo["typeID"].As<std::string>());
 				std::shared_ptr<Component>& activeComponent = activeObject->m_components.emplace_back();
 				Get().m_populateCallback(activeComponent, typeID);
-				activeComponent->m_enabled = compInfo["enabled"].as<bool>();
+				activeComponent->m_enabled = compInfo["enabled"].As<bool>();
 				activeComponent->gameObject = Ref<GameObject>(activeObject);
 				Get().m_componentInfoBuffer = &compInfo;
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 				Edit::EditorComponent& edActiveComp =
 					edActiveObject.components.emplace_back();
 				edActiveComp.typeID = typeID;
 				edActiveComp.enabled.ptr = &activeComponent->m_enabled;
 				edActiveComp.enabled.name = "Enabled";
 				edActiveComp.enabled.type = SerializableType::Bool;
-				Get().m_editorCompBuffer = &edActiveComp;
+				Get().mIS_EDITORCompBuffer = &edActiveComp;
 				activeComponent->Serializables();
-				Get().m_editorCompBuffer = nullptr;
+				Get().mIS_EDITORCompBuffer = nullptr;
 #else
 				activeComponent->Serializables();
-#endif //_EDITOR
+#endif //IS_EDITOR
 				Get().m_componentInfoBuffer = nullptr;
 			}
 		}
@@ -205,7 +206,7 @@ void Xeph2D::SceneManager::LoadSceneFile(const std::string& filePath, const int 
 	Get().m_activeScene->Initialize();
 }
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 std::shared_ptr<Xeph2D::Component>& Xeph2D::SceneManager::AddComponentByID(int gameObjectIndex, uint32_t typeID)
 {
 	GameObject* obj = ActiveScene().m_gameObjects[gameObjectIndex].get();
@@ -215,18 +216,16 @@ std::shared_ptr<Xeph2D::Component>& Xeph2D::SceneManager::AddComponentByID(int g
 }
 void Xeph2D::SceneManager::SaveSceneManifest()
 {
-	YAML::Node manifestInfo;
+	Markup::Node manifestInfo;
 
 	for (const ScenePath& path : Get().m_manifest)
 	{
-		YAML::Node sceneInfo;
+		Markup::Node sceneInfo;
 		sceneInfo = path;
-		manifestInfo["scenes"].push_back(sceneInfo);
+		manifestInfo["scenes"].PushBack(sceneInfo);
 	}
 
-	std::ofstream file(BUILD_INFO_FILE);
-	file << manifestInfo;
-	file.close();
+	AppData::Save(AppData::DataFile::BuildInfo, manifestInfo);
 }
 void Xeph2D::SceneManager::OpenSceneWindow()
 {
@@ -278,19 +277,19 @@ void Xeph2D::SceneManager::EmptyScene()
 	Edit::Editor::SetIsSaved(false);
 	Edit::Editor::Get().m_assetManagerWindow->Initialize();
 }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
-#ifdef _DEBUG
+#ifdef IS_DEBUG
 void Xeph2D::SceneManager::LoadLast()
 {
-	YAML::Node editData = YAML::LoadFile(EDITOR_FILE);
+	Markup::Node editData = AppData::Load(AppData::DataFile::Editor);
 
-	std::string last = editData["last"].as<std::string>();
+	std::string last = editData["last"].As<std::string>();
 	if (!std::filesystem::exists(SCENE_DIR + last))
 	{
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		EmptyScene();
-#endif //_EDITOR
+#endif //IS_EDITOR
 		return;
 	}
 
@@ -305,4 +304,4 @@ void Xeph2D::SceneManager::LoadLast()
 	}
 	Get().LoadSceneFile(last, index);
 }
-#endif //_DEBUG
+#endif //IS_DEBUG

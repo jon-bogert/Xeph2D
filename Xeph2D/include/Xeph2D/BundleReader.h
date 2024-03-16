@@ -1,5 +1,5 @@
-#ifndef __X2D_EDITOR_BUNDLEREADER_H__
-#define __X2D_EDITOR_BUNDLEREADER_H__
+#ifndef __X2DIS_EDITOR_BUNDLEREADER_H__
+#define __X2DIS_EDITOR_BUNDLEREADER_H__
 
 #include <filesystem>
 #include <fstream>
@@ -153,4 +153,4 @@ namespace Xeph2D
     };
 }
 
-#endif //!__X2D_EDITOR_BUNDLEREADER_H__
+#endif //!__X2DIS_EDITOR_BUNDLEREADER_H__

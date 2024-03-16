@@ -1,7 +1,7 @@
-#ifndef __X2D_EDITOR_EDITORSCENEDATA_H__
-#define __X2D_EDITOR_EDITORSCENEDATA_H__
+#ifndef __X2DIS_EDITORIS_EDITORSCENEDATA_H__
+#define __X2DIS_EDITORIS_EDITORSCENEDATA_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include <variant>
 #include "Xeph2D/Structs.h"
 #include "Xeph2D/Ref.h"
@@ -93,6 +93,6 @@ namespace Xeph2D::Edit
 		}
 	};
 }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
-#endif //!__X2D_EDITOR_EDITORSCENEDATA_H__
+#endif //!__X2DIS_EDITORIS_EDITORSCENEDATA_H__

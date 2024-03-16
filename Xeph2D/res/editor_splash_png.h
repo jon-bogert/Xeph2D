@@ -1,5 +1,5 @@
-#ifndef RESOURCE_editor_splash_png_H
-#define RESOURCE_editor_splash_png_H
+#ifndef RESOURCEIS_EDITOR_splash_png_H
+#define RESOURCEIS_EDITOR_splash_png_H
 
 #include <memory>
 #include <initializer_list>

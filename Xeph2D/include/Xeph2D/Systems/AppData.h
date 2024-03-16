@@ -23,18 +23,18 @@ namespace Xeph2D
             AssetManifest,
             BuildInfo,
             WindowProperties,
-#ifdef _EDITOR
+#ifdef IS_DEBUG
             ComponentManifest,
             Editor,
-#endif //_EDITOR
+#endif //IS_DEBUG
             Count
         };
 
         static Markup::Node Load(const DataFile file);
-#ifdef _EDITOR
+#ifdef IS_EDITOR
         static void Save(const DataFile file, const Markup::Node& node);
         static void BuildForRelease();
-#endif _EDITOR
+#endif IS_EDITOR
 
 #ifdef NDEBUG
         static void Initialize();

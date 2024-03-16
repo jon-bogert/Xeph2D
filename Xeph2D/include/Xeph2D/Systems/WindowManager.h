@@ -22,10 +22,10 @@ namespace Xeph2D
 	class WindowManager final
 	{
 	public:
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		static sf::RenderTexture* __Viewport() { return Get().m_viewport.get(); }
 		static void __UpdateViewportSize(Vector2 size);
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 		~WindowManager() = default;
 		WindowManager(const WindowManager& other) = delete;
@@ -67,9 +67,9 @@ namespace Xeph2D
 
 
 	private:
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		std::unique_ptr<sf::RenderTexture> m_viewport = nullptr;
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 		WindowManager() {}
 		static WindowManager& Get();

@@ -4,6 +4,7 @@ workspace "Xeph2D"
 	{
 		"Debug",
 		"Debug (Console)",
+		"Debug (Release Mode)",
 		"Editor",
 		"Editor (Console)",
 		"Release"
@@ -23,7 +24,7 @@ project "Xeph2D"
 	cppdialect "C++17"
 	staticruntime "Off"
 	
-	defines { "SFML_STATIC", "YAML_CPP_STATIC_DEFINE" }
+	defines { "SFML_STATIC" }
 
 	files
 	{
@@ -46,20 +47,24 @@ project "Xeph2D"
 		defines { "WIN32" }
 
 	filter "configurations:Debug"
-		defines { "_DEBUG", "NCONSOLE" }
+		defines { "IS_DEBUG", "NCONSOLE" }
 		symbols "On"
 
 	filter "configurations:Debug (Console)"
-		defines { "_DEBUG", "_CONSOLE" }
+		defines { "IS_DEBUG", "IS_CONSOLE" }
+		symbols "On"
+		
+	filter "configurations:Debug (Release Mode)"
+		defines { "NDEBUG", "NCONSOLE" }
 		symbols "On"
 		
 	filter "configurations:Editor"
-		defines { "_DEBUG", "NCONSOLE", "_EDITOR" }
+		defines { "IS_DEBUG", "NCONSOLE", "IS_EDITOR" }
 		symbols "On"
 		includedirs { "ext/ImGui/include" }
 
 	filter "configurations:Editor (Console)"
-		defines { "_DEBUG", "_CONSOLE", "_EDITOR" }
+		defines { "IS_DEBUG", "_CONSOLE", "IS_EDITOR" }
 		symbols "On"
 		includedirs { "ext/ImGui/include" }
 		
@@ -79,7 +84,7 @@ project "App"
 	cppdialect "C++17"
 	staticruntime "Off"
 	
-	defines { "SFML_STATIC", "YAML_CPP_STATIC_DEFINE" }
+	defines { "SFML_STATIC" }
 
 	files
 	{
@@ -95,8 +100,7 @@ project "App"
 		"ext/yaml-cpp/include",
 		"Xeph2D/include",
 		"%{prj.name}/gen",
-		"ext/xe-markup/include",
-		"ext/yaml-cpp/include"
+		"ext/xe-markup/include"
 	}
 	
 	libdirs
@@ -125,7 +129,7 @@ project "App"
 		defines { "WIN32" }
 
 	filter "configurations:Debug"
-		defines { "_DEBUG", "NCONSOLE" }
+		defines { "IS_DEBUG", "NCONSOLE" }
 		symbols "On"
 		links
 		{
@@ -135,12 +139,11 @@ project "App"
 			"sfml-window-s-d.lib",
 			"sfml-audio-s-d.lib",
 			"sfml-network-s-d.lib",
-			"xe-markup-d.lib",
-			"yaml-cpp-d.lib"
+			"xe-markup-d.lib"
 		}
 
 	filter "configurations:Debug (Console)"
-		defines { "_DEBUG", "_CONSOLE" }
+		defines { "IS_DEBUG", "_CONSOLE" }
 		kind "ConsoleApp"
 		symbols "On"
 		links
@@ -151,12 +154,25 @@ project "App"
 			"sfml-window-s-d.lib",
 			"sfml-audio-s-d.lib",
 			"sfml-network-s-d.lib",
-			"xe-markup-d.lib",
-			"yaml-cpp-d.lib"
+			"xe-markup-d.lib"
+		}
+	
+	filter "configurations:Debug (Release Mode)"
+		defines { "NDEBUG", "NCONSOLE" }
+		symbols "On"
+		links
+		{
+			"box2d-d.lib",
+			"sfml-system-s-d.lib",
+			"sfml-graphics-s-d.lib",
+			"sfml-window-s-d.lib",
+			"sfml-audio-s-d.lib",
+			"sfml-network-s-d.lib",
+			"xe-markup-d.lib"
 		}
 		
 	filter "configurations:Editor"
-		defines { "_DEBUG", "NCONSOLE", "_EDITOR" }
+		defines { "IS_DEBUG", "NCONSOLE", "IS_EDITOR" }
 		symbols "On"
 		includedirs { "ext/ImGui/include" }
 		links
@@ -169,12 +185,11 @@ project "App"
 			"sfml-network-s-d.lib",
 			"imgui-sfml-s-d.lib",
 			"opengl32",
-			"xe-markup-d.lib",
-			"yaml-cpp-d.lib"
+			"xe-markup-d.lib"
 		}
 
 	filter "configurations:Editor (Console)"
-		defines { "_DEBUG", "_CONSOLE", "_EDITOR" }
+		defines { "IS_DEBUG", "_CONSOLE", "IS_EDITOR" }
 		kind "ConsoleApp"
 		symbols "On"
 		includedirs { "ext/ImGui/include" }
@@ -187,8 +202,7 @@ project "App"
 			"sfml-audio-s-d.lib",
 			"sfml-network-s-d.lib",
 			"imgui-sfml-s-d.lib",
-			"xe-markup-d.lib",
-			"yaml-cpp-d.lib"
+			"xe-markup-d.lib"
 		}
 		
 	filter "configurations:Release"
@@ -202,6 +216,5 @@ project "App"
 			"sfml-window-s.lib",
 			"sfml-audio-s.lib",
 			"sfml-network-s.lib",
-			"xe-markup.lib",
-			"yaml-cpp.lib"
+			"xe-markup.lib"
 		}

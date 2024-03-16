@@ -21,7 +21,6 @@ namespace xe::Markup
 		Node& operator=(const Node& other)
 		{
 			Clear();
-			//m_key = other.m_key;
 			if (other.m_value != nullptr)
 			{
 				m_value = new std::string;
@@ -82,7 +81,6 @@ namespace xe::Markup
 				return *this;
 
 			Clear();
-			//m_key = other.m_key;
 			if (other.m_value != nullptr)
 			{
 				m_value = new std::string;

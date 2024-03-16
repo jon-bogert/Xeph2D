@@ -1,5 +1,5 @@
-#ifndef __X2D_EDITOR_BUNDLEFACTORY_H__
-#define __X2D_EDITOR_BUNDLEFACTORY_H__
+#ifndef __X2DIS_EDITOR_BUNDLEFACTORY_H__
+#define __X2DIS_EDITOR_BUNDLEFACTORY_H__
 
 #include <filesystem>
 #include <fstream>
@@ -88,5 +88,5 @@ namespace Xeph2D::Editor
 	};
 }
 
-#endif //!__X2D_EDITOR_BUNDLEFACTORY_H__
+#endif //!__X2DIS_EDITOR_BUNDLEFACTORY_H__
 

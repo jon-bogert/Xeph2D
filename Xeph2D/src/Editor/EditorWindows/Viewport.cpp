@@ -1,4 +1,4 @@
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "Xeph2D/Editor/EditorWindows/Viewport.h"
 #include "Xeph2D/Systems/WindowManager.h"
 #include <imgui-SFML.h>
@@ -70,4 +70,4 @@ Vector2 Xeph2D::Edit::Viewport::GetMousePos() const
 	return m_mouseInViewport;
 }
 
-#endif //_EDITOR
+#endif //IS_EDITOR

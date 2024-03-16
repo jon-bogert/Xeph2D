@@ -1,11 +1,11 @@
-#ifndef __X2D_EDITOR_EDITORWINDOWS_PROJECTSETTINGS_H__
-#define __X2D_EDITOR_EDITORWINDOWS_PROJECTSETTINGS_H__
+#ifndef __X2DIS_EDITORIS_EDITORWINDOWS_PROJECTSETTINGS_H__
+#define __X2DIS_EDITORIS_EDITORWINDOWS_PROJECTSETTINGS_H__
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 
 #include "Xeph2D/Editor/EditorWindow.h"
 
-#include <yaml-cpp/yaml.h>
+#include "Xeph2D/Systems/AppData.h"
 
 #include <vector>
 #include <string>
@@ -45,8 +45,8 @@ namespace Xeph2D::Edit
 
 		int m_indexSelection = -1;
 
-		YAML::Node m_buildData;
-		YAML::Node m_displayData;
+		Markup::Node m_buildData;
+		Markup::Node m_displayData;
 		const std::string m_buildFile = "BuildInfo.yaml";
 		const std::string m_displayFile = "WindowProperties.yaml";
 
@@ -54,5 +54,5 @@ namespace Xeph2D::Edit
 	};
 }
 
-#endif // _EDITOR
-#endif //!__X2D_EDITOR_EDITORWINDOWS_PROJECTSETTINGS_H__
+#endif // IS_EDITOR
+#endif //!__X2DIS_EDITORIS_EDITORWINDOWS_PROJECTSETTINGS_H__

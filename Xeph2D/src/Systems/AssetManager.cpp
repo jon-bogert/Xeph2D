@@ -4,7 +4,7 @@
 
 #include "../res/no_image_png.h"
 
-#include <yaml-cpp/yaml.h>
+#include "Xeph2D/Systems/AppData.h"
 
 #define ASSET_MANIFEST_FILE "settings/AssetManifest.yaml"
 #define TEXTURE_DIR "Assets/Textures/"
@@ -21,13 +21,13 @@ void Xeph2D::AssetManager::Initialize()
 	Get().m_defaultTexture = std::make_unique<sf::Texture>();
 	Get().m_defaultTexture->loadFromMemory(Get().m_defaultTextureData.get(), Get().m_defaultTextureSize);
 
-	YAML::Node assetManifest = YAML::LoadFile(ASSET_MANIFEST_FILE);
+	Markup::Node assetManifest = AppData::Load(AppData::DataFile::AssetManifest);
 	if (assetManifest["textures"].IsDefined())
 	{
-		for (yaml_val& texture : assetManifest["textures"])
+		for (Markup::Node& texture : assetManifest["textures"])
 		{
-			std::string key = texture["key"].as<std::string>();
-			std::string path = texture["path"].as<std::string>();
+			std::string key = texture["key"].As<std::string>();
+			std::string path = texture["path"].As<std::string>();
 			Get().m_textureManifest[key] = path;
 		}
 	}
@@ -44,23 +44,21 @@ sf::Texture* Xeph2D::AssetManager::GetTexture(const std::string& key)
 	return Get().m_loadedTextures.at(key).get();
 }
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 void Xeph2D::AssetManager::SaveToFile()
 {
-	YAML::Node manifestInfo;
+	Markup::Node manifestInfo;
 	for (auto& texPair : m_textureManifest)
 	{
-		YAML::Node texInfo;
+		Markup::Node texInfo;
 		texInfo["key"] = texPair.first;
 		texInfo["path"] = texPair.second;
-		manifestInfo["textures"].push_back(texInfo);
+		manifestInfo["textures"].PushBack(texInfo);
 	}
 
-	std::ofstream file(ASSET_MANIFEST_FILE);
-	file << manifestInfo;
-	file.close();
+	AppData::Save(AppData::DataFile::AssetManifest, manifestInfo);
 }
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 void Xeph2D::AssetManager::LoadTexture(const std::string& key)
 {

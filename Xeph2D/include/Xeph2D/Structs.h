@@ -32,9 +32,9 @@
 #include <SFML.hpp>
 #include <box2d/box2d.h>
 
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 #include "../../ImGui/include/imgui.h"
-#endif //_EDITOR
+#endif //IS_EDITOR
 
 namespace Xeph2D
 {
@@ -102,11 +102,11 @@ namespace Xeph2D
 		operator b2Vec2() const { return { x, y }; };										// **EDIT** Added for box2D Compatibility
 		Vector2& operator=(const b2Vec2& rhs) { x = rhs.x; y = rhs.y; return *this; }		// **EDIT** Added for box2D Compatibility
 		Vector2(const b2Vec2& other) : x(other.x), y(other.y) {}							// **EDIT** Added for box2D Compatibility
-#ifdef _EDITOR
+#ifdef IS_EDITOR
 		operator ImVec2() const { return { x, y }; };										// **EDIT** Added for ImGui Compatibility
 		Vector2& operator=(const ImVec2& rhs) { x = rhs.x; y = rhs.y; return *this; }		// **EDIT** Added for ImGui Compatibility
 		Vector2(const ImVec2& other) : x(other.x), y(other.y) {}							// **EDIT** Added for ImGui Compatibility
-#endif //_EDITOR
+#endif //IS_EDITOR
 	};
 	//----------------------------------------------------------------------------------------------------
 
