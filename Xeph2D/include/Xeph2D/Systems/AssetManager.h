@@ -31,6 +31,7 @@ namespace Xeph2D
 		static AssetManager& Get() { static AssetManager instance; return instance; }
 		using TextureMap = std::unordered_map<std::string, std::unique_ptr<sf::Texture>>;
 		using FontMap = std::unordered_map<std::string, std::unique_ptr<sf::Font>>;
+		using DataMap = std::unordered_map<std::string, std::unique_ptr<std::vector<uint8_t>>>;
 
 		using Manifest = std::unordered_map<std::string, std::string>;
 
@@ -48,6 +49,9 @@ namespace Xeph2D
 
 		Manifest m_textureManifest;
 		TextureMap m_loadedTextures;
+#ifndef IS_DEBUG
+		DataMap m_loadedTexturesData;
+#endif // !IS_DEBUG
 		std::unique_ptr<sf::Texture> m_defaultTexture;
 		std::unique_ptr<unsigned char[]> m_defaultTextureData;
 		size_t m_defaultTextureSize = 0;

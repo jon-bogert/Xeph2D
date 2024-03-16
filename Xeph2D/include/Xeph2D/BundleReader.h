@@ -27,6 +27,8 @@ namespace Xeph2D
             if (!m_file)
                 throw std::runtime_error("Unable to open file");
 
+            m_path = path.u8string();
+
             size_t numFiles;
             m_file.read(reinterpret_cast<char*>(&numFiles), sizeof(numFiles));
 

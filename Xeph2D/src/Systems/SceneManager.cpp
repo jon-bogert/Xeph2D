@@ -124,19 +124,10 @@ void Xeph2D::SceneManager::LoadSceneFile(const std::string& filePath, const int 
 	}
 	Get().m_activeScene = std::make_shared<Scene>();
 
-	//std::string fullFilePath = (isFullPath) ? filePath : SCENE_DIR + filePath;
-	
-	//if (!std::filesystem::exists(fullFilePath))
-	//{
-	//	Debug::LogErr("SceneLoader -> Could not find Scene file at path: %s", (fullFilePath).c_str());
-	//	return;
-	//}
-
 	Get().m_index = buildIndex;
 
 	Markup::Node contents;
 	contents = AppData::GetSceneData(filePath);
-	//contents = YAML::LoadFile(fullFilePath);
 
 	Get().m_activeScene->m_name = (isFullPath) ?
 		"Untitled" :

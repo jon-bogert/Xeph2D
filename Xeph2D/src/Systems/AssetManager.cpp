@@ -63,15 +63,26 @@ void Xeph2D::AssetManager::SaveToFile()
 void Xeph2D::AssetManager::LoadTexture(const std::string& key)
 {
 	m_loadedTextures[key] = std::make_unique<sf::Texture>();
+#ifndef IS_DEBUG
+	AppData::GetAssetData(AssetType::Texture, key, m_loadedTexturesData[key]);
+	m_loadedTextures[key]->loadFromMemory(m_loadedTexturesData[key]->data(), m_loadedTexturesData[key]->size());
+#else // IS_DEBUG
 	m_loadedTextures[key]->loadFromFile(TEXTURE_DIR + Get().m_textureManifest[key]);
+#endif //!IS_DEBUG
 }
 
 void Xeph2D::AssetManager::UnloadTexture(const std::string& key)
 {
 	m_loadedTextures.erase(key);
+#ifndef IS_DEBUG
+	m_loadedTexturesData.erase(key);
+#endif //!IS_DEBUG
 }
 
 void Xeph2D::AssetManager::ClearTextures()
 {
 	m_loadedTextures.clear();
+#ifndef IS_DEBUG
+	m_loadedTexturesData.clear();
+#endif //!IS_DEBUG
 }

@@ -179,7 +179,6 @@ Xeph2D::Markup::Node Xeph2D::AppData::Load(const DataFile file)
 void Xeph2D::AppData::Initialize()
 {
     Markup::BSONFormatter bson;
-    AppData& appData = Get();
     Get().m_data = bson.LoadFromFile(BUILD_DATA_LOCAL_DIRECTORY + RELEASE_FILE);
 
     Markup::YAMLFormatter yaml;

@@ -173,6 +173,10 @@ void Xeph2D::Edit::Editor::InputProc()
 			{
 				Get().m_componentCreatorWindow->Open();
 			}
+			if (InputSystem::GetKeyDown(Key::B))
+			{
+				AppData::BuildForRelease();
+			}
 		}
 		else //============
 		{
@@ -230,6 +234,10 @@ void Xeph2D::Edit::Editor::OnGUI()
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
 			Save();
+		}
+		if (ImGui::MenuItem("Build Release Data", "Ctrl+Shift+B"))
+		{
+			AppData::BuildForRelease();
 		}
 		if (ImGui::MenuItem("Close", "Ctrl+Q"))
 		{
