@@ -23,9 +23,8 @@ void Xeph2D::SpriteRenderer::SetTexture(const std::string& key)
 	}
 	m_textureKey = key;
 	m_sprite.setTexture(*texture);
-	{
-		m_sprite.setTextureRect(sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y));
-	}
+	sf::IntRect textureRect = { 0, 0, (int)texture->getSize().x, (int)texture->getSize().y };
+	m_sprite.setTextureRect(textureRect);
 	m_sprite.setOrigin(Vector2(texture->getSize()) * 0.5f);
 }
 

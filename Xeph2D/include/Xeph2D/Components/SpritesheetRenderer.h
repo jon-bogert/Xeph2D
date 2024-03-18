@@ -20,12 +20,19 @@ namespace Xeph2D
 		void Awake() override;
 
 		void OnEditorStart() override;
+		void OnEditorUpdate() override;
 
 		Vector2 m_cell = Vector2::Zero(); //current cell (in cells)
 		Vector2 m_size = Vector2::Zero(); //size of each cell (in pixels)
 		Vector2 m_padding = Vector2::Zero(); // size of padding (in pixels)
 
 		Ref<SpriteRenderer> m_renderer;
+
+#ifdef IS_EDITOR
+		Vector2 m_prevCell = Vector2::Zero();
+		Vector2 m_prevSize = Vector2::Zero();
+		Vector2 m_prevPadding = Vector2::Zero();
+#endif //IS_EDITOR
 	};
 }
 

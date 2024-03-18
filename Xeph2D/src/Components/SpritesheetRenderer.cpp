@@ -21,6 +21,9 @@ void Xeph2D::SpritesheetRenderer::Serializables()
 
 void Xeph2D::SpritesheetRenderer::Awake()
 {
+	if (!IsActiveAndEnabled())
+		return;
+
 	m_renderer = GetComponent<SpriteRenderer>();
 	if (m_renderer.IsNull())
 	{
@@ -35,5 +38,20 @@ void Xeph2D::SpritesheetRenderer::OnEditorStart()
 {
 #if IS_EDITOR
 	Awake();
+#endif //IS_EDITOR
+}
+
+void Xeph2D::SpritesheetRenderer::OnEditorUpdate()
+{
+#ifdef IS_EDITOR
+	if (m_prevCell != m_cell ||
+		m_prevSize != m_size ||
+		m_prevPadding != m_padding)
+	{
+		SetCell(m_cell);
+		m_prevCell = m_cell;
+		m_prevSize = m_size;
+		m_prevPadding = m_padding;
+	}
 #endif //IS_EDITOR
 }

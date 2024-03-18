@@ -117,23 +117,23 @@ void Xeph2D::Edit::Editor::Initialize()
 	Get().SetUIStyle();
 	
 	Get().m_viewportWindow =
-		(Viewport*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<Viewport>()).get();
+		(Viewport*)Get().m_editorWindows.emplace_back(std::make_unique<Viewport>()).get();
 	Get().m_inspectorWindow =
-		(Inspector*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<Inspector>()).get();
+		(Inspector*)Get().m_editorWindows.emplace_back(std::make_unique<Inspector>()).get();
 	Get().m_hierarchyWindow =
-		(Hierarchy*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<Hierarchy>()).get();
+		(Hierarchy*)Get().m_editorWindows.emplace_back(std::make_unique<Hierarchy>()).get();
 	Get().m_componentManagerWindow =
-		(ComponentManager*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<ComponentManager>()).get();
+		(ComponentManager*)Get().m_editorWindows.emplace_back(std::make_unique<ComponentManager>()).get();
 	Get().m_componentCreatorWindow =
-		(ComponentCreator*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<ComponentCreator>()).get();
+		(ComponentCreator*)Get().m_editorWindows.emplace_back(std::make_unique<ComponentCreator>()).get();
 	Get().m_assetManagerWindow =
-		(AssetManagerWindow*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
+		(AssetManagerWindow*)Get().m_editorWindows.emplace_back(std::make_unique<AssetManagerWindow>()).get();
 	 Get().m_projectSettingsWindow =
-	 	(ProjectSettings*)Get().mIS_EDITORWindows.emplace_back(std::make_unique<ProjectSettings>()).get();
+	 	(ProjectSettings*)Get().m_editorWindows.emplace_back(std::make_unique<ProjectSettings>()).get();
 
 	Get().m_transformGizmo = std::make_unique<TransformGizmo>();
 
-	for (auto& window : Get().mIS_EDITORWindows)
+	for (auto& window : Get().m_editorWindows)
 		window->Initialize();
 }
 
@@ -287,7 +287,7 @@ void Xeph2D::Edit::Editor::OnGUI()
 	}
 	ImGui::EndMainMenuBar();
 	ImGui::DockSpaceOverViewport();
-	for (auto& window : Get().mIS_EDITORWindows)
+	for (auto& window : Get().m_editorWindows)
 	{
 		if (!window->isOpen)
 			continue;

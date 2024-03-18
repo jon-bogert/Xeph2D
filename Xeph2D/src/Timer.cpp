@@ -78,5 +78,5 @@ void Xeph2D::Timer::Update()
 	m_isExpired = (m_currentSeconds <= 0.f);
 	
 	if (m_isExpired && m_isLooping)
-		time += m_lengthSeconds;
+		m_currentSeconds += m_lengthSeconds;
 }

@@ -90,7 +90,7 @@ namespace Xeph2D::Edit
 
         //Windows
         using EditorWindows = std::vector<std::unique_ptr<EditorWindow>>;
-        EditorWindows mIS_EDITORWindows;
+        EditorWindows m_editorWindows;
         Viewport* m_viewportWindow;
         Hierarchy* m_hierarchyWindow;
         Inspector* m_inspectorWindow;
