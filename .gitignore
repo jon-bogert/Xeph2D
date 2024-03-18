@@ -45,5 +45,5 @@ Makefile
 !vorbis.lib
 !vorbisenc.lib
 !vorbisfile.lib
-!yaml-cpp.lib
-!yaml-cpp-d.lib
+!xe-markup.lib
+!xe-markup-d.lib
