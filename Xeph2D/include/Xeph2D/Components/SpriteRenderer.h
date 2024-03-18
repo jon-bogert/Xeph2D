@@ -8,6 +8,7 @@ namespace Xeph2D
 {
 	class SpriteRenderer : public Component
 	{
+		friend class SpritesheetRenderer;
 		XEPH2D_REG_COMP(0x00000002);
 	public:
 		int GetOrder() const { return m_order; }

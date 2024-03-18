@@ -21,6 +21,7 @@ namespace Xeph2D
         {
         case 0x00000001: ptr = std::make_shared<Camera>(); break;
         case 0x00000002: ptr = std::make_shared<SpriteRenderer>(); break;
+        case 0x00000003: ptr = std::make_shared<SpritesheetRenderer>(); break;
         case 0x0867932b: ptr = std::make_shared<CoolScript>(); break;
         case 0xa45ff78b: ptr = std::make_shared<TestScript>(); break;
         }

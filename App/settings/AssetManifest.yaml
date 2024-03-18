@@ -3,5 +3,7 @@ textures:
     path: test2.png
   - key: test3
     path: test3.png
+  - key: player
+    path: player.png
   - key: test2-round
     path: test2-round.png

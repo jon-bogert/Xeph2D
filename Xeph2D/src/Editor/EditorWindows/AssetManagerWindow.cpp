@@ -172,7 +172,7 @@ void Xeph2D::Edit::AssetManagerWindow::AddTexture()
 	//if (std::mismatch(startPath.begin(), startPath.end(), path.begin()).first != startPath.end())
 	if (path.empty())
 		return;
-	if (FileBrowser::IsRelativeTo(path, startPath))
+	if (!FileBrowser::IsRelativeTo(path, startPath))
 	{
 		Debug::LogErr("Asset selected wasn't located in \"Assets\\Textures\"");
 		return;

@@ -1,5 +1,6 @@
 textures:
   - test2
+  - player
   - test2-round
 objects:
   - instID: 0x00000001
@@ -20,8 +21,8 @@ objects:
     name: My Object1
     transform:
       position:
-        x: 1
-        y: 1
+        x: 6.854071
+        y: 5.072397
       rotation: 0
       scale:
         x: 1
@@ -30,25 +31,25 @@ objects:
     components:
       - typeID: 0x00000002
         enabled: true
-        m_textureKey: test2-round
+        m_textureKey: player
         m_color:
           r: 1
           g: 1
           b: 1
           a: 1
+      - typeID: 0x00000003
+        enabled: true
+        m_cell:
+          x: 0
+          y: 0
+        m_size:
+          x: 16
+          y: 16
+        m_padding:
+          x: 0
+          y: 0
       - typeID: 0xa45ff78b
         enabled: true
-        m_colors[0]:
-          r: 1
-          g: 1
-          b: 1
-          a: 1
-        m_colors[1]:
-          r: 1
-          g: 0
-          b: 0
-          a: 1
-        m_isMain: true
   - instID: 0x11a99c93
     name: GameObject
     transform:
@@ -63,14 +64,3 @@ objects:
     components:
       - typeID: 0xa45ff78b
         enabled: true
-        m_colors[0]:
-          r: 1
-          g: 1
-          b: 1
-          a: 1
-        m_colors[1]:
-          r: 1
-          g: 0
-          b: 0
-          a: 1
-        m_isMain: false

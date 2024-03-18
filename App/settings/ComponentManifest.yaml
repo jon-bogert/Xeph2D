@@ -3,6 +3,8 @@ default:
     name: Camera
   - id: 0x00000002
     name: SpriteRenderer
+  - id: 0x00000003
+    name: SpritesheetRenderer
 user:
   - id: 0x0867932b
     name: CoolScript
