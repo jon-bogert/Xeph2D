@@ -24,6 +24,18 @@ void RenderStack::AddDrawable(const Ref<GameObject>& gameObject, sf::Transformab
 	std::sort(Get().m_stack.begin(), Get().m_stack.end(), [](const Item& i0, const Item& i1) { return i0.order < i1.order; });
 }
 
+void Xeph2D::RenderStack::AddUIDrawable(const Ref<GameObject>& gameObject, sf::Transformable* transformable, sf::Drawable* drawable, int order)
+{
+	Item item;
+	item.order = order;
+	item.object = gameObject;
+	item.transfromable = transformable;
+	item.drawable = drawable;
+
+	Get().m_uiStack.push_back(item);
+	std::sort(Get().m_uiStack.begin(), Get().m_uiStack.end(), [](const Item& i0, const Item& i1) { return i0.order < i1.order; });
+}
+
 void RenderStack::Draw()
 {
 	for (Callback& callback : Get().m_drawCallbacks)
@@ -37,6 +49,16 @@ void RenderStack::Draw()
 		WindowManager::Draw(i.drawable);
 	}
 	Get().m_stack.clear();
+	for (Item& i : Get().m_uiStack)
+	{
+#ifdef IS_EDITOR
+		WindowManager::PrepareTransformable(i.object, i.transfromable);
+#else
+		WindowManager::PrepareTransformableUI(i.object, i.transfromable);
+#endif // IS_EDITOR
+		WindowManager::Draw(i.drawable);
+	}
+	Get().m_uiStack.clear();
 }
 
 void Xeph2D::RenderStack::SubscribeDrawCall(void* component, std::function<void(void)> drawCall)

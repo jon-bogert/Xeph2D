@@ -60,6 +60,7 @@ void Xeph2D::SpriteRenderer::OnEditorShutdown()
 
 void Xeph2D::SpriteRenderer::Serializables()
 {
+	SERIALIZE_BOOL(m_isUiElement);
 	SERIALIZE_STRING(m_textureKey);
 	SERIALIZE_COLOR(m_color);
 }
@@ -80,6 +81,10 @@ void Xeph2D::SpriteRenderer::Draw()
 #ifdef IS_EDITOR
 	SetColor(m_color);
 #endif //IS_EDITOR
-	if (IsActiveAndEnabled())
+	if (!IsActiveAndEnabled())
+		return;
+	if (m_isUiElement)
+		RenderStack::AddUIDrawable(gameObject, &m_sprite, &m_sprite, m_order);
+	else
 		RenderStack::AddDrawable(gameObject, &m_sprite, &m_sprite, m_order);
 }

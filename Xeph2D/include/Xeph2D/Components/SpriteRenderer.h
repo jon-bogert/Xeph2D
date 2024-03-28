@@ -33,6 +33,7 @@ namespace Xeph2D
 
 		sf::Sprite m_sprite;
 
+		bool m_isUiElement = false;
 		std::string m_textureKey = "";
 		int m_order = 0;
 		Color m_color = Color::White;

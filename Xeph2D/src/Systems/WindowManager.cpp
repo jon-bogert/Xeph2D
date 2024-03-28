@@ -135,7 +135,36 @@ void Xeph2D::WindowManager::PrepareTransformable(const Ref<GameObject>& gameObje
 	transformable->setPosition({ // TODO -> Change LocalPosition() to GlobalPosition()
 	(finalTransform.position.x * Get().m_ppu * Get().m_resScale) - (__CAMERA->__POSITION.x * Get().m_ppu * Get().m_resScale),
 	Get().m_height - ((finalTransform.position.y * Get().m_ppu * Get().m_resScale) - (__CAMERA->__POSITION.y * Get().m_ppu * Get().m_resScale)) });
-	
+
+	transformable->setScale(finalTransform.scale.x * Get().m_resScale, finalTransform.scale.y * Get().m_resScale);
+	transformable->setRotation(finalTransform.rotation.GetDeg());
+}
+
+void Xeph2D::WindowManager::PrepareTransformableUI(const Ref<GameObject>& gameObject, sf::Transformable* transformable)
+{
+	Transform finalTransform = gameObject->m_transform;
+	//if (gameObject->GetParent())
+	//{
+	//	GameObject* currObj = gameObject->GetParent();
+	//	while (currObj)
+	//	{
+	//		finalTransform.position.x += currObj->transform.position.x;
+	//		finalTransform.position.y += currObj->transform.position.y;
+	//
+	//		finalTransform.rotation.AddDeg(currObj->transform.rotation.GetDeg());
+	//
+	//		finalTransform.scale.x *= currObj->transform.scale.x;
+	//		finalTransform.scale.y *= currObj->transform.scale.y;
+	//
+	//		currObj = currObj->GetParent();
+	//	}
+	//}
+
+	//Note Similar to PrepareTransform, but with no Camera Adjust
+	transformable->setPosition({ // TODO -> Change LocalPosition() to GlobalPosition()
+	(finalTransform.position.x * Get().m_ppu * Get().m_resScale),
+	Get().m_height - ((finalTransform.position.y * Get().m_ppu * Get().m_resScale)) });
+
 	transformable->setScale(finalTransform.scale.x * Get().m_resScale, finalTransform.scale.y * Get().m_resScale);
 	transformable->setRotation(finalTransform.rotation.GetDeg());
 }

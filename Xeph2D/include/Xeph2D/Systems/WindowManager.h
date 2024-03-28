@@ -37,6 +37,7 @@ namespace Xeph2D
 
 		static void Draw(sf::Drawable* item);
 		static void PrepareTransformable(const Ref<GameObject>& gameObject, sf::Transformable* transformable);
+		static void PrepareTransformableUI(const Ref<GameObject>& gameObject, sf::Transformable* transformable);
 
 		static void CheckWindowEvents();
 		static void Begin();

@@ -31,6 +31,7 @@ objects:
     components:
       - typeID: 0x00000002
         enabled: true
+        m_isUiElement: false
         m_textureKey: player
         m_color:
           r: 1
@@ -51,3 +52,24 @@ objects:
       - typeID: 0xa45ff78b
         enabled: true
         m_frameRate: 9
+  - instID: 0x09d805af
+    name: UIElement
+    transform:
+      position:
+        x: 28.404947
+        y: 15.39876
+      rotation: 0
+      scale:
+        x: 1
+        y: 1
+    active: true
+    components:
+      - typeID: 0x00000002
+        enabled: true
+        m_isUiElement: true
+        m_textureKey: test2
+        m_color:
+          r: 1
+          g: 1
+          b: 1
+          a: 1

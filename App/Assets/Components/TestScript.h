@@ -21,6 +21,8 @@ private:
 	float m_frameTime = 1.f / 12.f;
 	int m_currFrame = -1;
 
+	Xeph2D::Ref<Xeph2D::Camera> m_camera;
+
 	enum class Animation
 	{
 		Shoot,

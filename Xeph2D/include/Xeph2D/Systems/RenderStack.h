@@ -20,6 +20,7 @@ namespace Xeph2D
 		RenderStack operator=(const RenderStack&& other) = delete;
 
 		static void AddDrawable(const Ref<GameObject>& gameObject, sf::Transformable* transformable, sf::Drawable* drawable, int order = 0);
+		static void AddUIDrawable(const Ref<GameObject>& gameObject, sf::Transformable* transformable, sf::Drawable* drawable, int order = 0);
 		static void Draw();
 
 		static void SubscribeDrawCall(void* component, std::function<void(void)> drawCall);
@@ -28,7 +29,7 @@ namespace Xeph2D
 	private:
 		struct Item
 		{
-			enum class Type { Sprite };
+			enum class Type { Sprite, Text };
 			int order = 0;
 			Ref<GameObject> object;
 			sf::Transformable* transfromable = nullptr;
@@ -47,6 +48,7 @@ namespace Xeph2D
 
 		std::vector<Callback> m_drawCallbacks;
 		std::vector<Item> m_stack;
+		std::vector<Item> m_uiStack;
 
 		RenderStack() {}
 		static RenderStack& Get();

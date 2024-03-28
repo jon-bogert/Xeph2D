@@ -15,6 +15,7 @@ void TestScript::Awake()
 void TestScript::Start()
 {
 	m_spritesheet = GetComponent<SpritesheetRenderer>();
+	m_camera = FindObjectOfType<Camera>();
 	m_timer.SetLengthSeconds(m_frameTime);
 	m_timer.SetLooping(true);
 	m_timer.Start();
@@ -37,6 +38,15 @@ void TestScript::Update()
 
 	if (m_timer.ExpiredThisFrame())
 		UpdateSpritesheet();
+
+	if (InputSystem::GetKeyHold(Key::Up))
+		m_camera->LocalPosition().y += 5.f * Time::DeltaTime();
+	if (InputSystem::GetKeyHold(Key::Down))
+		m_camera->LocalPosition().y += -5.f * Time::DeltaTime();
+	if (InputSystem::GetKeyHold(Key::Right))
+		m_camera->LocalPosition().x += 5.f * Time::DeltaTime();
+	if (InputSystem::GetKeyHold(Key::Left))
+		m_camera->LocalPosition().x += -5.f * Time::DeltaTime();
 }
 
 void TestScript::AnimationSwitch()
