@@ -5,6 +5,8 @@ default:
     name: SpriteRenderer
   - id: 0x00000003
     name: SpritesheetRenderer
+  - id: 0x00000004
+    name: TextRenderer
 user:
   - id: 0x0867932b
     name: CoolScript

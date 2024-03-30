@@ -51,7 +51,13 @@ void Xeph2D::Edit::Editor::Save()
 		texKey = tex.first;
 		sceneData["textures"].PushBack(texKey);
 	}
-	EditorSceneData& sc = Get().m_sceneData;
+	//Fonts
+	for (auto& font : AssetManager::Get().m_loadedFonts)
+	{
+		Markup::Node fontKey;
+		fontKey = font.first;
+		sceneData["fonts"].PushBack(fontKey);
+	}
 	//OBJECTS
 	for (EditorGameObject& currObject : Get().m_sceneData.gameObjects)
 	{

@@ -297,6 +297,16 @@ void Xeph2D::WindowManager::SetTargetFramerate(uint32_t framerate)
 #endif //!IS_EDITOR
 }
 
+float Xeph2D::WindowManager::PixelsPerUnit()
+{
+	return Get().m_ppu;
+}
+
+float Xeph2D::WindowManager::ResolutionScale()
+{
+	return Get().m_resScale;
+}
+
 sf::RenderWindow* Xeph2D::WindowManager::UnWrap()
 {
 	return Get().m_window.get();

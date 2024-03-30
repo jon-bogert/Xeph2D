@@ -134,9 +134,19 @@ void Xeph2D::SceneManager::LoadSceneFile(const std::string& filePath, const int 
 		filePath;
 
 	//Load Assets
-	for (Markup::Node& texture : contents["textures"])
+	if (contents["textures"].IsDefined())
 	{
-		AssetManager::Get().LoadTexture(texture.As<std::string>());
+		for (Markup::Node& texture : contents["textures"])
+		{
+			AssetManager::Get().LoadTexture(texture.As<std::string>());
+		}
+	}
+	if (contents["fonts"].IsDefined())
+	{
+		for (Markup::Node& font : contents["fonts"])
+		{
+			AssetManager::Get().LoadFont(font.As<std::string>());
+		}
 	}
 
 	//Load Objects

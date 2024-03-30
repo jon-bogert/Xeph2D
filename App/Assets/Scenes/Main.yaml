@@ -2,6 +2,8 @@ textures:
   - test2
   - player
   - test2-round
+fonts:
+  - unica
 objects:
   - instID: 0x00000001
     name: Camera
@@ -56,18 +58,23 @@ objects:
     name: UIElement
     transform:
       position:
-        x: 28.404947
-        y: 15.39876
+        x: 6.923054
+        y: 7.381218
       rotation: 0
       scale:
         x: 1
         y: 1
     active: true
     components:
-      - typeID: 0x00000002
+      - typeID: 0x00000004
         enabled: true
         m_isUiElement: true
-        m_textureKey: test2
+        m_fontKey: unica
+        m_contents: Xepherin
+        m_fontSize: 98
+        m_pivot:
+          x: 0
+          y: 0
         m_color:
           r: 1
           g: 1

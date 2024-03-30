@@ -66,6 +66,9 @@ namespace Xeph2D
 
 		static void SetTargetFramerate(uint32_t framerate);
 
+		static float PixelsPerUnit();
+		static float ResolutionScale();
+
 
 	private:
 #ifdef IS_EDITOR

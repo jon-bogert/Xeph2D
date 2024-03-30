@@ -136,7 +136,11 @@ void Xeph2D::AppData::BuildForRelease()
             "_texture_" + texture["key"].As<std::string>());
     }
     
-    //fonts
+    for (Markup::Node& font : root["asset-manifest"]["fonts"])
+    {
+        factory.AddFile("Assets/Fonts/" + font["path"].As<std::string>(),
+            "_font_" + font["key"].As<std::string>());
+    }
     //audio
     
     factory.WriteToFile(BUILD_DATA_DIRECTORY + RELEASE_BUNDLE_FILE);

@@ -5,6 +5,7 @@
 #include <Xeph2D/Components/Camera.h>
 #include <Xeph2D/Components/SpriteRenderer.h>
 #include <Xeph2D/Components/SpritesheetRenderer.h>
+#include <Xeph2D/Components/TextRenderer.h>
 
 //Systems
 #include <Xeph2D/Systems/Debug.h>

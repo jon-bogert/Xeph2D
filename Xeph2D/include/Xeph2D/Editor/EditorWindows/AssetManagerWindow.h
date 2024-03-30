@@ -16,7 +16,7 @@ namespace Xeph2D::Edit
 		void OnGUI() override;
 
 	private:
-		enum class Type { Texture, Audio, Font };
+		enum class Type { Texture, Font, Audio };
 		struct Entry
 		{
 			std::string key;
@@ -28,6 +28,7 @@ namespace Xeph2D::Edit
 		};
 
 		void AddTexture();
+		void AddFont();
 
 		std::vector<Entry> m_textures;
 		std::vector<Entry> m_audio;

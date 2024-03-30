@@ -25,6 +25,7 @@ namespace Xeph2D
 
 		static void Initialize();
 		static sf::Texture* GetTexture(const std::string& key);
+		static sf::Font* GetFont(const std::string& key);
 
 	private:
 		AssetManager() {}
@@ -43,18 +44,32 @@ namespace Xeph2D
 		void SaveToFile();
 		bool m_isSaved = true;
 #endif //IS_EDITOR
+
 		void LoadTexture(const std::string& key);
 		void UnloadTexture(const std::string& key);
 		void ClearTextures();
 
+		void LoadFont(const std::string& key);
+		void UnloadFont(const std::string& key);
+		void ClearFonts();
+
 		Manifest m_textureManifest;
+		Manifest m_fontManifest;
+
 		TextureMap m_loadedTextures;
+		FontMap m_loadedFonts;
+
 #ifndef IS_DEBUG
 		DataMap m_loadedTexturesData;
+		DataMap m_loadedFontsData;
 #endif // !IS_DEBUG
 		std::unique_ptr<sf::Texture> m_defaultTexture;
 		std::unique_ptr<unsigned char[]> m_defaultTextureData;
 		size_t m_defaultTextureSize = 0;
+
+		std::unique_ptr<sf::Font> m_defaultFont;
+		std::unique_ptr<unsigned char[]> m_defaultFontData;
+		size_t m_defaultFontSize = 0;
 	};
 }
 

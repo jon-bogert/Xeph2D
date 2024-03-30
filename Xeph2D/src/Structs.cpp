@@ -330,612 +330,613 @@ namespace Xeph2D
 		return eulerAngles;
 	}
 	//----------------------------------------------------------------------------------------------------
-
-	Quaternion Conjugate(Quaternion q0)
+	namespace Math
 	{
-		Quaternion q1;
-		q1.w = q0.w;
-		q1.x = -q0.x;
-		q1.y = -q0.y;
-		q1.z = -q0.z;
-
-		return q1;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	Quaternion Inverse(Quaternion q0)
-	{
-		Quaternion qInverse = Conjugate(q0) / Math::MagnitudeSqr(q0);
-
-		return qInverse;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	Quaternion LookRotation(const Vector3& look, const Vector3& up)
-	{
-		Vector3 forward = Math::Normalize(look);
-		Vector3 vector2 = Math::Normalize(Math::Cross(up, forward));
-		Vector3 vector3 = Math::Cross(forward, vector2);
-
-		float m00 = vector2.x;
-		float m01 = vector2.y;
-		float m02 = vector2.z;
-		float m10 = vector3.x;
-		float m11 = vector3.y;
-		float m12 = vector3.z;
-		float m20 = forward.x;
-		float m21 = forward.y;
-		float m22 = forward.z;
-
-		float num8 = (m00 + m11) + m22;
-
-		Quaternion quaternion;
-
-		if (num8 > 0.0f)
+		Quaternion Conjugate(Quaternion q0)
 		{
-			float num = Math::Sqrt(num8 + 1.0f);
-			quaternion.w = num * 0.5f;
-			num = 0.5f / num;
-			quaternion.x = (m12 - m21) * num;
-			quaternion.y = (m20 - m02) * num;
-			quaternion.z = (m01 - m10) * num;
+			Quaternion q1;
+			q1.w = q0.w;
+			q1.x = -q0.x;
+			q1.y = -q0.y;
+			q1.z = -q0.z;
 
-			return quaternion;
+			return q1;
 		}
 
-		if ((m00 >= m11) && (m00 >= m22))
+		//----------------------------------------------------------------------------------------------------
+		Quaternion Inverse(Quaternion q0)
 		{
-			float num7 = Math::Sqrt(((1.0f + m00) - m11) - m22);
-			float num4 = 0.5f / num7;
-			quaternion.x = 0.5f * num7;
-			quaternion.y = (m01 + m10) * num4;
-			quaternion.z = (m02 + m20) * num4;
-			quaternion.w = (m12 - m21) * num4;
-			return quaternion;
+			Quaternion qInverse = Conjugate(q0) / Math::MagnitudeSqr(q0);
+
+			return qInverse;
 		}
 
-		if (m11 > m22)
+		//----------------------------------------------------------------------------------------------------
+		Quaternion LookRotation(const Vector3& look, const Vector3& up)
 		{
-			float num6 = Math::Sqrt(((1.0f + m11) - m00) - m22);
-			float num3 = 0.5f / num6;
-			quaternion.x = (m10 + m01) * num3;
-			quaternion.y = 0.5f * num6;
-			quaternion.z = (m21 + m12) * num3;
-			quaternion.w = (m20 - m02) * num3;
-			return quaternion;
-		}
+			Vector3 forward = Math::Normalize(look);
+			Vector3 vector2 = Math::Normalize(Math::Cross(up, forward));
+			Vector3 vector3 = Math::Cross(forward, vector2);
 
-		float num5 = Math::Sqrt(((1.0f + m22) - m00) - m11);
-		float num2 = 0.5f / num5;
+			float m00 = vector2.x;
+			float m01 = vector2.y;
+			float m02 = vector2.z;
+			float m10 = vector3.x;
+			float m11 = vector3.y;
+			float m12 = vector3.z;
+			float m20 = forward.x;
+			float m21 = forward.y;
+			float m22 = forward.z;
 
-		quaternion.x = (m20 + m02) * num2;
-		quaternion.y = (m21 + m12) * num2;
-		quaternion.z = 0.5f * num5;
-		quaternion.w = (m01 - m10) * num2;
-		return quaternion;
+			float num8 = (m00 + m11) + m22;
 
-	}
-	//----------------------------------------------------------------------------------------------------
-	Quaternion QuaternionFromAxisAngle(const Vector3& axis, float angleDegrees)
-	{
-		Quaternion q;
-		float angleRadians = angleDegrees * Math::kDegToRad;
-		float s = sin(angleRadians * 0.5f);
+			Quaternion quaternion;
 
-		q.x = axis.x * s;
-		q.y = axis.y * s;
-		q.z = axis.z * s;
-		q.w = cos(angleRadians * 0.5f);
-
-		return q;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	Quaternion FromToQuaternion(const Vector3& from, const Vector3& to)
-	{
-		Vector3 normalizedFrom = Math::Normalize(from);
-		Vector3 normalizedTo = Math::Normalize(to);
-
-		float c = Math::Dot(normalizedFrom, normalizedTo);
-		float angle = acos(c);
-		Vector3 w = Math::Normalize(Math::Cross(from, to));
-		return QuaternionFromAxisAngle(w, angle);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	Quaternion QuaternionFromMatrix(const Matrix4& mat)
-	{
-		Matrix4 rotationMatrix = Math::Transpose(mat);
-		Quaternion q;
-
-		float trace{ rotationMatrix._11 + rotationMatrix._22 + rotationMatrix._33 };
-
-		if (trace > 0.0f)
-		{
-			float s = 0.5f / sqrt(trace + 1.0f);
-
-			q.w = 0.25f / s;
-			q.x = (rotationMatrix._32 - rotationMatrix._23) * s;
-			q.y = (rotationMatrix._13 - rotationMatrix._31) * s;
-			q.z = (rotationMatrix._21 - rotationMatrix._12) * s;
-		}
-		else
-		{
-			if (rotationMatrix._11 > rotationMatrix._22 && rotationMatrix._11 > rotationMatrix._33)
+			if (num8 > 0.0f)
 			{
-				float s = 2.0f * sqrt(1.0f + rotationMatrix._11 - rotationMatrix._22 - rotationMatrix._33);
-				q.x = 0.25f * s;
-				q.y = (rotationMatrix._12 + rotationMatrix._21) / s;
-				q.z = (rotationMatrix._13 + rotationMatrix._31) / s;
-				q.w = (rotationMatrix._32 - rotationMatrix._23) / s;
+				float num = Math::Sqrt(num8 + 1.0f);
+				quaternion.w = num * 0.5f;
+				num = 0.5f / num;
+				quaternion.x = (m12 - m21) * num;
+				quaternion.y = (m20 - m02) * num;
+				quaternion.z = (m01 - m10) * num;
+
+				return quaternion;
 			}
-			else if (rotationMatrix._22 > rotationMatrix._33)
+
+			if ((m00 >= m11) && (m00 >= m22))
 			{
-				float s = 2.0f * sqrt(1.0f + rotationMatrix._22 - rotationMatrix._11 - rotationMatrix._33);
-				q.x = (rotationMatrix._12 + rotationMatrix._21) / s;
-				q.y = 0.25f * s;
-				q.z = (rotationMatrix._23 + rotationMatrix._32) / s;
-				q.w = (rotationMatrix._13 - rotationMatrix._31) / s;
+				float num7 = Math::Sqrt(((1.0f + m00) - m11) - m22);
+				float num4 = 0.5f / num7;
+				quaternion.x = 0.5f * num7;
+				quaternion.y = (m01 + m10) * num4;
+				quaternion.z = (m02 + m20) * num4;
+				quaternion.w = (m12 - m21) * num4;
+				return quaternion;
+			}
+
+			if (m11 > m22)
+			{
+				float num6 = Math::Sqrt(((1.0f + m11) - m00) - m22);
+				float num3 = 0.5f / num6;
+				quaternion.x = (m10 + m01) * num3;
+				quaternion.y = 0.5f * num6;
+				quaternion.z = (m21 + m12) * num3;
+				quaternion.w = (m20 - m02) * num3;
+				return quaternion;
+			}
+
+			float num5 = Math::Sqrt(((1.0f + m22) - m00) - m11);
+			float num2 = 0.5f / num5;
+
+			quaternion.x = (m20 + m02) * num2;
+			quaternion.y = (m21 + m12) * num2;
+			quaternion.z = 0.5f * num5;
+			quaternion.w = (m01 - m10) * num2;
+			return quaternion;
+
+		}
+		//----------------------------------------------------------------------------------------------------
+		Quaternion QuaternionFromAxisAngle(const Vector3& axis, float angleDegrees)
+		{
+			Quaternion q;
+			float angleRadians = angleDegrees * Math::kDegToRad;
+			float s = sin(angleRadians * 0.5f);
+
+			q.x = axis.x * s;
+			q.y = axis.y * s;
+			q.z = axis.z * s;
+			q.w = cos(angleRadians * 0.5f);
+
+			return q;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		Quaternion FromToQuaternion(const Vector3& from, const Vector3& to)
+		{
+			Vector3 normalizedFrom = Math::Normalize(from);
+			Vector3 normalizedTo = Math::Normalize(to);
+
+			float c = Math::Dot(normalizedFrom, normalizedTo);
+			float angle = acos(c);
+			Vector3 w = Math::Normalize(Math::Cross(from, to));
+			return QuaternionFromAxisAngle(w, angle);
+		}
+
+		//----------------------------------------------------------------------------------------------------
+		Quaternion QuaternionFromMatrix(const Matrix4& mat)
+		{
+			Matrix4 rotationMatrix = Math::Transpose(mat);
+			Quaternion q;
+
+			float trace{ rotationMatrix._11 + rotationMatrix._22 + rotationMatrix._33 };
+
+			if (trace > 0.0f)
+			{
+				float s = 0.5f / sqrt(trace + 1.0f);
+
+				q.w = 0.25f / s;
+				q.x = (rotationMatrix._32 - rotationMatrix._23) * s;
+				q.y = (rotationMatrix._13 - rotationMatrix._31) * s;
+				q.z = (rotationMatrix._21 - rotationMatrix._12) * s;
 			}
 			else
 			{
-				float s = 2.0f * sqrt(1.0f + rotationMatrix._33 - rotationMatrix._11 - rotationMatrix._22);
+				if (rotationMatrix._11 > rotationMatrix._22 && rotationMatrix._11 > rotationMatrix._33)
+				{
+					float s = 2.0f * sqrt(1.0f + rotationMatrix._11 - rotationMatrix._22 - rotationMatrix._33);
+					q.x = 0.25f * s;
+					q.y = (rotationMatrix._12 + rotationMatrix._21) / s;
+					q.z = (rotationMatrix._13 + rotationMatrix._31) / s;
+					q.w = (rotationMatrix._32 - rotationMatrix._23) / s;
+				}
+				else if (rotationMatrix._22 > rotationMatrix._33)
+				{
+					float s = 2.0f * sqrt(1.0f + rotationMatrix._22 - rotationMatrix._11 - rotationMatrix._33);
+					q.x = (rotationMatrix._12 + rotationMatrix._21) / s;
+					q.y = 0.25f * s;
+					q.z = (rotationMatrix._23 + rotationMatrix._32) / s;
+					q.w = (rotationMatrix._13 - rotationMatrix._31) / s;
+				}
+				else
+				{
+					float s = 2.0f * sqrt(1.0f + rotationMatrix._33 - rotationMatrix._11 - rotationMatrix._22);
 
-				q.x = (rotationMatrix._13 + rotationMatrix._31) / s;
-				q.y = (rotationMatrix._23 + rotationMatrix._32) / s;
-				q.z = 0.25f * s;
-				q.w = (rotationMatrix._21 - rotationMatrix._12) / s;
+					q.x = (rotationMatrix._13 + rotationMatrix._31) / s;
+					q.y = (rotationMatrix._23 + rotationMatrix._32) / s;
+					q.z = 0.25f * s;
+					q.w = (rotationMatrix._21 - rotationMatrix._12) / s;
+				}
 			}
+
+			return Math::Normalize(q);
 		}
 
-		return Math::Normalize(q);
-	}
+		//----------------------------------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------------------------------
-
-	bool PointInRect(const Vector2& point, const Rect& rect)
-	{
-		if (point.x > rect.right || point.x < rect.left ||
-			point.y > rect.bottom || point.y < rect.top)
+		bool PointInRect(const Vector2& point, const Rect& rect)
 		{
-			return false;
-		}
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool PointInCircle(const Vector2& point, const Circle& circle)
-	{
-		const Vector2 centerToPoint = point - circle.center;
-		const float distSqr = Math::Dot(centerToPoint, centerToPoint);
-		const float radiusSqr = circle.radius * circle.radius;
-		return distSqr < radiusSqr;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const LineSegment& a, const LineSegment& b)
-	{
-		// http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
-
-		float ua = ((a.to.x - a.from.x) * (b.from.y - a.from.y)) - ((a.to.y - a.from.y) * (b.from.x - a.from.x));
-		float ub = ((b.to.x - b.from.x) * (b.from.y - a.from.y)) - ((b.to.y - b.from.y) * (b.from.x - a.from.x));
-		float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
-
-		// First check for special cases
-		if (denom == 0.0f)
-		{
-			if (ua == 0.0f && ub == 0.0f)
-			{
-				// The line segments are the same
-				return true;
-			}
-			else
-			{
-				// The line segments are parallel
-				return false;
-			}
-		}
-
-		ua /= denom;
-		ub /= denom;
-
-		if (ua < 0.0f || ua > 1.0f || ub < 0.0f || ub > 1.0f)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Circle& c0, const Circle& c1)
-	{
-		const float totalRadius = c0.radius + c1.radius;
-		const float totalRadiusSquare = totalRadius * totalRadius;
-		const float fDistanceSquared = Math::DistanceSqr(c0.center, c1.center);
-		return (fDistanceSquared < totalRadiusSquare);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Rect& r0, const Rect& r1)
-	{
-		if (r0.left > r1.right)
-			return false;
-		else if (r0.top > r1.bottom)
-			return false;
-		else if (r0.right < r1.left)
-			return false;
-		else if (r0.bottom < r1.top)
-			return false;
-		return true;
-	}
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const AABB2D& aabb0, const AABB2D& aabb1)
-	{
-		if (aabb0.Xmin > aabb1.Xmax)
-			return false;
-		else if (aabb0.Ymin > aabb1.Ymax)
-			return false;
-		else if (aabb0.Xmax < aabb1.Xmin)
-			return false;
-		else if (aabb0.Ymax < aabb1.Ymin)
-			return false;
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-
-	bool Intersect(const Circle& c, const LineSegment& l)
-	{
-		Vector2 startToCenter = c.center - l.from;
-		Vector2 startToEnd = l.to - l.from;
-		float len = Math::Magnitude(startToEnd);
-		Vector2 dir = startToEnd / len;
-
-		// Find the closest point to the line segment
-		float projection = Math::Dot(startToCenter, dir);
-		Vector2 closestPoint;
-		if (projection > len)
-		{
-			closestPoint = l.to;
-		}
-		else if (projection < 0.0f)
-		{
-			closestPoint = l.from;
-		}
-		else
-		{
-			closestPoint = l.from + (dir * projection);
-		}
-
-		// Check if the closest point is within the circle
-		Vector2 closestToCenter = c.center - closestPoint;
-		if (Math::MagnitudeSqr(closestToCenter) > Math::Sqr(c.radius))
-		{
-			return false;
-		}
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const LineSegment& l, const Circle& c)
-	{
-		return Intersect(c, l);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Rect& r, const Circle& c)
-	{
-		Vector2 closestPoint;
-		closestPoint.x = Math::Clamp(c.center.x, r.left, r.right);
-		closestPoint.y = Math::Clamp(c.center.y, r.top, r.bottom);
-
-		const float distance = Math::Distance(closestPoint, c.center);
-		if (distance > c.radius)
-		{
-			return false;
-		}
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	
-	bool Intersect(const Circle& c, const Rect& r)
-	{
-		return Intersect(r, c);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance)
-	{
-		// Reference: https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
-
-		// Find vectors for two edges sharing V1
-		Vector3 e1 = b - a;
-		Vector3 e2 = c - a;
-
-		// Begin calculating determinant - also used to calculate u parameter
-		Vector3 P = Math::Cross(ray.dir, e2);
-
-		// If determinant is near zero, ray lies in plane of triangle
-		float det = Math::Dot(e1, P);
-		// NOT CULLING
-		if (Math::IsZero(det))
-		{
-			return false;
-		}
-
-		float inv_det = 1.0f / det;
-
-		// Calculate distance from V1 to ray origin
-		Vector3 T = ray.org - a;
-
-		// Calculate u parameter and test bound
-		float u = Math::Dot(T, P) * inv_det;
-
-		// The intersection lies outside of the triangle
-		if (u < 0.0f || u > 1.0f)
-		{
-			return false;
-		}
-
-		// Prepare to test v parameter
-		Vector3 Q = Math::Cross(T, e1);
-
-		// Calculate V parameter and test bound
-		float v = Math::Dot(ray.dir, Q) * inv_det;
-
-		// The intersection lies outside of the triangle
-		if (v < 0.0f || u + v  > 1.0f)
-		{
-			return false;
-		}
-
-		// Ray intersection
-		float t = Math::Dot(e2, Q) * inv_det;
-		if (t <= 0.0f)
-		{
-			// No hit, no win
-			return false;
-		}
-
-		distance = t;
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Ray& ray, const Plane& plane, float& distance)
-	{
-		const float orgDotN = Math::Dot(ray.org, plane.n);
-		const float dirDotN = Math::Dot(ray.dir, plane.n);
-
-		// Check if ray is parallel to the plane
-		if (Math::IsZero(dirDotN))
-		{
-			if (Math::IsZero(orgDotN - plane.d))
-			{
-				distance = 0.0f;
-				return true;
-			}
-			else
+			if (point.x > rect.right || point.x < rect.left ||
+				point.y > rect.bottom || point.y < rect.top)
 			{
 				return false;
 			}
+			return true;
 		}
 
-		// Compute distance
-		distance = (plane.d - orgDotN) / dirDotN;
-		return true;
-	}
+		//----------------------------------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Ray& ray, const AABB& aabb, float& distEntry, float& distExit)
-	{
-		// https://truesculpt.googlecode.com/hg-history/Release%25200.8/Doc/ray_box_intersect.pdf
-
-		// Returns true if ray intersects bounding box
-		// Sets d1 to entry distance, d2 to exit distance (along ray.dir)
-
-		Vector3 boxMin = aabb.center - aabb.extend;
-		Vector3 boxMax = aabb.center + aabb.extend;
-		float tmin, tmax, tymin, tymax, tzmin, tzmax;
-
-		float divx = 1.0f / ray.dir.x;
-		float divy = 1.0f / ray.dir.y;
-		float divz = 1.0f / ray.dir.z;
-
-		if (divx >= 0.0f)
+		bool PointInCircle(const Vector2& point, const Circle& circle)
 		{
-			tmin = (boxMin.x - ray.org.x) * divx;
-			tmax = (boxMax.x - ray.org.x) * divx;
-		}
-		else
-		{
-			tmin = (boxMax.x - ray.org.x) * divx;
-			tmax = (boxMin.x - ray.org.x) * divx;
-		}
-		if (divy >= 0.0f)
-		{
-			tymin = (boxMin.y - ray.org.y) * divy;
-			tymax = (boxMax.y - ray.org.y) * divy;
-		}
-		else
-		{
-			tymin = (boxMax.y - ray.org.y) * divy;
-			tymax = (boxMin.y - ray.org.y) * divy;
+			const Vector2 centerToPoint = point - circle.center;
+			const float distSqr = Math::Dot(centerToPoint, centerToPoint);
+			const float radiusSqr = circle.radius * circle.radius;
+			return distSqr < radiusSqr;
 		}
 
-		if ((tmin > tymax) || (tymin > tmax))
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const LineSegment& a, const LineSegment& b)
 		{
-			return false;
-		}
+			// http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
 
-		if (tymin > tmin)
-		{
-			tmin = tymin;
-		}
+			float ua = ((a.to.x - a.from.x) * (b.from.y - a.from.y)) - ((a.to.y - a.from.y) * (b.from.x - a.from.x));
+			float ub = ((b.to.x - b.from.x) * (b.from.y - a.from.y)) - ((b.to.y - b.from.y) * (b.from.x - a.from.x));
+			float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
 
-		if (tymax < tmax)
-		{
-			tmax = tymax;
-		}
-
-		if (divz >= 0.0f)
-		{
-			tzmin = (boxMin.z - ray.org.z) * divz;
-			tzmax = (boxMax.z - ray.org.z) * divz;
-		}
-		else
-		{
-			tzmin = (boxMax.z - ray.org.z) * divz;
-			tzmax = (boxMin.z - ray.org.z) * divz;
-		}
-
-		if ((tmin > tzmax) || (tzmin > tmax))
-		{
-			return false;
-		}
-
-		if (tzmin > tmin)
-		{
-			tmin = tzmin;
-		}
-
-		if (tzmax < tmax)
-		{
-			tmax = tzmax;
-		}
-
-		distEntry = tmin;
-		distExit = tmax;
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	bool Intersect(const Vector3& point, const AABB& aabb)
-	{
-		const Vector3 test = point - aabb.center;
-		if (abs(test.x) > aabb.extend.x) return false;
-		if (abs(test.y) > aabb.extend.y) return false;
-		if (abs(test.z) > aabb.extend.z) return false;
-		return true;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	Rect GetAABB2DIntersectionRect(const AABB2D& aabb0, const AABB2D& aabb1)
-	{
-		Rect intersection;
-
-		intersection.left = Max(aabb0.Xmin, aabb1.Xmin);
-		intersection.top = Max(aabb0.Ymin, aabb1.Ymin);
-		intersection.right = Min(aabb0.Xmax, aabb1.Xmax);
-		intersection.bottom = Min(aabb0.Ymax, aabb1.Ymax);
-
-		return intersection;
-	}
-
-	Vector3 GetClosestPoint(const Ray& ray, const Vector3& point)
-	{
-		Vector3 orgToPoint = point - ray.org;
-		float d = Math::Dot(orgToPoint, ray.dir);
-		return ray.org + (ray.dir * d);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-
-	Vector3 Mean(const Vector3* v, uint32_t count)
-	{
-		Vector3 mean(0.0f, 0.0f, 0.0f);
-		for (uint32_t i = 0; i < count; ++i)
-		{
-			mean += v[i];
-		}
-		return mean / (float)count;
-	}
-
-	Vector3 VecMax(const Vector3& a, const Vector3& b)
-	{
-		Vector3 result;
-		result = { std::max(a.x, b.x), std::max(a.y, b.y) , std::max(a.z, b.z) };
-		return result;
-	}
-
-	Vector3 VecMin(const Vector3& a, const Vector3& b)
-	{
-		Vector3 result;
-		result = { std::min(a.x, b.x), std::min(a.y, b.y) , std::min(a.z, b.z) };
-		return result;
-	}
-	float Remap(float oldLower, float oldUpper, float newLower, float newUpper, float value)
-	{
-		float rangeFactor = (newUpper - newLower) / (oldUpper - oldLower);
-		return (value - oldLower) * rangeFactor + newLower;
-	}
-	int Round(float num)
-	{
-		return static_cast<int>(num + 0.5f);
-	}
-
-	float Round(float num, int decPlace)
-	{
-		return static_cast<float>(static_cast<int>(num * 10 * decPlace + 0.5f) / (10.f * decPlace));
-	}
-	bool FloatComp(float a, float b)
-	{
-		return (a >= b - FLT_EPSILON && a <= b + FLT_EPSILON);
-	}
-	Math::Random::Random()
-	{
-		srand(time(0));
-	}
-
-	Math::Random& Math::Random::Get()
-	{
-		static Random inst;
-		return inst;
-	}
-	int Math::Random::Range(int lower, int upper, float increment)
-	{
-		return ((rand() % (upper - lower)) + lower) * increment;
-	}
-	float Math::Random::Range(float lower, float upper, float increment)
-	{
-		int decPoint{};
-		int intInc{};
-		for (; decPoint <= 6; ++decPoint)
-		{
-			if (static_cast<int>(increment * 10 * decPoint) == increment * 10 * decPoint)
+			// First check for special cases
+			if (denom == 0.0f)
 			{
-				intInc = static_cast<int>(increment * 10 * decPoint);
-				break;
+				if (ua == 0.0f && ub == 0.0f)
+				{
+					// The line segments are the same
+					return true;
+				}
+				else
+				{
+					// The line segments are parallel
+					return false;
+				}
 			}
+
+			ua /= denom;
+			ub /= denom;
+
+			if (ua < 0.0f || ua > 1.0f || ub < 0.0f || ub > 1.0f)
+			{
+				return false;
+			}
+
+			return true;
 		}
-		int intLow = static_cast<int>(lower * 10 * decPoint) / intInc;
-		int intUp = static_cast<int>(upper * 10 * decPoint) / intInc;
-	
-		return (((rand() % (intUp - intLow)) + intUp) * intInc) / (10.f * decPoint);
-	}
 
-	uint32_t Math::Random::UInt32()
-	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<uint32_t> dis(0, UINT32_MAX);
-		return dis(gen);
-	}
+		//----------------------------------------------------------------------------------------------------
 
+		bool Intersect(const Circle& c0, const Circle& c1)
+		{
+			const float totalRadius = c0.radius + c1.radius;
+			const float totalRadiusSquare = totalRadius * totalRadius;
+			const float fDistanceSquared = Math::DistanceSqr(c0.center, c1.center);
+			return (fDistanceSquared < totalRadiusSquare);
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Rect& r0, const Rect& r1)
+		{
+			if (r0.left > r1.right)
+				return false;
+			else if (r0.top > r1.bottom)
+				return false;
+			else if (r0.right < r1.left)
+				return false;
+			else if (r0.bottom < r1.top)
+				return false;
+			return true;
+		}
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const AABB2D& aabb0, const AABB2D& aabb1)
+		{
+			if (aabb0.Xmin > aabb1.Xmax)
+				return false;
+			else if (aabb0.Ymin > aabb1.Ymax)
+				return false;
+			else if (aabb0.Xmax < aabb1.Xmin)
+				return false;
+			else if (aabb0.Ymax < aabb1.Ymin)
+				return false;
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+
+		bool Intersect(const Circle& c, const LineSegment& l)
+		{
+			Vector2 startToCenter = c.center - l.from;
+			Vector2 startToEnd = l.to - l.from;
+			float len = Math::Magnitude(startToEnd);
+			Vector2 dir = startToEnd / len;
+
+			// Find the closest point to the line segment
+			float projection = Math::Dot(startToCenter, dir);
+			Vector2 closestPoint;
+			if (projection > len)
+			{
+				closestPoint = l.to;
+			}
+			else if (projection < 0.0f)
+			{
+				closestPoint = l.from;
+			}
+			else
+			{
+				closestPoint = l.from + (dir * projection);
+			}
+
+			// Check if the closest point is within the circle
+			Vector2 closestToCenter = c.center - closestPoint;
+			if (Math::MagnitudeSqr(closestToCenter) > Math::Sqr(c.radius))
+			{
+				return false;
+			}
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const LineSegment& l, const Circle& c)
+		{
+			return Intersect(c, l);
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Rect& r, const Circle& c)
+		{
+			Vector2 closestPoint;
+			closestPoint.x = Math::Clamp(c.center.x, r.left, r.right);
+			closestPoint.y = Math::Clamp(c.center.y, r.top, r.bottom);
+
+			const float distance = Math::Distance(closestPoint, c.center);
+			if (distance > c.radius)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Circle& c, const Rect& r)
+		{
+			return Intersect(r, c);
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance)
+		{
+			// Reference: https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+
+			// Find vectors for two edges sharing V1
+			Vector3 e1 = b - a;
+			Vector3 e2 = c - a;
+
+			// Begin calculating determinant - also used to calculate u parameter
+			Vector3 P = Math::Cross(ray.dir, e2);
+
+			// If determinant is near zero, ray lies in plane of triangle
+			float det = Math::Dot(e1, P);
+			// NOT CULLING
+			if (Math::IsZero(det))
+			{
+				return false;
+			}
+
+			float inv_det = 1.0f / det;
+
+			// Calculate distance from V1 to ray origin
+			Vector3 T = ray.org - a;
+
+			// Calculate u parameter and test bound
+			float u = Math::Dot(T, P) * inv_det;
+
+			// The intersection lies outside of the triangle
+			if (u < 0.0f || u > 1.0f)
+			{
+				return false;
+			}
+
+			// Prepare to test v parameter
+			Vector3 Q = Math::Cross(T, e1);
+
+			// Calculate V parameter and test bound
+			float v = Math::Dot(ray.dir, Q) * inv_det;
+
+			// The intersection lies outside of the triangle
+			if (v < 0.0f || u + v  > 1.0f)
+			{
+				return false;
+			}
+
+			// Ray intersection
+			float t = Math::Dot(e2, Q) * inv_det;
+			if (t <= 0.0f)
+			{
+				// No hit, no win
+				return false;
+			}
+
+			distance = t;
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Ray& ray, const Plane& plane, float& distance)
+		{
+			const float orgDotN = Math::Dot(ray.org, plane.n);
+			const float dirDotN = Math::Dot(ray.dir, plane.n);
+
+			// Check if ray is parallel to the plane
+			if (Math::IsZero(dirDotN))
+			{
+				if (Math::IsZero(orgDotN - plane.d))
+				{
+					distance = 0.0f;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			// Compute distance
+			distance = (plane.d - orgDotN) / dirDotN;
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Ray& ray, const AABB& aabb, float& distEntry, float& distExit)
+		{
+			// https://truesculpt.googlecode.com/hg-history/Release%25200.8/Doc/ray_box_intersect.pdf
+
+			// Returns true if ray intersects bounding box
+			// Sets d1 to entry distance, d2 to exit distance (along ray.dir)
+
+			Vector3 boxMin = aabb.center - aabb.extend;
+			Vector3 boxMax = aabb.center + aabb.extend;
+			float tmin, tmax, tymin, tymax, tzmin, tzmax;
+
+			float divx = 1.0f / ray.dir.x;
+			float divy = 1.0f / ray.dir.y;
+			float divz = 1.0f / ray.dir.z;
+
+			if (divx >= 0.0f)
+			{
+				tmin = (boxMin.x - ray.org.x) * divx;
+				tmax = (boxMax.x - ray.org.x) * divx;
+			}
+			else
+			{
+				tmin = (boxMax.x - ray.org.x) * divx;
+				tmax = (boxMin.x - ray.org.x) * divx;
+			}
+			if (divy >= 0.0f)
+			{
+				tymin = (boxMin.y - ray.org.y) * divy;
+				tymax = (boxMax.y - ray.org.y) * divy;
+			}
+			else
+			{
+				tymin = (boxMax.y - ray.org.y) * divy;
+				tymax = (boxMin.y - ray.org.y) * divy;
+			}
+
+			if ((tmin > tymax) || (tymin > tmax))
+			{
+				return false;
+			}
+
+			if (tymin > tmin)
+			{
+				tmin = tymin;
+			}
+
+			if (tymax < tmax)
+			{
+				tmax = tymax;
+			}
+
+			if (divz >= 0.0f)
+			{
+				tzmin = (boxMin.z - ray.org.z) * divz;
+				tzmax = (boxMax.z - ray.org.z) * divz;
+			}
+			else
+			{
+				tzmin = (boxMax.z - ray.org.z) * divz;
+				tzmax = (boxMin.z - ray.org.z) * divz;
+			}
+
+			if ((tmin > tzmax) || (tzmin > tmax))
+			{
+				return false;
+			}
+
+			if (tzmin > tmin)
+			{
+				tmin = tzmin;
+			}
+
+			if (tzmax < tmax)
+			{
+				tmax = tzmax;
+			}
+
+			distEntry = tmin;
+			distExit = tmax;
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		bool Intersect(const Vector3& point, const AABB& aabb)
+		{
+			const Vector3 test = point - aabb.center;
+			if (abs(test.x) > aabb.extend.x) return false;
+			if (abs(test.y) > aabb.extend.y) return false;
+			if (abs(test.z) > aabb.extend.z) return false;
+			return true;
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		Rect GetAABB2DIntersectionRect(const AABB2D& aabb0, const AABB2D& aabb1)
+		{
+			Rect intersection;
+
+			intersection.left = Max(aabb0.Xmin, aabb1.Xmin);
+			intersection.top = Max(aabb0.Ymin, aabb1.Ymin);
+			intersection.right = Min(aabb0.Xmax, aabb1.Xmax);
+			intersection.bottom = Min(aabb0.Ymax, aabb1.Ymax);
+
+			return intersection;
+		}
+
+		Vector3 GetClosestPoint(const Ray& ray, const Vector3& point)
+		{
+			Vector3 orgToPoint = point - ray.org;
+			float d = Math::Dot(orgToPoint, ray.dir);
+			return ray.org + (ray.dir * d);
+		}
+
+		//----------------------------------------------------------------------------------------------------
+
+		Vector3 Mean(const Vector3* v, uint32_t count)
+		{
+			Vector3 mean(0.0f, 0.0f, 0.0f);
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				mean += v[i];
+			}
+			return mean / (float)count;
+		}
+
+		Vector3 VecMax(const Vector3& a, const Vector3& b)
+		{
+			Vector3 result;
+			result = { std::max(a.x, b.x), std::max(a.y, b.y) , std::max(a.z, b.z) };
+			return result;
+		}
+
+		Vector3 VecMin(const Vector3& a, const Vector3& b)
+		{
+			Vector3 result;
+			result = { std::min(a.x, b.x), std::min(a.y, b.y) , std::min(a.z, b.z) };
+			return result;
+		}
+		float Remap(float oldLower, float oldUpper, float newLower, float newUpper, float value)
+		{
+			float rangeFactor = (newUpper - newLower) / (oldUpper - oldLower);
+			return (value - oldLower) * rangeFactor + newLower;
+		}
+		int Round(float num)
+		{
+			return static_cast<int>(num + 0.5f);
+		}
+
+		float Round(float num, int decPlace)
+		{
+			return static_cast<float>(static_cast<int>(num * 10 * decPlace + 0.5f) / (10.f * decPlace));
+		}
+		bool FloatComp(float a, float b)
+		{
+			return (a >= b - FLT_EPSILON && a <= b + FLT_EPSILON);
+		}
+		Math::Random::Random()
+		{
+			srand(time(0));
+		}
+
+		Math::Random& Math::Random::Get()
+		{
+			static Random inst;
+			return inst;
+		}
+		int Math::Random::Range(int lower, int upper, float increment)
+		{
+			return ((rand() % (upper - lower)) + lower) * increment;
+		}
+		float Math::Random::Range(float lower, float upper, float increment)
+		{
+			int decPoint{};
+			int intInc{};
+			for (; decPoint <= 6; ++decPoint)
+			{
+				if (static_cast<int>(increment * 10 * decPoint) == increment * 10 * decPoint)
+				{
+					intInc = static_cast<int>(increment * 10 * decPoint);
+					break;
+				}
+			}
+			int intLow = static_cast<int>(lower * 10 * decPoint) / intInc;
+			int intUp = static_cast<int>(upper * 10 * decPoint) / intInc;
+
+			return (((rand() % (intUp - intLow)) + intUp) * intInc) / (10.f * decPoint);
+		}
+
+		uint32_t Math::Random::UInt32()
+		{
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<uint32_t> dis(0, UINT32_MAX);
+			return dis(gen);
+		}
+	}
 }
