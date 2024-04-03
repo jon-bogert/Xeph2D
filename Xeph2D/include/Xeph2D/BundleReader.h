@@ -1,5 +1,5 @@
-#ifndef __X2DIS_EDITOR_BUNDLEREADER_H__
-#define __X2DIS_EDITOR_BUNDLEREADER_H__
+#ifndef __XEPH2D_EDITOR_BUNDLEREADER_H__
+#define __XEPH2D_EDITOR_BUNDLEREADER_H__
 
 #include <filesystem>
 #include <fstream>
