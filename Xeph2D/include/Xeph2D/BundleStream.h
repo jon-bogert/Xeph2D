@@ -4,7 +4,7 @@
 #include "SFML/Audio.hpp"
 #include <fstream>
 
-namespace Xeph2D
+namespace sf
 {
 	//NOTE: Formatted to fit the SFML-style for override
 	class BundleStream : public sf::InputStream
@@ -12,6 +12,8 @@ namespace Xeph2D
     public:
         BundleStream() = default;
         BundleStream(const std::string& filename, size_t offset, size_t size);
+        BundleStream(const BundleStream&);
+        BundleStream operator=(const BundleStream& other);
 
         sf::Int64 read(void* data, sf::Int64 size) override;
         sf::Int64 seek(sf::Int64 position) override;
@@ -27,6 +29,7 @@ namespace Xeph2D
         std::ifstream m_file;
         std::streamoff m_offset;
         std::streamsize m_size;
+        std::string m_filename;
     };
 }
 
